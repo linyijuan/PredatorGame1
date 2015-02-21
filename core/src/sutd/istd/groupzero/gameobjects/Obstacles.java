@@ -12,4 +12,8 @@ public class Obstacles {
     {
         this.position = _position;
     }
+
+    public Vector2 getPosition(){
+        return position;
+    }
 }

@@ -10,4 +10,6 @@ public class Tree extends Obstacles {
     public Tree(Vector2 _position) {
         super(_position);
     }
+
+
 }
