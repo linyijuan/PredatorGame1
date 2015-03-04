@@ -1,19 +1,21 @@
 package sutd.istd.groupzero.gameworld;
 
 import sutd.istd.groupzero.gameobjects.Map;
+import sutd.istd.groupzero.gameobjects.Monster;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameWorld {
 	private Map map;
-	
-	public GameWorld(){
-		map = new Map();
+	private Monster monster;
+	public GameWorld(float screenWidth, float screenHeight){
+		map = new Map(screenWidth, screenHeight);
+		monster = map.getMonster();
 	}
 	public void update(float delta) {
-        Gdx.app.log("GameWorld", "update");
-        
+		map.update();
+        monster.update(delta);
     }
 	
 	public Map getMap(){

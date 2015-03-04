@@ -1,36 +1,50 @@
 package sutd.istd.groupzero.screens;
 
-import sutd.istd.groupzero.gameworld.GameRenderer;
-import sutd.istd.groupzero.gameworld.GameWorld;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+
+import sutd.istd.groupzero.gameworld.GameRenderer;
+import sutd.istd.groupzero.gameworld.GameWorld;
+import sutd.istd.groupzero.helpers.InputHandler;
+
+// Possible to load tiled map here if we are using
+
+
 
 public class GameScreen implements Screen{
+    float screenWidth;
+    float screenHeight;
 	private GameWorld world;
 	private GameRenderer renderer;
+	private float runTime = 0;
 	
 	public GameScreen() {
-        Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld();
-        renderer = new GameRenderer(world);
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
+        
+        float gameWidth = 136;
+        float gameHeight = screenHeight / (screenWidth/gameWidth);
+        int midPointY = (int) gameHeight/2;
+ 
+        world = new GameWorld(screenWidth, screenHeight);
+        renderer = new GameRenderer(world, screenWidth, screenHeight);
+
+        Gdx.input.setInputProcessor(new InputHandler(world,screenWidth, screenHeight));
     }
 
 	@Override
     public void render(float delta) {
+		runTime += delta;
         world.update(delta);
-        renderer.render();
+        renderer.render(runTime);
     }
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("GameScreen", "resizing");
     }
 
     @Override
     public void show() {
-        Gdx.app.log("GameScreen", "show called");
     }
 
     @Override
@@ -51,6 +65,16 @@ public class GameScreen implements Screen{
     @Override
     public void dispose() {
         // Leave blank
+    }
+
+
+    /////////// Getters/////////////
+    public float getScreenWidth() {
+        return screenWidth;
+    }
+
+    public float getScreenHeight() {
+        return screenHeight;
     }
 
 }

@@ -1,6 +1,5 @@
 package sutd.istd.groupzero.predator1;
 
-import sun.rmi.runtime.Log;
 import sutd.istd.groupzero.helpers.AssetLoader;
 import sutd.istd.groupzero.screens.GameScreen;
 
