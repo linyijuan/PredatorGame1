@@ -49,10 +49,10 @@ public class InputHandler implements InputProcessor{
         layer2 = -screenHeight/screenWidth;
 		map = myWorld.getMap();
 		monster = map.getMonster();
-		moveUp= new Vector2(10,0);
-		moveDown = new Vector2(-10,0);
-		moveLeft = new Vector2(0,-20);
-		moveRight = new Vector2(0,20);
+		moveUp= new Vector2(0,-60);
+		moveDown = new Vector2(0,60);
+		moveLeft = new Vector2(-60,0);
+		moveRight = new Vector2(60,0);
 	}
 	@Override
 	public boolean keyDown(int keycode) {
@@ -80,9 +80,11 @@ public class InputHandler implements InputProcessor{
         if ((screenX/screenY) >= layer1){
             if (((screenY-screenHeight)/screenX) <= layer2){
             	monster.setDirection(Direction.TOP);
+            	monster.setMapPosition(monster.getMapPosition().add(moveUp));
+
                 Gdx.app.log("touchDown", "top of screen");
             }else{
-            	
+            	monster.setMapPosition(monster.getMapPosition().add(moveRight));
             	monster.setDirection(Direction.RIGHT);
 
                 Gdx.app.log("touchDown", "right of screen");
@@ -90,10 +92,14 @@ public class InputHandler implements InputProcessor{
         }else{
             if (((screenY-screenHeight)/screenX) >= layer2){
             	monster.setDirection(Direction.BOTTOM);
+            	monster.setMapPosition(monster.getMapPosition().add(moveDown));
+
 
                 Gdx.app.log("touchDown", "bottom of screen");
             }else{
             	monster.setDirection(Direction.LEFT);
+            	monster.setMapPosition(monster.getMapPosition().add(moveLeft));
+
                 Gdx.app.log("touchDown", "left of screen");
             }
         }
@@ -104,17 +110,11 @@ public class InputHandler implements InputProcessor{
             
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        // Debugging purposes
-//        Gdx.app.log("touchUp", "User touched up at X: " + screenX + " Y: " + screenY);
-//        Gdx.app.log("touchUp", "Button: " + button);
         return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-        // Debugging purposes
-//        Gdx.app.log("KeyDown", "User touched dragged at X: " + screenX + " Y: " + screenY);
-        //
         return false;
 	}
 

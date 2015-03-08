@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
@@ -49,7 +50,7 @@ public class GameRenderer {
         Gdx.app.log("Screen Height and Width ", screenWidth + "  " + screenHeight);
         
         gridBg = new Texture(Gdx.files.internal("data/gridBg.jpg"));
-        grid = new TextureRegion(gridBg, 180, 360);
+        grid = new TextureRegion(gridBg, 600, 600);
         Gdx.app.log(grid.toString(),(gridBg.getWidth()/10f) * 3 +" " + (gridBg.getHeight()/10f) * 6);
         
         
@@ -73,33 +74,55 @@ public class GameRenderer {
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
+        Vector2 mapPos = myMonster.getMapPosition();
         
         switch (d) {
 		case TOP:
         	Gdx.app.log(d.toString(), d.toString());
-            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+        	
+//        	(new TextureRegion(gridBg, mapPos.x, mapPos.y, 180, 360))
+        	
+        	
+
+			batcher.draw(gridBg, mapPos.x, mapPos.y);
+        	
         	batcher.draw(animationSet[1].getKeyFrame(runTime),90,180);
 
 			break;
 		case LEFT:
 
         	Gdx.app.log(d.toString(), d.toString());
-            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+
+
+			batcher.draw(gridBg, mapPos.x, mapPos.y);
+
+        	
         	batcher.draw(animationSet[0].getKeyFrame(runTime),90, 180);        	
 
 			
 			break;
 		case RIGHT:
 			Gdx.app.log(d.toString(), d.toString());
-            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+//            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
 			// all the 90 180 are hardcoded for testing purpose. need to change with the screenWidth and screenHeight;
+
+
+			
+
+			batcher.draw(gridBg, mapPos.x, mapPos.y);
+        	
+//			batcher.draw(grid, mapPos.x, mapPos.y, cam.viewportWidth, cam.viewportHeight);
         	batcher.draw(animationSet[2].getKeyFrame(runTime),90, 180);        	
 
 			
 			break;
 		case BOTTOM:
 			Gdx.app.log(d.toString(), d.toString());
-            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+//            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+//			batcher.draw(grid, mapPos.x, mapPos.y, cam.viewportWidth, cam.viewportHeight);
+
+
+			batcher.draw(gridBg, mapPos.x, mapPos.y);
 			
         	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);        	
 
@@ -108,8 +131,11 @@ public class GameRenderer {
 
 		default:
 			Gdx.app.log(d.toString(), d.toString());
-            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
-			
+
+
+			batcher.draw(gridBg, mapPos.x, mapPos.y);
+
+
         	batcher.draw(directionSet[myMonster.getDirection().getKeycode()],90,180);
 
 			break;
