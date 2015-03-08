@@ -1,9 +1,9 @@
 package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
-
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
+import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.helpers.*;
 
 public class GameRenderer {
@@ -22,7 +23,8 @@ public class GameRenderer {
 	private Monster myMonster;
 	private OrthographicCamera cam;
 	private SpriteBatch batcher;
-	public static TextureRegion gridBg;
+	public static Texture gridBg;
+	public static TextureRegion grid;
 	public static TextureRegion[] directionSet;
 	public static Animation[] animationSet;
 	public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
@@ -37,13 +39,20 @@ public class GameRenderer {
         this.screenHeight = screenHeight;
 		
 		cam = new OrthographicCamera();
-		cam.setToOrtho(true, 136, 204);
+		cam.setToOrtho(true, 180, 360);
 		
 		batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
 		
 		shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
+        Gdx.app.log("Screen Height and Width ", screenWidth + "  " + screenHeight);
+        
+        gridBg = new Texture(Gdx.files.internal("data/gridBg.jpg"));
+        grid = new TextureRegion(gridBg, 180, 360);
+        Gdx.app.log(grid.toString(),(gridBg.getWidth()/10f) * 3 +" " + (gridBg.getHeight()/10f) * 6);
+        
+        
         
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
@@ -59,16 +68,61 @@ public class GameRenderer {
 	public void render(float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+    	//Gdx.app.log("Screen Height", "Screen Width :" + screenWidth+ "  ScreenHeight :"+ screenHeight);
+
         batcher.begin();
         batcher.enableBlending();
-        int direction = myMonster.getMovement();
-        if (direction < 4)
-        	batcher.draw(animationSet[direction].getKeyFrame(runTime),myMonster.getX(),myMonster.getY());        	
-        else 
-        	batcher.draw(directionSet[direction-4],myMonster.getX(),myMonster.getY());
-		
+        Direction d = myMonster.getDirection();
+        
+        switch (d) {
+		case TOP:
+        	Gdx.app.log(d.toString(), d.toString());
+            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+        	batcher.draw(animationSet[1].getKeyFrame(runTime),90,180);
+
+			break;
+		case LEFT:
+
+        	Gdx.app.log(d.toString(), d.toString());
+            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+        	batcher.draw(animationSet[0].getKeyFrame(runTime),90, 180);        	
+
+			
+			break;
+		case RIGHT:
+			Gdx.app.log(d.toString(), d.toString());
+            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+			// all the 90 180 are hardcoded for testing purpose. need to change with the screenWidth and screenHeight;
+        	batcher.draw(animationSet[2].getKeyFrame(runTime),90, 180);        	
+
+			
+			break;
+		case BOTTOM:
+			Gdx.app.log(d.toString(), d.toString());
+            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+			
+        	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);        	
+
+			
+			break;
+
+		default:
+			Gdx.app.log(d.toString(), d.toString());
+            batcher.draw(grid, 0, 0, cam.viewportWidth,cam.viewportHeight);
+			
+        	batcher.draw(directionSet[myMonster.getDirection().getKeycode()],90,180);
+
+			break;
+		}
+        batcher.disableBlending();
         batcher.end();
+        
+//        if (direction < 4)
+//        	batcher.draw(animationSet[direction].getKeyFrame(runTime),myMonster.getX(),myMonster.getY());        	
+//        else 
+//        	batcher.draw(directionSet[direction-4],myMonster.getX(),myMonster.getY());
+//		
+//        batcher.end();
     }
 
 

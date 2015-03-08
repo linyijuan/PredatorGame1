@@ -1,83 +1,123 @@
 package sutd.istd.groupzero.gameobjects;
 
-import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
+
+import sutd.istd.groupzero.gameobjects.Monster.Direction;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 public class Monster {
-	float screenWidth;
-    float screenHeight;
-	private final float STEP_SIZE = 5;
-	private float X = 0;
-	private float Y = 0;
-	private boolean movingLeft = false;
-	private boolean movingRight = false;
-	private boolean movingUp = false;
-	private boolean movingDown = false;
-	private int facing = 6;
-	private int direction = 2;
-	private boolean[] moving = {movingLeft,movingUp,movingRight,movingDown};
-	private float[] movingX = {-1,0,1,0};
-	private float[] movingY = {0,-1,0,1};
 	
-	public Monster (float screenWidth, float screenHeight){
-		this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-	}
-	
-	public void update(float delta){
-		
-	}
-	public int getMovement(){
-		boolean isMoving = false;
-		for (int i =0;i<moving.length;i++){
-			if (moving[i] == true){
-				facing = i+4;
-				direction = i;
-				isMoving = true;
-			}
-		}
-		if (isMoving){
-			moving[direction] = false;
-			return direction;
-		}
-		else 
-			return facing;
-		
-			
+	private int speed;
+	private Direction direction;
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 
-	public void move(int screenX, int screenY){
-		int dir = -1;
-		float dx = screenX/(float)2.5 - X;
-        float dy = screenY/(float)2.3 - Y;
-        Gdx.app.log("cp", "x:"+X+"  y:"+Y);
-//        Gdx.app.log("cp", screenHeight+"");
-        float d = Math.abs(dx) - Math.abs(dy);
-        if (dx > 0 && d > 0) dir = 2;
-        if (dx < 0 && d > 0) dir = 0;
-        if (dy < 0 && d < 0) dir = 1;
-        if (dy > 0 && d < 0) dir = 3;
-		for (boolean dire:moving)
-			if (dire == true)
-				return;
-		if (dir >=0) {
-			moving[dir] = true;
-			X += movingX[dir]*STEP_SIZE;
-			Y += movingY[dir]*STEP_SIZE;
+	public Direction getDirection() {
+		return direction;
+	}
+
+
+
+
+	private float screenWidth, screenHeight;
+	
+	
+
+	private Vector2 mapPosition;
+	
+	public Vector2 getMapPosition() {
+		return mapPosition;
+	}
+
+
+	public void setMapPosition(Vector2 mapPosition) {
+		this.mapPosition = mapPosition;
+	}
+
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "this monster is at" + this.mapPosition.x + ", " + this. mapPosition.y;
+	}
+
+	public enum Direction
+	{
+		TOP, RIGHT, LEFT, BOTTOM;
+		
+		
+
+		public int getKeycode() {
+			// TODO Auto-generated method stub
+
+			if(this.equals(TOP))
+			{
+				return 1;
+			}
+			else if(this.equals(LEFT))
+			{
+				return 0;
+			}
+			else if(this.equals(RIGHT))
+			{
+				return 2;
+			}
+			else 
+			{
+				return 3;
+			}
+//			return 1;
 		}
-//		if (movingX[direction]*STEP_SIZE > 0 && movingX[direction]*STEP_SIZE < screenWidth){
-//			if (movingY[direction]*STEP_SIZE > 0 && movingY[direction]*STEP_SIZE <screenHeight){
-				
-//			}			
-//		}		
+	}
+		
+	
+	public Monster(int speed,  Vector2 currentMapPosition, Direction direction1, float screenWidth, float screenHeight)
+	{
+		this.direction = direction1;
+		this.speed = speed;
+		this.mapPosition = currentMapPosition;
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
 	}
 	
-	public float getX(){
-		return X;
+	
+	public void update(float delta)
+	{
+		
 	}
-	public float getY(){
-		return Y;
+	
+	
+	
+	public void move(Direction d, Vector2 mapPosition )
+	{
+		switch (d) {
+		case TOP:
+			setDirection(d);
+			setMapPosition(mapPosition);
+			break;
+		case RIGHT:
+			setDirection(d);
+			setMapPosition(mapPosition);
+
+			break;
+		case LEFT:
+			setDirection(d);
+			setMapPosition(mapPosition);
+
+			break;
+		case BOTTOM:
+			setDirection(d);
+			setMapPosition(mapPosition);
+
+			break;
+
+		default:
+			
+			break;
+		}
 	}
+
 
 }

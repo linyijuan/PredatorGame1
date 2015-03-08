@@ -10,6 +10,8 @@ public class GameWorld {
 	private Map map;
 	private Monster monster;
 	public GameWorld(float screenWidth, float screenHeight){
+		
+		// map should not be the same as screenWidth and Height
 		map = new Map(screenWidth, screenHeight);
 		monster = map.getMonster();
 	}

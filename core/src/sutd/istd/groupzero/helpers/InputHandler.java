@@ -2,9 +2,11 @@ package sutd.istd.groupzero.helpers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
+import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameworld.GameWorld;
 import sutd.istd.groupzero.screens.GameScreen;
 
@@ -16,6 +18,7 @@ public class InputHandler implements InputProcessor{
     private float screenHeight;
     private float layer1;
     private float layer2;
+    private Vector2 moveUp, moveRight, moveLeft, moveDown;
 
     //                  Game Screen
     //
@@ -46,6 +49,10 @@ public class InputHandler implements InputProcessor{
         layer2 = -screenHeight/screenWidth;
 		map = myWorld.getMap();
 		monster = map.getMonster();
+		moveUp= new Vector2(10,0);
+		moveDown = new Vector2(-10,0);
+		moveLeft = new Vector2(0,-20);
+		moveRight = new Vector2(0,20);
 	}
 	@Override
 	public boolean keyDown(int keycode) {
@@ -68,29 +75,28 @@ public class InputHandler implements InputProcessor{
 		//call method inside Map to determine the movement
         // Debugging purposes
         Gdx.app.log("touchDown", "User touched down at X: " + screenX + " Y: " + screenY);
-        // Splitting the screen to 4 parts for user to tap to control character
-//        if ((screenX/screenY) >= layer1){
-//            // Belong to the sector top/right of the screen
-////            Gdx.app.log("touchDown", "top/right of screen");
-//            if (((screenY-screenHeight)/screenX) <= layer2){
-//            	map.onTap(1);
-//                Gdx.app.log("touchDown", "top of screen");
-//            }else{
-//            	map.onTap(2);
-//                Gdx.app.log("touchDown", "right of screen");
-//            }
-//        }else{
-//            // Belong to the bottom/left of the screen
-////            Gdx.app.log("touchDown", "bottom/left of screen");
-//            if (((screenY-screenHeight)/screenX) >= layer2){
-//            	map.onTap(3);
-//                Gdx.app.log("touchDown", "bottom of screen");
-//            }else{
-//                map.onTap(0);
-//                Gdx.app.log("touchDown", "left of screen");
-//            }
-//        }
-        monster.move(screenX, screenY);
+        
+        
+        if ((screenX/screenY) >= layer1){
+            if (((screenY-screenHeight)/screenX) <= layer2){
+            	monster.setDirection(Direction.TOP);
+                Gdx.app.log("touchDown", "top of screen");
+            }else{
+            	
+            	monster.setDirection(Direction.RIGHT);
+
+                Gdx.app.log("touchDown", "right of screen");
+            }
+        }else{
+            if (((screenY-screenHeight)/screenX) >= layer2){
+            	monster.setDirection(Direction.BOTTOM);
+
+                Gdx.app.log("touchDown", "bottom of screen");
+            }else{
+            	monster.setDirection(Direction.LEFT);
+                Gdx.app.log("touchDown", "left of screen");
+            }
+        }
 
 		return false;
 	}

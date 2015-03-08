@@ -24,5 +24,10 @@ public class PredatorGame extends Game {
         super.dispose();
         AssetLoader.dispose();
     }
+	
+	 @Override
+	 public void render() {
+	        super.render();
+	 }
 
 }

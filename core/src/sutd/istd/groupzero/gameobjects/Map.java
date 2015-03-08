@@ -3,6 +3,9 @@ package sutd.istd.groupzero.gameobjects;
 import java.util.ArrayList;
 import java.util.Random;
 
+import sutd.istd.groupzero.gameobjects.Monster.Direction;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map{
@@ -20,17 +23,19 @@ public class Map{
     private int obstacleCountBoulders = 0;
     private int foodCount = 0;
     private int powerUpCount = 0;
-    private ArrayList<Vector2> vector2List = new ArrayList<>();
+    private ArrayList<Vector2> vector2List = new ArrayList<Vector2>();
     private ArrayList<Obstacles> obstaclesList = new ArrayList<Obstacles>();
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private ArrayList<PowerUps> powerUpsList = new ArrayList<PowerUps>();
     private Random r = new Random();
     private Monster monster;
-
     
     public Map(float screenWidth, float screenHeight){
         Init();
-        monster = new Monster(screenWidth, screenHeight);
+        Gdx.app.log("map", "map created");
+        monster = new Monster(10, new Vector2(0,0), Direction.BOTTOM , screenWidth, screenHeight);
+        Gdx.app.log("map", monster.toString());
+//        monster = new Monster2(screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }

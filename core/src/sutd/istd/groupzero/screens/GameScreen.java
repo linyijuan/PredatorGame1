@@ -19,13 +19,12 @@ public class GameScreen implements Screen{
 	private float runTime = 0;
 	
 	public GameScreen() {
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
+//        screenWidth = Gdx.graphics.getWidth();
+//        screenHeight = Gdx.graphics.getHeight();
+		screenWidth = 180;
+		screenHeight = 360;
+        Gdx.app.log("ScreenWidth and Height ",  screenWidth + " " + screenHeight);
         
-        float gameWidth = 136;
-        float gameHeight = screenHeight / (screenWidth/gameWidth);
-        int midPointY = (int) gameHeight/2;
- 
         world = new GameWorld(screenWidth, screenHeight);
         renderer = new GameRenderer(world, screenWidth, screenHeight);
 
@@ -37,6 +36,7 @@ public class GameScreen implements Screen{
 		runTime += delta;
         world.update(delta);
         renderer.render(runTime);
+       
     }
 
     @Override
