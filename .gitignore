@@ -2,3 +2,7 @@
 *.lock
 *.bin
 *.bin
+*.lock
+local.properties
+*.class
+PredatorGameFolder.ipr
