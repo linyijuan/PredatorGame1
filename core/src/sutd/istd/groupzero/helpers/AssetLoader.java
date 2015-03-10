@@ -3,12 +3,13 @@ package sutd.istd.groupzero.helpers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+
+import aurelienribon.tweenengine.TweenManager;
 
 public class AssetLoader {
+    public static TweenManager tweenManager;
 	public static TextureRegion[][] texture;
 	public static Texture source;
 	public static TextureRegion gridBg;
@@ -19,7 +20,7 @@ public class AssetLoader {
 	public static void load(){
 		source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
 		texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
-		tree = new Texture(Gdx.files.internal("data/tree.png"));
+//		tree = new Texture(Gdx.files.internal("data/tree.png"));
 		
 		monsterUp = texture[3][0];
 		monsterDown = texture[0][0];

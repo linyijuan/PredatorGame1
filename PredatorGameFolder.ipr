@@ -109,7 +109,9 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.5.4/7b974b501dc92361698a1f6251f9e7b308582c08/gdx-backend-android-1.5.4.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.5.4/494ea86b57d0fbcd1c89408b1db12eb27bba9f4f/gdx-backend-android-1.5.4-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="gdx-backend-gwt-1.5.4">
       <CLASSES>
@@ -335,6 +337,20 @@
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.robovm/robovm-rt/1.0.0-beta-04/f95ca6b453519d93481fb9df5328a3af5d41d5c0/robovm-rt-1.0.0-beta-04-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="tween-engine-api">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/tween-engine-api.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="tween-engine-api-sources">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/tween-engine-api-sources.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
     <library name="validation-api-1.0.0.GA">
       <CLASSES>
