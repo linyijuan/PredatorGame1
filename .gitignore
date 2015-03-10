@@ -2,3 +2,6 @@
 *.lock
 *.bin
 *.bin
+*.properties
+*.class
+*.iml
