@@ -68,7 +68,6 @@ public class Monster {
 			{
 				return 3;
 			}
-//			return 1;
 		}
 	}
 		
@@ -87,8 +86,6 @@ public class Monster {
 	{
 		
 	}
-	
-	
 	
 	public void move(Direction d, Vector2 mapPosition )
 	{

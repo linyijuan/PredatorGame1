@@ -19,6 +19,8 @@ public class InputHandler implements InputProcessor{
     private float layer1;
     private float layer2;
     private Vector2 moveUp, moveRight, moveLeft, moveDown;
+    
+    private Vector2 center;
 
     //                  Game Screen
     //
@@ -40,7 +42,8 @@ public class InputHandler implements InputProcessor{
     //
     //
     //
-	
+
+    
 	public InputHandler(GameWorld world, float screenHeight,float screenWidth){
 		myWorld = world;
         this.screenHeight = screenHeight;
@@ -49,10 +52,13 @@ public class InputHandler implements InputProcessor{
         layer2 = -screenHeight/screenWidth;
 		map = myWorld.getMap();
 		monster = map.getMonster();
-		moveUp= new Vector2(0,-60);
-		moveDown = new Vector2(0,60);
-		moveLeft = new Vector2(-60,0);
-		moveRight = new Vector2(60,0);
+		moveUp= new Vector2(0,60);
+		moveDown = new Vector2(0,-60);
+		moveLeft = new Vector2(60,0);
+		moveRight = new Vector2(-60,0);
+		
+		center = new Vector2(screenWidth/2, screenHeight/2);
+		
 	}
 	@Override
 	public boolean keyDown(int keycode) {
@@ -71,6 +77,9 @@ public class InputHandler implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		
+
+		
 		//use user's position to determine the direction to go
 		//call method inside Map to determine the movement
         // Debugging purposes
@@ -81,24 +90,28 @@ public class InputHandler implements InputProcessor{
             if (((screenY-screenHeight)/screenX) <= layer2){
             	monster.setDirection(Direction.TOP);
             	monster.setMapPosition(monster.getMapPosition().add(moveUp));
+            	map.update(moveUp);
 
                 Gdx.app.log("touchDown", "top of screen");
             }else{
             	monster.setMapPosition(monster.getMapPosition().add(moveRight));
             	monster.setDirection(Direction.RIGHT);
+            	map.update(moveRight);
 
                 Gdx.app.log("touchDown", "right of screen");
             }
         }else{
             if (((screenY-screenHeight)/screenX) >= layer2){
             	monster.setDirection(Direction.BOTTOM);
-            	monster.setMapPosition(monster.getMapPosition().add(moveDown));
+            	monster.setMapPosition(monster.getMapPosition().add(moveDown));	
+            	map.update(moveDown);
 
 
                 Gdx.app.log("touchDown", "bottom of screen");
             }else{
             	monster.setDirection(Direction.LEFT);
             	monster.setMapPosition(monster.getMapPosition().add(moveLeft));
+            	map.update(moveLeft);
 
                 Gdx.app.log("touchDown", "left of screen");
             }

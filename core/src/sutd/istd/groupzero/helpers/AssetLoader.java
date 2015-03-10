@@ -14,11 +14,12 @@ public class AssetLoader {
 	public static TextureRegion gridBg;
 	public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
 	public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
-	
+	public static Texture tree;
 	public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
 	public static void load(){
 		source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
 		texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
+		tree = new Texture(Gdx.files.internal("data/tree.png"));
 		
 		monsterUp = texture[3][0];
 		monsterDown = texture[0][0];

@@ -5,6 +5,7 @@ import sutd.istd.groupzero.gameobjects.Monster;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class GameWorld {
 	private Map map;
@@ -16,7 +17,7 @@ public class GameWorld {
 		monster = map.getMonster();
 	}
 	public void update(float delta) {
-		map.update();
+		map.update(new Vector2(0,0));
         monster.update(delta);
     }
 	

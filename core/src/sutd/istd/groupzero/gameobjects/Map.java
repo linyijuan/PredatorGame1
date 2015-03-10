@@ -12,8 +12,8 @@ public class Map{
     //generate random maze every time here - algorithm part
     //need to figure out the way to create and index the grids - easier to refer
     //coordinate system: (0,0) at top left of screen and goes positive from top left to bot right
-    private int mapSizeX = 32;  // Not too sure of this value yet
-    private int mapSizeY = 32; // Same as for X
+    private int mapSizeX = 600;  // Not too sure of this value yet
+    private int mapSizeY = 600; // Same as for X
     float screenWidth;
     float screenHeight;
     private int noOfObstacles = 10;
@@ -23,9 +23,16 @@ public class Map{
     private int obstacleCountBoulders = 0;
     private int foodCount = 0;
     private int powerUpCount = 0;
-    private ArrayList<Vector2> vector2List = new ArrayList<Vector2>();
-    private ArrayList<Obstacles> obstaclesList = new ArrayList<Obstacles>();
-    private ArrayList<Food> foodList = new ArrayList<Food>();
+    private ArrayList<Vector2> vector2List = new ArrayList<Vector2>();//marks occupied spots
+    private ArrayList<Tree> treeList = new ArrayList<Tree>();
+    public ArrayList<Tree> getTreeList() {
+		return treeList;
+	}
+
+	public void setTreeList(ArrayList<Tree> treeList) {
+		this.treeList = treeList;
+	}
+	private ArrayList<Food> foodList = new ArrayList<Food>();
     private ArrayList<PowerUps> powerUpsList = new ArrayList<PowerUps>();
     private Random r = new Random();
     private Monster monster;
@@ -41,7 +48,7 @@ public class Map{
     }
     
     private void generateObstacles() {
-        while(obstacleCountTrees < noOfObstacles/2) {
+        while(obstacleCountTrees < 7) {
             //creates noOfObstacles trees
             int x = r.nextInt(mapSizeX);
             int y = r.nextInt(mapSizeY);
@@ -49,24 +56,26 @@ public class Map{
             if (vector2List.contains(positionVector)){
                 continue;
             }else {
-                obstaclesList.add(new Tree(positionVector));
+//                obstaclesList.add(new Tree(positionVector));
+                treeList.add(new Tree(positionVector));
                 vector2List.add(positionVector);
+                Gdx.app.log("tree pos vector ", positionVector.toString());
                 obstacleCountTrees++;
             }
         }
-        while(obstacleCountBoulders < noOfObstacles/2) {
-            //creates noOfObstacles trees
-            int x = r.nextInt(mapSizeX);
-            int y = r.nextInt(mapSizeY);
-            Vector2 positionVector = new Vector2(x,y);
-            if (vector2List.contains(positionVector)){
-                continue;
-            }else {
-                obstaclesList.add(new Boulder(positionVector));
-                vector2List.add(positionVector);
-                obstacleCountBoulders++;
-            }
-        }
+//        while(obstacleCountBoulders < noOfObstacles/2) {
+//            //creates noOfObstacles trees
+//            int x = r.nextInt(mapSizeX);
+//            int y = r.nextInt(mapSizeY);
+//            Vector2 positionVector = new Vector2(x,y);
+//            if (vector2List.contains(positionVector)){
+//                continue;
+//            }else {
+//                obstaclesList.add(new Boulder(positionVector));
+//                vector2List.add(positionVector);
+//                obstacleCountBoulders++;
+//            }
+//        }
     }
 
     private void genFood() {
@@ -103,10 +112,6 @@ public class Map{
     }
 
 
-    public ArrayList<Obstacles> getObstaclesList() {
-        return obstaclesList;
-    }
-
     public ArrayList<PowerUps> getPowerUpsList() {
         return powerUpsList;
     }
@@ -132,6 +137,13 @@ public class Map{
         generateObstacles();
         genFood();
         genPowerUps();
+        Gdx.app.log("Init", "Init Completed Map.java");
+        
+        
+        for(int i = 0 ; i < treeList.size(); i++)
+        {
+        	Gdx.app.log(treeList.get(i).toString(), treeList.get(i).getPosition().x + " "+ treeList.get(i).getPosition().y);
+        }
     }
 
     //use tree and something else as attributes here to represent the obstacles
@@ -143,6 +155,14 @@ public class Map{
     public Monster getMonster(){
     	return monster;
     }
-    public void update(){}
+    
+    //
+    public void update(Vector2 posDif)
+    {
+    	for(Tree tree : treeList)
+    	{
+    		tree.setPosition(tree.getPosition().add(posDif));
+    	}
+    }
     public void onTap(int direction){}
 }
