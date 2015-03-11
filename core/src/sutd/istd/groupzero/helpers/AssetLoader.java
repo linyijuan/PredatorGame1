@@ -19,7 +19,7 @@ public class AssetLoader {
 	public static void load(){
 		source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
 		texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
-		tree = new Texture(Gdx.files.internal("data/tree.png"));
+		tree = new Texture(Gdx.files.internal("data/treesmall.png"));
 		
 		monsterUp = texture[3][0];
 		monsterDown = texture[0][0];

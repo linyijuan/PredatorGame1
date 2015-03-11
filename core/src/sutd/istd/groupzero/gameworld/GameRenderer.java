@@ -49,7 +49,7 @@ public class GameRenderer {
         shapeRenderer.setProjectionMatrix(cam.combined);
         Gdx.app.log("Screen Height and Width ", screenWidth + "  " + screenHeight);
         
-        gridBg = new Texture(Gdx.files.internal("data/gridBg.jpg"));
+        gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
         Gdx.app.log(grid.toString(),(gridBg.getWidth()/10f) * 3 +" " + (gridBg.getHeight()/10f) * 6);
         
