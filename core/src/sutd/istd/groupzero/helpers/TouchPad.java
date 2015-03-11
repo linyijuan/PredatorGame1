@@ -74,10 +74,10 @@ public class TouchPad {
 
 
 		this.monster = gameWorld.getMap().getMonster();
-		moveUp = new Vector2(0, 0.01f);
-		moveDown = new Vector2(0, -0.01f);
-		moveLeft = new Vector2(0.01f, 0);
-		moveRight = new Vector2(-0.01f, 0);
+		moveUp = new Vector2(0, 0.005f);
+		moveDown = new Vector2(0, -0.005f);
+		moveLeft = new Vector2(0.005f, 0);
+		moveRight = new Vector2(-0.005f, 0);
 		this.map = gameWorld.getMap();
 		speed = 0.1f;
 	}

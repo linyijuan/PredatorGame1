@@ -117,13 +117,9 @@ public class GameRenderer {
         {
 //        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
 
-        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 0.2f, 0.2f, -180f);
+        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 1f, 1f, -180f);
         }
        
-      
-        
-        
-        
     
         batcher.disableBlending();
         batcher.end();
