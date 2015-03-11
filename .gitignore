@@ -1,1 +1,10 @@
 /build/
+*.lock
+*.bin
+*.bin
+*.lock
+local.properties
+*.class
+PredatorGameFolder.ipr
+*.class
+local.properties

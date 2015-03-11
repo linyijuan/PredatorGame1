@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="PredatorGame1" external.system.module.version="1.0" type="JAVA_MODULE" version="4">
-=======
-<module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="Original" external.system.module.version="1.0" type="JAVA_MODULE" version="4">
->>>>>>> 0b03fa6d8162f55c0cae545271878994453e44f1
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -20,10 +16,7 @@
         <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateDebugTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
-<<<<<<< HEAD
         <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/res" />
-=======
->>>>>>> 0b03fa6d8162f55c0cae545271878994453e44f1
       </configuration>
     </facet>
   </component>
@@ -87,6 +80,8 @@
     <orderEntry type="jdk" jdkName="Android API 20 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gdx-1.5.4" level="project" />
+    <orderEntry type="library" exported="" name="tween-engine-api" level="project" />
+    <orderEntry type="library" exported="" name="tween-engine-api-sources" level="project" />
     <orderEntry type="library" exported="" name="gdx-box2d-1.5.4" level="project" />
     <orderEntry type="library" exported="" name="gdx-backend-android-1.5.4" level="project" />
     <orderEntry type="module" module-name="core" exported="" />

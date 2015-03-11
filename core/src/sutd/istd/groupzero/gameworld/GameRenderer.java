@@ -8,15 +8,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 
-import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
-import sutd.istd.groupzero.helpers.*;
+import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
 	private float screenWidth;
@@ -73,7 +70,6 @@ public class GameRenderer {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     	//Gdx.app.log("Screen Height", "Screen Width :" + screenWidth+ "  ScreenHeight :"+ screenHeight);
-
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
@@ -120,11 +116,11 @@ public class GameRenderer {
 			break;
 		}
        
-        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList())
-        {
-        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
-        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 0.2f, 0.2f, -180f);
-        }
+//        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList())
+//        {
+//        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
+//        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 0.2f, 0.2f, -180f);
+//        }
         
         
         
