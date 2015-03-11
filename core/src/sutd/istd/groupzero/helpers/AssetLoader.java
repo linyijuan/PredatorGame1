@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
 
 public class AssetLoader {
@@ -18,7 +19,7 @@ public class AssetLoader {
 	public static void load(){
 		source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
 		texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
-//		tree = new Texture(Gdx.files.internal("data/tree.png"));
+		tree = new Texture(Gdx.files.internal("data/tree.png"));
 		
 		monsterUp = texture[3][0];
 		monsterDown = texture[0][0];
@@ -29,10 +30,14 @@ public class AssetLoader {
 			for (TextureRegion tt: t)
 				tt.flip(false, true);
 		
-		upAnimation = new Animation(0.5f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
-		downaAnimation = new Animation(0.5f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
-		leftaAnimation = new Animation(0.5f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
-		rightaAnimation = new Animation(0.5f,new TextureRegion[] {monsterRight,texture[1][1],monsterRight,texture[1][2]});
+		upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
+		downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
+		leftaAnimation = new Animation(0.15f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
+		rightaAnimation = new Animation(0.15f,new TextureRegion[] {monsterRight,texture[1][1],monsterRight,texture[1][2]});
+		upAnimation.setPlayMode(PlayMode.LOOP);
+		downaAnimation.setPlayMode(PlayMode.LOOP);
+		leftaAnimation.setPlayMode(PlayMode.LOOP);
+		rightaAnimation.setPlayMode(PlayMode.LOOP);
 
 	}
 	public static void dispose(){

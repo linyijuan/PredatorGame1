@@ -40,7 +40,7 @@ public class Monster {
 
 	public enum Direction
 	{
-		TOP, RIGHT, LEFT, BOTTOM;
+		TOP, RIGHT, LEFT, BOTTOM, STATIONARY_TOP, STATIONARY_LEFT,STATIONARY_RIGHT,STATIONARY_BOTTOM;
 		
 		
 
@@ -59,10 +59,27 @@ public class Monster {
 			{
 				return 2;
 			}
-			else 
+			else if(this.equals(BOTTOM))
 			{
 				return 3;
 			}
+			else if(this.equals(STATIONARY_TOP))
+			{
+				return 6;
+			}
+			else if(this.equals(STATIONARY_LEFT))
+			{
+				return 5;
+			}
+			else if(this.equals(STATIONARY_RIGHT))
+			{
+				return 7;
+			}
+			else if(this.equals(STATIONARY_BOTTOM))
+			{
+				return 8;
+			}
+			return 10;
 		}
 	}
 		

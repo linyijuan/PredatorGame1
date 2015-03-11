@@ -62,7 +62,10 @@ public class Map{
                 Gdx.app.log("tree pos vector ", positionVector.toString());
                 obstacleCountTrees++;
             }
+            
+            
         }
+        
 //        while(obstacleCountBoulders < noOfObstacles/2) {
 //            //creates noOfObstacles trees
 //            int x = r.nextInt(mapSizeX);

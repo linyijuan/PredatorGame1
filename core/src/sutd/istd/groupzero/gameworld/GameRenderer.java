@@ -76,7 +76,6 @@ public class GameRenderer {
         Vector2 mapPos = myMonster.getMapPosition();
         
       
-      
         
         switch (d) {
 		case TOP:
@@ -103,22 +102,25 @@ public class GameRenderer {
 			break;
 		case BOTTOM:
 			batcher.draw(gridBg, mapPos.x, mapPos.y);
-			
-        	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);       
+        	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);   
 			break;
 
 		default:
 			batcher.draw(gridBg, mapPos.x, mapPos.y);
-        	batcher.draw(directionSet[myMonster.getDirection().getKeycode()],90,180);
+        	batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],90,180);
 
 			break;
 		}
-       
-//        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList())
-//        {
+        
+
+        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList())
+        {
 //        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
-//        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 0.2f, 0.2f, -180f);
-//        }
+
+        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 0.2f, 0.2f, -180f);
+        }
+       
+      
         
         
         
