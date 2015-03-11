@@ -40,11 +40,11 @@ public class GameScreen implements Screen{
         
         
         ///test
-//        stage = new TouchPad(15f, 15f, 200f, 200f, world).createTouchPad();
-//       
-//        Gdx.input.setInputProcessor(stage);
+        stage = new TouchPad(15f, 15f, 200f, 200f, world).createTouchPad();
+       
+        Gdx.input.setInputProcessor(stage);
         
-        Gdx.input.setInputProcessor(new InputHandler(world,screenWidth, screenHeight));
+//        Gdx.input.setInputProcessor(new InputHandler(world,screenWidth, screenHeight));
     }
 
 	@Override
@@ -52,7 +52,7 @@ public class GameScreen implements Screen{
 		runTime += delta;
         world.update(delta);
         renderer.render(runTime);
-//        stage.draw();       
+        stage.draw();       
     }
 
     @Override

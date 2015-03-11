@@ -108,6 +108,8 @@ public class GameRenderer {
 		case BOTTOM:
 			batcher.draw(gridBg, mapPos.x, mapPos.y);
 			
+			
+			
         	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);       
 			break;
 

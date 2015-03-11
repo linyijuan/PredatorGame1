@@ -18,13 +18,8 @@ public class Monster {
 		return direction;
 	}
 
-
-
-
 	private float screenWidth, screenHeight;
 	
-	
-
 	private Vector2 mapPosition;
 	
 	public Vector2 getMapPosition() {

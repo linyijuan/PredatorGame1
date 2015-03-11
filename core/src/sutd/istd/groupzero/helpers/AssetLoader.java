@@ -30,10 +30,10 @@ public class AssetLoader {
 			for (TextureRegion tt: t)
 				tt.flip(false, true);
 		
-		upAnimation = new Animation(0.3f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
-		downaAnimation = new Animation(0.3f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
-		leftaAnimation = new Animation(0.3f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
-		rightaAnimation = new Animation(0.3f,new TextureRegion[] {monsterRight,texture[1][1],monsterRight,texture[1][2]});
+		upAnimation = new Animation(0.5f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
+		downaAnimation = new Animation(0.5f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
+		leftaAnimation = new Animation(0.5f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
+		rightaAnimation = new Animation(0.5f,new TextureRegion[] {monsterRight,texture[1][1],monsterRight,texture[1][2]});
 
 	}
 	public static void dispose(){
