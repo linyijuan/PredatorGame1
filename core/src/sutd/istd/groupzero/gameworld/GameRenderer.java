@@ -10,9 +10,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
+import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
@@ -118,6 +120,14 @@ public class GameRenderer {
 //        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
 
         	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 1f, 1f, -180f);
+        }
+
+        for(PowerUps p: myMap.getPowerUpsList()){
+            batcher.draw(new TextureRegion(AssetLoader.powerUp),p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getWidth(), AssetLoader.powerUp.getHeight(), 1f, 1f, 180f);
+        }
+
+        for(Food s:myMap.getFoodList()){
+            batcher.draw(new TextureRegion(AssetLoader.steak),s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getWidth(), AssetLoader.steak.getHeight(), 1f, 1f, 180f);
         }
        
     

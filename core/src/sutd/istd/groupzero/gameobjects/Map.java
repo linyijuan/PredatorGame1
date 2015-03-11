@@ -166,6 +166,12 @@ public class Map{
     	{
     		tree.setPosition(tree.getPosition().add(posDif));
     	}
+        for (PowerUps p:powerUpsList){
+            p.setPosition(p.getPosition().add(posDif));
+        }
+        for (Food f:foodList){
+            f.setPosition(f.getPosition().add(posDif));
+        }
     }
     public void onTap(int direction){}
 }

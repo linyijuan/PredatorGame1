@@ -15,12 +15,16 @@ public class AssetLoader {
 	public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
 	public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
 	public static Texture tree;
+    public static Texture steak;
+    public static Texture powerUp;
 	public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
 	public static void load(){
 		source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
 		texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
 		tree = new Texture(Gdx.files.internal("data/treesmall.png"));
-		
+		steak = new Texture(Gdx.files.internal("data/steak.png"));
+        powerUp = new Texture(Gdx.files.internal("data/powerupsmall.png"));
+
 		monsterUp = texture[3][0];
 		monsterDown = texture[0][0];
 		monsterLeft = texture[2][0];
@@ -30,6 +34,7 @@ public class AssetLoader {
 			for (TextureRegion tt: t)
 				tt.flip(false, true);
 		
+
 		upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
 		downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
 		leftaAnimation = new Animation(0.15f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
@@ -38,15 +43,15 @@ public class AssetLoader {
 		downaAnimation.setPlayMode(PlayMode.LOOP);
 		leftaAnimation.setPlayMode(PlayMode.LOOP);
 		rightaAnimation.setPlayMode(PlayMode.LOOP);
-		upAnimation = new Animation(0.05f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
-		downaAnimation = new Animation(0.05f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
-		leftaAnimation = new Animation(0.05f,new TextureRegion[] {monsterLeft,texture[2][1],monsterLeft,texture[2][2]});
-		rightaAnimation = new Animation(0.05f,new TextureRegion[] {monsterRight,texture[1][1],monsterRight,texture[1][2]});
+
 
 
 	}
 	public static void dispose(){
 		source.dispose();
+        tree.dispose();
+        steak.dispose();
+        powerUp.dispose();
 	}
 	
 }
