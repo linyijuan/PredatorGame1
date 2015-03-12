@@ -90,8 +90,8 @@ public class Monster {
         this.direction = direction1;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.myPosition = new Vector2(90,180);
-        this.original = new Vector2(90,180);
+        this.myPosition = new Vector2(0,0);
+        this.original = new Vector2(0,0);
         this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
         this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);

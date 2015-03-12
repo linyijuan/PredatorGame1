@@ -83,12 +83,14 @@ public class GameRenderer {
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
         for(PowerUps p: myMap.getPowerUpsList()){
-                batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
-
+            if (p.shouldShow()) {
+                batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+            }
         }
         for(Food s:myMap.getFoodList()){
+            if (s.shouldShow()) {
                 batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
-
+            }
         }
 
         switch (d) {

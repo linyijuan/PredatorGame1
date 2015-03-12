@@ -3,9 +3,11 @@ package sutd.istd.groupzero.helpers;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
+import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.gameworld.GameWorld;
 
@@ -41,13 +43,13 @@ public class TouchPad {
 	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld) {
 		touchpadSkin = new Skin();
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
-		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob.png")));
+		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
-		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(10, touchpadStyle);
+		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(20, touchpadStyle);
 		touchpad.setBounds(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -56,10 +58,10 @@ public class TouchPad {
 		this.monster = gameWorld.getMap().getMonster();
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();
-		moveUp = new Vector2(0, -0.001f);
-		moveDown = new Vector2(0, 0.001f);
-		moveLeft = new Vector2(-0.001f, 0);
-		moveRight = new Vector2(0.001f, 0);
+		moveUp = new Vector2(0, -0.008f);
+		moveDown = new Vector2(0, 0.008f);
+		moveLeft = new Vector2(-0.008f, 0);
+		moveRight = new Vector2(0.008f, 0);
 	}
 
 
@@ -78,6 +80,7 @@ public class TouchPad {
                         while(touchUp == false){
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
+                            Gdx.app.log("X , Y", x + " " + y);
                             if ((x >= 65 && x < 165) && (y >= 160)) {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
@@ -85,10 +88,10 @@ public class TouchPad {
                                     if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
                                     .getBound().getHeight()), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveDown));
-
                                         break;
                                     }
                                 }
+
                             } else if ((x >= 65 && x <= 165) && (y <= 50)) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
@@ -124,6 +127,18 @@ public class TouchPad {
                                     }
                                 }
                             }
+                            for (Food f: map.getFoodList()){
+                                if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                        .getBound().getHeight()), f.getBound())){
+                                    f.setShouldShow(false);
+                                }
+                            }
+                            for (PowerUps p: map.getPowerUpsList()){
+                                if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                        .getBound().getHeight()), p.getBound())){
+                                    p.setShouldShow(false);
+                                }
+                            }
                         }
                         Direction d = monster.getDirection();
                         switch (d) {
@@ -148,6 +163,7 @@ public class TouchPad {
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {touchUp = true;}
         });
+
 		return stage;
 	}
 

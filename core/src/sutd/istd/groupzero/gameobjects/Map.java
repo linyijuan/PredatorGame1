@@ -16,7 +16,7 @@ public class Map{
     private int mapSizeY = 960; // Same as for X
     float screenWidth;
     float screenHeight;
-    private int noOfObstacles = 10;
+    private int noOfObstacles = 20;
     private int noOfFood=5;
     private int noOfPowerUps=3;
     private int obstacleCountTrees = 0;
@@ -28,7 +28,7 @@ public class Map{
     public ArrayList<Tree> getTreeList() {
         return treeList;
     }
-
+    private ArrayList<Rectangle2D> rectangleList = new ArrayList<Rectangle2D>();
     public void setTreeList(ArrayList<Tree> treeList) {
         this.treeList = treeList;
     }
@@ -45,49 +45,82 @@ public class Map{
     }
 
     private void generateObstacles() {
-        while(obstacleCountTrees < 7) {
+        boolean toPlace;
+        while(obstacleCountTrees < noOfObstacles) {
+            toPlace = true;
             //creates noOfObstacles trees
-            int x = cap(24,mapSizeX-183);
-            int y = cap(24,mapSizeY-183);
+            int x = cap(0,mapSizeX-52);
+            int y = cap(0,mapSizeY-52);
             Vector2 positionVector = new Vector2(x,y);
-            if (vector2List.contains(positionVector)){
-                continue;
-            }else {
+            Rectangle2D rect = new Rectangle2D(x, y, 52.0f, 52.0f); // Possible optimization here
+            for (int i=0; i<rectangleList.size(); i++){
+                Rectangle2D currRect = rectangleList.get(i);
+                if (rect.overlaps(currRect) || rect.contains(currRect) || currRect.overlaps(rect) || currRect.contains(rect)){
+                    toPlace = false;
+                    break;
+                }
+
+            }
+            if (toPlace){
                 treeList.add(new Tree(positionVector));
                 vector2List.add(positionVector);
+                rectangleList.add(rect);
+                Gdx.app.log("tree pos vector ", positionVector.toString());
                 obstacleCountTrees++;
             }
+
         }
+
     }
 
     private void genFood() {
+        boolean toPlace;
         while(foodCount < noOfFood) {
+            toPlace = true;
             //creates noOfObstacles trees
-            int x = cap(24,mapSizeX-24);
-            int y = cap(24,mapSizeY-24);
+            int x = cap(0,mapSizeX-30);
+            int y = cap(0,mapSizeY-21);
 
             Vector2 positionVector = new Vector2(x,y);
-            if (vector2List.contains(positionVector)){
-                continue;
-            }else {
+            Rectangle2D rect = new Rectangle2D(x, y, 30.0f, 21.0f); // Possible optimization here
+            for (int i=0; i<rectangleList.size(); i++){
+                Rectangle2D currRect = rectangleList.get(i);
+                if (rect.overlaps(currRect) || rect.contains(currRect) || currRect.overlaps(rect) || currRect.contains(rect)){
+                    toPlace = false;
+                    break;
+                }
+            }
+            if (toPlace){
                 foodList.add(new Food(positionVector));
                 vector2List.add(positionVector);
+                rectangleList.add(rect);
+                Gdx.app.log("food pos vector ", positionVector.toString());
                 foodCount++;
             }
         }
     }
 
     private void genPowerUps(){
+        boolean toPlace;
         while(powerUpCount < noOfPowerUps) {
+            toPlace = true;
             //creates noOfObstacles trees
-            int x = cap(24,mapSizeX-24);
-            int y = cap(24,mapSizeY-24);
+            int x = cap(0,mapSizeX-22);
+            int y = cap(0,mapSizeY-21);
             Vector2 positionVector = new Vector2(x,y);
-            if (vector2List.contains(positionVector)){
-                continue;
-            }else {
+            Rectangle2D rect = new Rectangle2D(x, y, 22.0f, 21.0f); // Possible optimization here
+            for (int i=0; i<rectangleList.size(); i++){
+                Rectangle2D currRect = rectangleList.get(i);
+                if (rect.overlaps(currRect) || rect.contains(currRect) || currRect.overlaps(rect) || currRect.contains(rect)){
+                    toPlace = false;
+                    break;
+                }
+            }
+            if (toPlace) {
                 powerUpsList.add(new PowerUps(positionVector));
                 vector2List.add(positionVector);
+                rectangleList.add(rect);
+                Gdx.app.log("power up pos vector ", positionVector.toString());
                 powerUpCount++;
             }
         }

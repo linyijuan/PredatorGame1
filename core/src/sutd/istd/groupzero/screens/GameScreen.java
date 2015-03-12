@@ -18,11 +18,11 @@ public class GameScreen implements Screen{
 	private Stage stage;
 	
 	public GameScreen() {
-		screenWidth = 180;
-		screenHeight = 360;
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
         world = new GameWorld(screenWidth, screenHeight);
         renderer = new GameRenderer(world, screenWidth, screenHeight);
-        stage = new TouchPad(15f, 15f, 200f, 200f, world).createTouchPad();
+        stage = new TouchPad(screenWidth/2, 15f, 200f, 200f, world).createTouchPad();
         Gdx.input.setInputProcessor(stage);
     }
 
