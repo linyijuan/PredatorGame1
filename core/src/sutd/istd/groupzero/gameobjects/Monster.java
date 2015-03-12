@@ -2,13 +2,13 @@ package sutd.istd.groupzero.gameobjects;
 
 
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
+import sutd.istd.groupzero.helpers.AssetLoader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Monster {
-
     private int speed;
     private Direction direction;
     public void setDirection(Direction direction) {
@@ -17,6 +17,7 @@ public class Monster {
     private Rectangle bound;
     private float boundWidth;
     private float boundHeight;
+    public Rectangle getBound(){return bound;}
     public Direction getDirection() {
         return direction;
     }
@@ -33,23 +34,19 @@ public class Monster {
     public void setMapPosition(Vector2 mapPosition) {
         this.mapPosition = mapPosition;
     }
-    public void setMyPosition(Vector2 myPosition){this.myPosition = myPosition;}
+    public void setMyPosition(Vector2 myPosition){
+        this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
+        this.myPosition = myPosition;
+    }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return "this monster is at" + this.mapPosition.x + ", " + this. mapPosition.y;
     }
 
-    public enum Direction
-    {
+    public enum Direction{
         TOP, RIGHT, LEFT, BOTTOM, STATIONARY_TOP, STATIONARY_LEFT,STATIONARY_RIGHT,STATIONARY_BOTTOM;
-
-
-
         public int getKeycode() {
-            // TODO Auto-generated method stub
-
             if(this.equals(TOP))
             {
                 return 1;
@@ -95,6 +92,9 @@ public class Monster {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.myPosition = new Vector2(90,180);
+        this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
+        this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
+        this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
     }
 
 

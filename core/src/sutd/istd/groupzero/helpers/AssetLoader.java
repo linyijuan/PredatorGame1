@@ -26,16 +26,13 @@ public class AssetLoader {
         powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
         powerUp.flip(false,true);
 
-
+        for (TextureRegion[] t:texture)
+            for (TextureRegion tt: t)
+                tt.flip(false, true);
         monsterUp = texture[3][0];
         monsterDown = texture[0][0];
         monsterLeft = texture[2][0];
         monsterRight = texture[1][0];
-
-        for (TextureRegion[] t:texture)
-            for (TextureRegion tt: t)
-                tt.flip(false, true);
-
 
         upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
         downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});

@@ -77,46 +77,6 @@ public class InputHandler implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		
-
-		
-		//use user's position to determine the direction to go
-		//call method inside Map to determine the movement
-        // Debugging purposes
-        Gdx.app.log("touchDown", "User touched down at X: " + screenX + " Y: " + screenY);
-        
-        
-        if ((screenX/screenY) >= layer1){
-            if (((screenY-screenHeight)/screenX) <= layer2){
-            	monster.setDirection(Direction.TOP);
-            	monster.setMapPosition(monster.getMapPosition().add(moveUp));
-            	map.update(moveUp);
-
-                Gdx.app.log("touchDown", "top of screen");
-            }else{
-            	monster.setMapPosition(monster.getMapPosition().add(moveRight));
-            	monster.setDirection(Direction.RIGHT);
-            	map.update(moveRight);
-
-                Gdx.app.log("touchDown", "right of screen");
-            }
-        }else{
-            if (((screenY-screenHeight)/screenX) >= layer2){
-            	monster.setDirection(Direction.BOTTOM);
-            	monster.setMapPosition(monster.getMapPosition().add(moveDown));	
-            	map.update(moveDown);
-
-
-                Gdx.app.log("touchDown", "bottom of screen");
-            }else{
-            	monster.setDirection(Direction.LEFT);
-            	monster.setMapPosition(monster.getMapPosition().add(moveLeft));
-            	map.update(moveLeft);
-
-                Gdx.app.log("touchDown", "left of screen");
-            }
-        }
-
 		return false;
 	}
             

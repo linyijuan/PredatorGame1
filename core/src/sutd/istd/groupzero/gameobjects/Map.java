@@ -12,8 +12,8 @@ public class Map{
     //generate random maze every time here - algorithm part
     //need to figure out the way to create and index the grids - easier to refer
     //coordinate system: (0,0) at top left of screen and goes positive from top left to bot right
-    private int mapSizeX = 600;  // Not too sure of this value yet
-    private int mapSizeY = 600; // Same as for X
+    private int mapSizeX = 540;  // Not too sure of this value yet
+    private int mapSizeY = 960; // Same as for X
     float screenWidth;
     float screenHeight;
     private int noOfObstacles = 10;
@@ -50,8 +50,8 @@ public class Map{
     private void generateObstacles() {
         while(obstacleCountTrees < 7) {
             //creates noOfObstacles trees
-            int x = r.nextInt(mapSizeX);
-            int y = r.nextInt(mapSizeY);
+            int x = cap(24,mapSizeX-183);
+            int y = cap(24,mapSizeY-183);
             Vector2 positionVector = new Vector2(x,y);
             if (vector2List.contains(positionVector)){
                 continue;
@@ -84,8 +84,9 @@ public class Map{
     private void genFood() {
         while(foodCount < noOfFood) {
             //creates noOfObstacles trees
-            int x = r.nextInt(mapSizeX);
-            int y = r.nextInt(mapSizeY);
+            int x = cap(24,mapSizeX-24);
+            int y = cap(24,mapSizeY-24);
+
             Vector2 positionVector = new Vector2(x,y);
             if (vector2List.contains(positionVector)){
                 continue;
@@ -100,8 +101,8 @@ public class Map{
     private void genPowerUps(){
         while(powerUpCount < noOfPowerUps) {
             //creates noOfObstacles trees
-            int x = r.nextInt(mapSizeX);
-            int y = r.nextInt(mapSizeY);
+            int x = cap(24,mapSizeX-24);
+            int y = cap(24,mapSizeY-24);
             Vector2 positionVector = new Vector2(x,y);
             if (vector2List.contains(positionVector)){
                 continue;
@@ -135,6 +136,16 @@ public class Map{
         this.noOfPowerUps = noOfPowerUps;
     }
 
+    public int cap(int min, int max)
+    {
+        int  x = r.nextInt();
+        while(x > max || x < min)
+        {
+            x = r.nextInt(max);
+        }
+        return x;
+    }
+
     private void Init()
     {
         generateObstacles();
@@ -159,21 +170,6 @@ public class Map{
         return monster;
     }
 
-    //
-    public void update(Vector2 posDif)
-    {
-        for(Tree tree : treeList)
-        {
-            tree.setPosition(tree.getPosition().add(posDif));
-        }
-        for (PowerUps p:powerUpsList){
-            p.setPosition(p.getPosition().add(posDif));
-        }
-        for (Food f:foodList){
-            f.setPosition(f.getPosition().add(posDif));
-        }
-
-    }
     public boolean canMove(){
 
         return true;

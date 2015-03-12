@@ -17,7 +17,6 @@ public class GameWorld {
 		monster = map.getMonster();
 	}
 	public void update(float delta) {
-		map.update(new Vector2(0,0));
         monster.update(delta);
     }
 	

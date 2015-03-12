@@ -83,7 +83,16 @@ public class GameRenderer {
         cam.update();
         batcher.setProjectionMatrix(cam.combined);
         batcher.draw(gridBg, 0, 0);
-
+        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList()){
+            batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
+        }
+        for(PowerUps p: myMap.getPowerUpsList()){
+            batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+        }
+        for(Food s:myMap.getFoodList()){
+            batcher.draw(AssetLoader.steak,s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+        }
+        
         switch (d) {
             case TOP:
                 batcher.draw(animationSet[1].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
@@ -97,42 +106,18 @@ public class GameRenderer {
             case BOTTOM:
                 batcher.draw(animationSet[3].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
-
             default:
                 batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
         }
-
-
-        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList()){
-            batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
-        }
-
-
-        for(PowerUps p: myMap.getPowerUpsList()){
-            batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
-        }
-
-        for(Food s:myMap.getFoodList()){
-            batcher.draw(AssetLoader.steak,s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
-        }
-
-
         batcher.disableBlending();
         batcher.end();
 
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
-//        for(Tree tree : myMap.getTreeList()){
-//            shapeRenderer.rect(tree.getBound().x,tree.getBound().y,tree.getBound().width,tree.getBound().height);
-//        }
-//        for(PowerUps p: myMap.getPowerUpsList()){
-//            shapeRenderer.rect(p.getBound().x,p.getBound().y,p.getBound().width,p.getBound().height);
-//        }
-//        for(Food s:myMap.getFoodList()){
-//            shapeRenderer.rect(s.getBound().x,s.getBound().y,s.getBound().width,s.getBound().height);
-//        }
+        shapeRenderer.setProjectionMatrix(cam.combined);
+//        shapeRenderer.rect(myMonster.getBound().x,myMonster.getBound().y,myMonster.getBound().width,myMonster.getBound().height);
         shapeRenderer.end();
     }
 
