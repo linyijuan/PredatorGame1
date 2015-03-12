@@ -74,10 +74,10 @@ public class TouchPad {
 
 
 		this.monster = gameWorld.getMap().getMonster();
-		moveUp = new Vector2(0, 0.003f);
-		moveDown = new Vector2(0, -0.003f);
-		moveLeft = new Vector2(0.003f, 0);
-		moveRight = new Vector2(-0.003f, 0);
+		moveUp = new Vector2(0, 0.001f);
+		moveDown = new Vector2(0, -0.001f);
+		moveLeft = new Vector2(0.001f, 0);
+		moveRight = new Vector2(-0.001f, 0);
 		this.map = gameWorld.getMap();
 		speed = 0.1f;
 	}
@@ -109,29 +109,18 @@ public class TouchPad {
 						{
 							float x = touchpad.getKnobX();
 							float y = touchpad.getKnobY();
-//							Gdx.app.log("touchdragged", x + "  " + y);
-//							Gdx.app.log("PERCENT", touchpad.getKnobPercentX() + " " + touchpad.getKnobPercentY());
 							if ((x >= 65 && x < 165) && (y >= 160)) {
-								Gdx.app.log("TOP", "TOP");
 								monster.setDirection(Direction.TOP);
-								monster.setMapPosition(monster.getMapPosition().add(moveUp));
-								map.update(moveUp);
+                                monster.setMyPosition(monster.getMyPosition().add(moveDown));
 							} else if ((x >= 65 && x <= 165) && (y <= 50)) {
-								Gdx.app.log("BOTTOM", "BOTTOM");
 								monster.setDirection(Direction.BOTTOM);
-								monster.setMapPosition(monster.getMapPosition().add(moveDown));
-				
-								map.update(moveDown);
+                                monster.setMyPosition(monster.getMyPosition().add(moveUp));
 							} else if ((x < 100) && (y <= 160)) {
-								Gdx.app.log("LEFT", "LEFT");
 								monster.setDirection(Direction.LEFT);
-								monster.setMapPosition(monster.getMapPosition().add(moveLeft));
-								map.update(moveLeft);
+                                monster.setMyPosition(monster.getMyPosition().add(moveRight));
 							} else if ((x > 100) && (y > 65 && y < 165)) {
-								Gdx.app.log("RIGHT", "RIGHT");
-								monster.setMapPosition(monster.getMapPosition().add(moveRight));
-								monster.setDirection(Direction.RIGHT);
-								map.update(moveRight);
+                                monster.setDirection(Direction.RIGHT);
+                                monster.setMyPosition(monster.getMyPosition().add(moveLeft));
 							}
 						}
 						Gdx.app.log(monster.getDirection().toString() , monster.getDirection().toString());
@@ -187,29 +176,22 @@ public class TouchPad {
 			{
 				float x = touchpad.getKnobX();
 				float y = touchpad.getKnobY();
-//				Gdx.app.log("touchdragged", x + "  " + y);
-//				Gdx.app.log("PERCENT", touchpad.getKnobPercentX() + " " + touchpad.getKnobPercentY());
 				if ((x >= 65 && x < 165) && (y >= 160)) {
 					Gdx.app.log("TOP", "TOP");
 					monster.setDirection(Direction.TOP);
-					monster.setMapPosition(monster.getMapPosition().add(moveUp));
-					map.update(moveUp);
+                    monster.setMyPosition(monster.getMyPosition().add(moveDown));
 				} else if ((x >= 65 && x <= 165) && (y <= 50)) {
 					Gdx.app.log("BOTTOM", "BOTTOM");
 					monster.setDirection(Direction.BOTTOM);
-					monster.setMapPosition(monster.getMapPosition().add(moveDown));
-	
-					map.update(moveDown);
+                    monster.setMyPosition(monster.getMyPosition().add(moveUp));
 				} else if ((x < 100) && (y <= 160)) {
 					Gdx.app.log("LEFT", "LEFT");
 					monster.setDirection(Direction.LEFT);
-					monster.setMapPosition(monster.getMapPosition().add(moveLeft));
-					map.update(moveLeft);
+                    monster.setMyPosition(monster.getMyPosition().add(moveRight));
 				} else if ((x > 100) && (y > 65 && y < 165)) {
 					Gdx.app.log("RIGHT", "RIGHT");
-					monster.setMapPosition(monster.getMapPosition().add(moveRight));
-					monster.setDirection(Direction.RIGHT);
-					map.update(moveRight);
+                    monster.setDirection(Direction.RIGHT);
+                    monster.setMyPosition(monster.getMyPosition().add(moveLeft));
 				}
 			}
 			Gdx.app.log(monster.getDirection().toString() , monster.getDirection().toString());

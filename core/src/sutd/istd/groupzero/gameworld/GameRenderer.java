@@ -79,40 +79,27 @@ public class GameRenderer {
         Direction d = myMonster.getDirection();
         Vector2 mapPos = myMonster.getMapPosition();
 
-
+        cam.position.set(myMonster.getMyPosition(),0);
+        cam.update();
+        batcher.setProjectionMatrix(cam.combined);
+        batcher.draw(gridBg, 0, 0);
 
         switch (d) {
             case TOP:
-                batcher.draw(gridBg, mapPos.x, mapPos.y);
-
-                batcher.draw(animationSet[1].getKeyFrame(runTime),90,180);
-
+                batcher.draw(animationSet[1].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
             case LEFT:
-
-                batcher.draw(gridBg, mapPos.x, mapPos.y);
-
-
-                batcher.draw(animationSet[0].getKeyFrame(runTime),90, 180);
-
-
+               batcher.draw(animationSet[0].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
             case RIGHT:
-                batcher.draw(gridBg, mapPos.x, mapPos.y);
-
-                batcher.draw(animationSet[2].getKeyFrame(runTime),90, 180);
-
-
+               batcher.draw(animationSet[2].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
             case BOTTOM:
-                batcher.draw(gridBg, mapPos.x, mapPos.y);
-                batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);
+                batcher.draw(animationSet[3].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
 
             default:
-                batcher.draw(gridBg, mapPos.x, mapPos.y);
-                batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],90,180);
-
+                batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
         }
 

@@ -24,16 +24,16 @@ public class Monster {
     private float screenWidth, screenHeight;
 
     private Vector2 mapPosition;
-
+    private Vector2 myPosition;
     public Vector2 getMapPosition() {
         return mapPosition;
     }
-
+    public Vector2 getMyPosition(){return  myPosition;}
 
     public void setMapPosition(Vector2 mapPosition) {
         this.mapPosition = mapPosition;
     }
-
+    public void setMyPosition(Vector2 myPosition){this.myPosition = myPosition;}
 
     @Override
     public String toString() {
@@ -94,6 +94,7 @@ public class Monster {
         this.mapPosition = currentMapPosition;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.myPosition = new Vector2(90,180);
     }
 
 
@@ -104,31 +105,8 @@ public class Monster {
 
     public void move(Direction d, Vector2 mapPosition )
     {
-        switch (d) {
-            case TOP:
-                setDirection(d);
-                setMapPosition(mapPosition);
-                break;
-            case RIGHT:
-                setDirection(d);
-                setMapPosition(mapPosition);
-
-                break;
-            case LEFT:
-                setDirection(d);
-                setMapPosition(mapPosition);
-
-                break;
-            case BOTTOM:
-                setDirection(d);
-                setMapPosition(mapPosition);
-
-                break;
-
-            default:
-
-                break;
-        }
+        setDirection(d);
+        setMapPosition(mapPosition);
     }
 
 
