@@ -57,8 +57,6 @@ public class GameRenderer {
         grid = new TextureRegion(gridBg, 600, 600);
         Gdx.app.log(grid.toString(),(gridBg.getWidth()/10f) * 3 +" " + (gridBg.getHeight()/10f) * 6);
 
-
-
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
         monsterLeft = AssetLoader.monsterLeft;
@@ -73,11 +71,9 @@ public class GameRenderer {
     public void render(float runTime) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Gdx.app.log("Screen Height", "Screen Width :" + screenWidth+ "  ScreenHeight :"+ screenHeight);
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
-        Vector2 mapPos = myMonster.getMapPosition();
 
         cam.position.set(myMonster.getMyPosition(),0);
         cam.update();
@@ -92,7 +88,7 @@ public class GameRenderer {
         for(Food s:myMap.getFoodList()){
             batcher.draw(AssetLoader.steak,s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
         }
-        
+
         switch (d) {
             case TOP:
                 batcher.draw(animationSet[1].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);

@@ -49,10 +49,10 @@ public class TouchPad {
 		this.width = width;
 		this.height = height;
 		this.monster = gameWorld.getMap().getMonster();
-		moveUp = new Vector2(0, -0.001f);
-		moveDown = new Vector2(0, 0.001f);
-		moveLeft = new Vector2(-0.001f, 0);
-		moveRight = new Vector2(0.001f, 0);
+		moveUp = new Vector2(0, -0.008f);
+		moveDown = new Vector2(0, 0.008f);
+		moveLeft = new Vector2(-0.008f, 0);
+		moveRight = new Vector2(0.008f, 0);
 	}
 
 
@@ -74,15 +74,19 @@ public class TouchPad {
                             if ((x >= 65 && x < 165) && (y >= 160)) {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
+//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
                             } else if ((x >= 65 && x <= 165) && (y <= 50)) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
+//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
                             } else if ((x < 100) && (y <= 160)) {
                                 monster.setDirection(Direction.LEFT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
+//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
                             } else if ((x > 100) && (y > 65 && y < 165)) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
+//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
                             }
                         }
                         Direction d = monster.getDirection();

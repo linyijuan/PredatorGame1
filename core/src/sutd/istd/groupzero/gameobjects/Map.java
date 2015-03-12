@@ -39,10 +39,7 @@ public class Map{
 
     public Map(float screenWidth, float screenHeight){
         Init();
-        Gdx.app.log("map", "map created");
         monster = new Monster(10, new Vector2(0,0), Direction.BOTTOM , screenWidth, screenHeight);
-        Gdx.app.log("map", monster.toString());
-//        monster = new Monster2(screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }

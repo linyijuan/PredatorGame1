@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Monster {
+    private int mapSizeX = 540;  // Not too sure of this value yet
+    private int mapSizeY = 960; // Same as for X
     private int speed;
     private Direction direction;
     public void setDirection(Direction direction) {
@@ -31,17 +33,16 @@ public class Monster {
     }
     public Vector2 getMyPosition(){return  myPosition;}
 
-    public void setMapPosition(Vector2 mapPosition) {
-        this.mapPosition = mapPosition;
-    }
     public void setMyPosition(Vector2 myPosition){
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
         this.myPosition = myPosition;
-    }
+        if (myPosition.x < 0){this.myPosition.x = 0;}
+        if (myPosition.x > mapSizeX - boundWidth){this.myPosition.x = mapSizeX - boundWidth;}
+        if (myPosition.y < 0){this.myPosition.y = 0;}
+        if (myPosition.y > mapSizeY - boundHeight){this.myPosition.y = mapSizeY- boundHeight;}
 
-    @Override
-    public String toString() {
-        return "this monster is at" + this.mapPosition.x + ", " + this. mapPosition.y;
+        Gdx.app.log("monster position",myPosition.toString());
+        Gdx.app.log("monster position",this.myPosition.toString());
     }
 
     public enum Direction{
@@ -101,12 +102,6 @@ public class Monster {
     public void update(float delta)
     {
 
-    }
-
-    public void move(Direction d, Vector2 mapPosition )
-    {
-        setDirection(d);
-        setMapPosition(mapPosition);
     }
 
 
