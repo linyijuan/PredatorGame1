@@ -26,17 +26,17 @@ public class Map{
     private ArrayList<Vector2> vector2List = new ArrayList<Vector2>();//marks occupied spots
     private ArrayList<Tree> treeList = new ArrayList<Tree>();
     public ArrayList<Tree> getTreeList() {
-		return treeList;
-	}
+        return treeList;
+    }
 
-	public void setTreeList(ArrayList<Tree> treeList) {
-		this.treeList = treeList;
-	}
-	private ArrayList<Food> foodList = new ArrayList<Food>();
+    public void setTreeList(ArrayList<Tree> treeList) {
+        this.treeList = treeList;
+    }
+    private ArrayList<Food> foodList = new ArrayList<Food>();
     private ArrayList<PowerUps> powerUpsList = new ArrayList<PowerUps>();
     private Random r = new Random();
     private Monster monster;
-    
+
     public Map(float screenWidth, float screenHeight){
         Init();
         Gdx.app.log("map", "map created");
@@ -46,7 +46,7 @@ public class Map{
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
-    
+
     private void generateObstacles() {
         while(obstacleCountTrees < 7) {
             //creates noOfObstacles trees
@@ -62,10 +62,10 @@ public class Map{
                 Gdx.app.log("tree pos vector ", positionVector.toString());
                 obstacleCountTrees++;
             }
-            
-            
+
+
         }
-        
+
 //        while(obstacleCountBoulders < noOfObstacles/2) {
 //            //creates noOfObstacles trees
 //            int x = r.nextInt(mapSizeX);
@@ -141,11 +141,11 @@ public class Map{
         genFood();
         genPowerUps();
         Gdx.app.log("Init", "Init Completed Map.java");
-        
-        
+
+
         for(int i = 0 ; i < treeList.size(); i++)
         {
-        	Gdx.app.log(treeList.get(i).toString(), treeList.get(i).getPosition().x + " "+ treeList.get(i).getPosition().y);
+            Gdx.app.log(treeList.get(i).toString(), treeList.get(i).getPosition().x + " "+ treeList.get(i).getPosition().y);
         }
     }
 
@@ -156,22 +156,27 @@ public class Map{
     //update Map when monster got food and power-ups, update the map to dismiss the items obtained
     //the rest are all static - no need to update
     public Monster getMonster(){
-    	return monster;
+        return monster;
     }
-    
+
     //
     public void update(Vector2 posDif)
     {
-    	for(Tree tree : treeList)
-    	{
-    		tree.setPosition(tree.getPosition().add(posDif));
-    	}
+        for(Tree tree : treeList)
+        {
+            tree.setPosition(tree.getPosition().add(posDif));
+        }
         for (PowerUps p:powerUpsList){
             p.setPosition(p.getPosition().add(posDif));
         }
         for (Food f:foodList){
             f.setPosition(f.getPosition().add(posDif));
         }
+
+    }
+    public boolean canMove(){
+
+        return true;
     }
     public void onTap(int direction){}
 }

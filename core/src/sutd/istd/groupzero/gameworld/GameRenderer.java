@@ -1,6 +1,7 @@
 package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,48 +16,49 @@ import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
+import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
-	private float screenWidth;
+    private float screenWidth;
     private float screenHeight;
-	private GameWorld myWorld;
-	private Map myMap;
-	private Monster myMonster;
-	
-	private OrthographicCamera cam;
-	private SpriteBatch batcher;
-	public static Texture gridBg;
-	public static TextureRegion grid;
-	public static TextureRegion[] directionSet;
-	public static Animation[] animationSet;
-	public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
-	public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;	
-	private ShapeRenderer shapeRenderer;
-	
-	public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
-		myWorld = world;
-		myMap = myWorld.getMap();
-		myMonster = myMap.getMonster();
-		this.screenWidth = screenWidth;
+    private GameWorld myWorld;
+    private Map myMap;
+    private Monster myMonster;
+
+    private OrthographicCamera cam;
+    private SpriteBatch batcher;
+    public static Texture gridBg;
+    public static TextureRegion grid;
+    public static TextureRegion[] directionSet;
+    public static Animation[] animationSet;
+    public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
+    public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    private ShapeRenderer shapeRenderer;
+
+    public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
+        myWorld = world;
+        myMap = myWorld.getMap();
+        myMonster = myMap.getMonster();
+        this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-		
-		cam = new OrthographicCamera();
-		cam.setToOrtho(true, 180, 360);
-		
-		batcher = new SpriteBatch();
+
+        cam = new OrthographicCamera();
+        cam.setToOrtho(true, 180, 360);
+
+        batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
-		
-		shapeRenderer = new ShapeRenderer();
+
+        shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
         Gdx.app.log("Screen Height and Width ", screenWidth + "  " + screenHeight);
-        
+
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
         Gdx.app.log(grid.toString(),(gridBg.getWidth()/10f) * 3 +" " + (gridBg.getHeight()/10f) * 6);
-        
-        
-        
+
+
+
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
         monsterLeft = AssetLoader.monsterLeft;
@@ -64,75 +66,87 @@ public class GameRenderer {
         upAnimation = AssetLoader.upAnimation;
         downaAnimation = AssetLoader.downaAnimation;
         leftaAnimation = AssetLoader.leftaAnimation;
-        rightaAnimation = AssetLoader.rightaAnimation;  
+        rightaAnimation = AssetLoader.rightaAnimation;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
-	}
-	public void render(float runTime) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+    }
+    public void render(float runTime) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    	//Gdx.app.log("Screen Height", "Screen Width :" + screenWidth+ "  ScreenHeight :"+ screenHeight);
+        //Gdx.app.log("Screen Height", "Screen Width :" + screenWidth+ "  ScreenHeight :"+ screenHeight);
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
         Vector2 mapPos = myMonster.getMapPosition();
-        
-      
-        
+
+
+
         switch (d) {
-		case TOP:
-			batcher.draw(gridBg, mapPos.x, mapPos.y);
-        	
-        	batcher.draw(animationSet[1].getKeyFrame(runTime),90,180);
+            case TOP:
+                batcher.draw(gridBg, mapPos.x, mapPos.y);
 
-			break;
-		case LEFT:
+                batcher.draw(animationSet[1].getKeyFrame(runTime),90,180);
 
-			batcher.draw(gridBg, mapPos.x, mapPos.y);
+                break;
+            case LEFT:
 
-        	
-        	batcher.draw(animationSet[0].getKeyFrame(runTime),90, 180);        	
+                batcher.draw(gridBg, mapPos.x, mapPos.y);
 
-			
-			break;
-		case RIGHT:
-			batcher.draw(gridBg, mapPos.x, mapPos.y);
-        	
-        	batcher.draw(animationSet[2].getKeyFrame(runTime),90, 180);        	
 
-			
-			break;
-		case BOTTOM:
-			batcher.draw(gridBg, mapPos.x, mapPos.y);
-        	batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);   
-			break;
+                batcher.draw(animationSet[0].getKeyFrame(runTime),90, 180);
 
-		default:
-			batcher.draw(gridBg, mapPos.x, mapPos.y);
-        	batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],90,180);
 
-			break;
-		}
-        
+                break;
+            case RIGHT:
+                batcher.draw(gridBg, mapPos.x, mapPos.y);
 
-        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList())
-        {
-//        	Gdx.app.log("tree count" , myMap.getTreeList().size()+"");
+                batcher.draw(animationSet[2].getKeyFrame(runTime),90, 180);
 
-        	batcher.draw(new TextureRegion(AssetLoader.tree), tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getWidth(), AssetLoader.tree.getHeight(), 1f, 1f, -180f);
+
+                break;
+            case BOTTOM:
+                batcher.draw(gridBg, mapPos.x, mapPos.y);
+                batcher.draw(animationSet[3].getKeyFrame(runTime),90, 180);
+                break;
+
+            default:
+                batcher.draw(gridBg, mapPos.x, mapPos.y);
+                batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],90,180);
+
+                break;
         }
 
+
+        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList()){
+            batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
+        }
+
+
         for(PowerUps p: myMap.getPowerUpsList()){
-            batcher.draw(new TextureRegion(AssetLoader.powerUp),p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getWidth(), AssetLoader.powerUp.getHeight(), 1f, 1f, 180f);
+            batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
         }
 
         for(Food s:myMap.getFoodList()){
-            batcher.draw(new TextureRegion(AssetLoader.steak),s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getWidth(), AssetLoader.steak.getHeight(), 1f, 1f, 180f);
+            batcher.draw(AssetLoader.steak,s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
         }
-       
-    
+
+
         batcher.disableBlending();
         batcher.end();
+
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+//        for(Tree tree : myMap.getTreeList()){
+//            shapeRenderer.rect(tree.getBound().x,tree.getBound().y,tree.getBound().width,tree.getBound().height);
+//        }
+//        for(PowerUps p: myMap.getPowerUpsList()){
+//            shapeRenderer.rect(p.getBound().x,p.getBound().y,p.getBound().width,p.getBound().height);
+//        }
+//        for(Food s:myMap.getFoodList()){
+//            shapeRenderer.rect(s.getBound().x,s.getBound().y,s.getBound().width,s.getBound().height);
+//        }
+        shapeRenderer.end();
     }
 
 
