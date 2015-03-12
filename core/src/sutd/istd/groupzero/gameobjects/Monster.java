@@ -5,13 +5,18 @@ import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 public class Monster {
     private int mapSizeX = 540;  // Not too sure of this value yet
     private int mapSizeY = 960; // Same as for X
-    private int speed;
+    private ArrayList<Tree> treeList;
+    private ArrayList<Food> foodList;
+    private ArrayList<PowerUps> powerUpsList;
     private Direction direction;
     public void setDirection(Direction direction) {
         this.direction = direction;
@@ -23,26 +28,21 @@ public class Monster {
     public Direction getDirection() {
         return direction;
     }
-
     private float screenWidth, screenHeight;
-
-    private Vector2 mapPosition;
     private Vector2 myPosition;
-    public Vector2 getMapPosition() {
-        return mapPosition;
-    }
+    private Vector2 original;
+
+
     public Vector2 getMyPosition(){return  myPosition;}
 
     public void setMyPosition(Vector2 myPosition){
-        this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
         this.myPosition = myPosition;
+        this.bound = new Rectangle(this.myPosition.x,this.myPosition.y,boundWidth,boundHeight);
+
         if (myPosition.x < 0){this.myPosition.x = 0;}
         if (myPosition.x > mapSizeX - boundWidth){this.myPosition.x = mapSizeX - boundWidth;}
         if (myPosition.y < 0){this.myPosition.y = 0;}
         if (myPosition.y > mapSizeY - boundHeight){this.myPosition.y = mapSizeY- boundHeight;}
-
-        Gdx.app.log("monster position",myPosition.toString());
-        Gdx.app.log("monster position",this.myPosition.toString());
     }
 
     public enum Direction{
@@ -85,17 +85,38 @@ public class Monster {
     }
 
 
-    public Monster(int speed,  Vector2 currentMapPosition, Direction direction1, float screenWidth, float screenHeight)
+    public Monster(ArrayList<Food> foodList,ArrayList<PowerUps> powerUpsList,ArrayList<Tree> treeList, Direction direction1, float screenWidth, float screenHeight)
     {
         this.direction = direction1;
-        this.speed = speed;
-        this.mapPosition = currentMapPosition;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.myPosition = new Vector2(90,180);
+        this.original = new Vector2(90,180);
         this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
         this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
+        this.foodList = foodList;
+        this.treeList = treeList;
+        this.powerUpsList = powerUpsList;
+    }
+
+    public boolean collide(PowerUps p){
+
+        return  false;
+    }
+
+    public boolean collide(Food f){
+        return  false;
+    }
+
+    public boolean collide(ArrayList<Tree> treeList){
+        boolean collision = false;
+        for (Tree t:treeList){
+            if (Intersector.overlaps(bound,t.getBound())){
+                collision = true;
+            }
+        }
+        return collision;
     }
 
 

@@ -6,12 +6,15 @@ import java.util.concurrent.Executors;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
+import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.gameworld.GameWorld;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -32,6 +35,8 @@ public class TouchPad {
 	private boolean touchUp = false;
 	private Monster monster;
 	private float x, y, width, height;
+    private GameWorld gameworld;
+    private Map map;
 
 	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld) {
 		touchpadSkin = new Skin();
@@ -49,10 +54,12 @@ public class TouchPad {
 		this.width = width;
 		this.height = height;
 		this.monster = gameWorld.getMap().getMonster();
-		moveUp = new Vector2(0, -0.008f);
-		moveDown = new Vector2(0, 0.008f);
-		moveLeft = new Vector2(-0.008f, 0);
-		moveRight = new Vector2(0.008f, 0);
+        this.gameworld = gameWorld;
+        this.map = gameWorld.getMap();
+		moveUp = new Vector2(0, -0.001f);
+		moveDown = new Vector2(0, 0.001f);
+		moveLeft = new Vector2(-0.001f, 0);
+		moveRight = new Vector2(0.001f, 0);
 	}
 
 
@@ -74,19 +81,48 @@ public class TouchPad {
                             if ((x >= 65 && x < 165) && (y >= 160)) {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
-//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
+                                for (Tree t: map.getTreeList() ){
+                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                    .getBound().getHeight()), t.getBound())){
+                                        monster.setMyPosition(monster.getMyPosition().add(moveDown));
+
+                                        break;
+                                    }
+                                }
                             } else if ((x >= 65 && x <= 165) && (y <= 50)) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
-//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
+                                for (Tree t: map.getTreeList() ){
+                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                            .getBound().getHeight()), t.getBound())){
+                                        monster.setMyPosition(monster.getMyPosition().add(moveUp));
+
+                                        break;
+                                    }
+                                }
+
                             } else if ((x < 100) && (y <= 160)) {
                                 monster.setDirection(Direction.LEFT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
-//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
+                                for (Tree t: map.getTreeList() ){
+                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                            .getBound().getHeight()), t.getBound())){
+                                        monster.setMyPosition(monster.getMyPosition().add(moveRight));
+
+                                        break;
+                                    }
+                                }
                             } else if ((x > 100) && (y > 65 && y < 165)) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
-//                                Gdx.app.log("monster position",monster.getMyPosition().toString());
+                                for (Tree t: map.getTreeList() ){
+                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
+                                            .getBound().getHeight()), t.getBound())){
+                                        monster.setMyPosition(monster.getMyPosition().add(moveLeft));
+
+                                        break;
+                                    }
+                                }
                             }
                         }
                         Direction d = monster.getDirection();

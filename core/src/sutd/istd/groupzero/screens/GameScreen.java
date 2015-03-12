@@ -9,10 +9,6 @@ import sutd.istd.groupzero.gameworld.GameWorld;
 import sutd.istd.groupzero.helpers.InputHandler;
 import sutd.istd.groupzero.helpers.TouchPad;
 
-// Possible to load tiled map here if we are using
-
-
-
 public class GameScreen implements Screen{
     float screenWidth;
     float screenHeight;
@@ -20,25 +16,14 @@ public class GameScreen implements Screen{
 	private GameRenderer renderer;
 	private float runTime = 0;
 	private Stage stage;
-//	private TouchPad touchPad;
 	
 	public GameScreen() {
-//        screenWidth = Gdx.graphics.getWidth();
-//        screenHeight = Gdx.graphics.getHeight();
 		screenWidth = 180;
 		screenHeight = 360;
-        Gdx.app.log("ScreenWidth and Height ",  screenWidth + " " + screenHeight);
-        
         world = new GameWorld(screenWidth, screenHeight);
         renderer = new GameRenderer(world, screenWidth, screenHeight);
-        
-        
-        ///test
         stage = new TouchPad(15f, 15f, 200f, 200f, world).createTouchPad();
-       
         Gdx.input.setInputProcessor(stage);
-        
-//        Gdx.input.setInputProcessor(new InputHandler(world,screenWidth, screenHeight));
     }
 
 	@Override

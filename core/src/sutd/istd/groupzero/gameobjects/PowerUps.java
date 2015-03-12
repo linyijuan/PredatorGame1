@@ -2,19 +2,15 @@ package sutd.istd.groupzero.gameobjects;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 import sutd.istd.groupzero.helpers.AssetLoader;
-
-/**
- * Created by win on 2/17/15.
- */
-
-// Need to pseudo random power up here
 
 public class PowerUps {
     private Vector2 position;
     private float boundWidth;
     private float boundHeight;
+    private boolean showing;
+    public boolean shouldShow(){return showing;}
+    public void setShouldShow(boolean s){this.showing = s;}
     private String name;
     private Rectangle bound;
     public PowerUps(Vector2 _position)
@@ -23,6 +19,7 @@ public class PowerUps {
         this.boundWidth = AssetLoader.powerUp.getRegionWidth();
         this.boundHeight = AssetLoader.powerUp.getRegionHeight();
         this.bound = new Rectangle(_position.x,_position.y,boundWidth,boundHeight);
+        this.showing = true;
     }
     public Rectangle getBound(){return bound;}
     public Vector2 getPosition(){

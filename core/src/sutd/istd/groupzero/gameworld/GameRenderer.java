@@ -75,7 +75,7 @@ public class GameRenderer {
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
 
-        cam.position.set(myMonster.getMyPosition(),0);
+        cam.position.set(myMonster.getMyPosition(), 0);
         cam.update();
         batcher.setProjectionMatrix(cam.combined);
         batcher.draw(gridBg, 0, 0);
@@ -83,10 +83,12 @@ public class GameRenderer {
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
         for(PowerUps p: myMap.getPowerUpsList()){
-            batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+                batcher.draw(AssetLoader.powerUp,p.getPosition().x,p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+
         }
         for(Food s:myMap.getFoodList()){
-            batcher.draw(AssetLoader.steak,s.getPosition().x,s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+                batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+
         }
 
         switch (d) {

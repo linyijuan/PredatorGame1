@@ -39,7 +39,7 @@ public class Map{
 
     public Map(float screenWidth, float screenHeight){
         Init();
-        monster = new Monster(10, new Vector2(0,0), Direction.BOTTOM , screenWidth, screenHeight);
+        monster = new Monster(foodList,powerUpsList,treeList, Direction.BOTTOM , screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
@@ -53,29 +53,11 @@ public class Map{
             if (vector2List.contains(positionVector)){
                 continue;
             }else {
-//                obstaclesList.add(new Tree(positionVector));
                 treeList.add(new Tree(positionVector));
                 vector2List.add(positionVector);
-                Gdx.app.log("tree pos vector ", positionVector.toString());
                 obstacleCountTrees++;
             }
-
-
         }
-
-//        while(obstacleCountBoulders < noOfObstacles/2) {
-//            //creates noOfObstacles trees
-//            int x = r.nextInt(mapSizeX);
-//            int y = r.nextInt(mapSizeY);
-//            Vector2 positionVector = new Vector2(x,y);
-//            if (vector2List.contains(positionVector)){
-//                continue;
-//            }else {
-//                obstaclesList.add(new Boulder(positionVector));
-//                vector2List.add(positionVector);
-//                obstacleCountBoulders++;
-//            }
-//        }
     }
 
     private void genFood() {
@@ -133,8 +115,7 @@ public class Map{
         this.noOfPowerUps = noOfPowerUps;
     }
 
-    public int cap(int min, int max)
-    {
+    public int cap(int min, int max){
         int  x = r.nextInt();
         while(x > max || x < min)
         {
@@ -143,26 +124,12 @@ public class Map{
         return x;
     }
 
-    private void Init()
-    {
+    private void Init(){
         generateObstacles();
         genFood();
         genPowerUps();
-        Gdx.app.log("Init", "Init Completed Map.java");
-
-
-        for(int i = 0 ; i < treeList.size(); i++)
-        {
-            Gdx.app.log(treeList.get(i).toString(), treeList.get(i).getPosition().x + " "+ treeList.get(i).getPosition().y);
-        }
     }
 
-    //use tree and something else as attributes here to represent the obstacles
-    //place food(strength) and power-ups(3 types) in the rest of the map - limit the total number
-    //give all the dimensions and positions of power-ups and obstacles to GameWorld
-
-    //update Map when monster got food and power-ups, update the map to dismiss the items obtained
-    //the rest are all static - no need to update
     public Monster getMonster(){
         return monster;
     }
