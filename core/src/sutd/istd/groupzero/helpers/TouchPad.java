@@ -33,6 +33,8 @@ public class TouchPad {
 	private Drawable touchBackground;
 	private Drawable touchKnob;
 	public Skin touchpadSkin;
+
+    private Vector2 touchpadcenter;
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
@@ -42,14 +44,15 @@ public class TouchPad {
 
 	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld) {
 		touchpadSkin = new Skin();
-		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
+		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
+
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
-		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(20, touchpadStyle);
+		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
 		touchpad.setBounds(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -62,6 +65,7 @@ public class TouchPad {
 		moveDown = new Vector2(0, 0.008f);
 		moveLeft = new Vector2(-0.008f, 0);
 		moveRight = new Vector2(0.008f, 0);
+        touchpadcenter = new Vector2(width/2, height/2);
 	}
 
 
@@ -72,6 +76,8 @@ public class TouchPad {
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
+//                Gdx.app.log("x y",  touchpad.getKnobX() + " " + touchpad.getKnobY());
+
                 Executor executor = Executors.newSingleThreadExecutor();
                 executor.execute(new Runnable() {
 
@@ -80,8 +86,14 @@ public class TouchPad {
                         while(touchUp == false){
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
-                            Gdx.app.log("X , Y", x + " " + y);
-                            if ((x >= 65 && x < 165) && (y >= 160)) {
+
+
+                            
+                            float angle = getAngle(x, y);
+                            Gdx.app.log("angle", angle + "");
+                            
+                            if(angle>=45 && angle <=135)
+                            {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                 for (Tree t: map.getTreeList() ){
@@ -92,7 +104,7 @@ public class TouchPad {
                                     }
                                 }
 
-                            } else if ((x >= 65 && x <= 165) && (y <= 50)) {
+                            } else if (angle <= -45 && angle >= -135) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                 for (Tree t: map.getTreeList() ){
@@ -104,7 +116,7 @@ public class TouchPad {
                                     }
                                 }
 
-                            } else if ((x < 100) && (y <= 160)) {
+                            } else if (angle>=135 || angle <=-135) {
                                 monster.setDirection(Direction.LEFT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                 for (Tree t: map.getTreeList() ){
@@ -115,7 +127,7 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                            } else if ((x > 100) && (y > 65 && y < 165)) {
+                            } else if (angle<=45 && angle >=-45) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                 for (Tree t: map.getTreeList() ){
@@ -167,6 +179,13 @@ public class TouchPad {
 		return stage;
 	}
 
+	
+	public float getAngle(float x, float y)
+	{
+		float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x);
+		temp = (float) (temp * 57.2957795);
+		return 	temp;
+	}
 
 }
 
