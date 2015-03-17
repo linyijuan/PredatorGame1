@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 public class AssetLoader {
     public static TextureRegion[][] texture;
     public static Texture source;
+    public static Texture maskLayer;
     public static TextureRegion gridBg;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
@@ -25,6 +26,9 @@ public class AssetLoader {
         steak.flip(false,true);
         powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
         powerUp.flip(false,true);
+
+        maskLayer = new Texture(Gdx.files.internal("data/maskingLayer.png"));
+
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)
