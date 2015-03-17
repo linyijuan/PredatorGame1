@@ -34,6 +34,7 @@ public class GameRenderer {
     public static Animation[] animationSet;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    private static float scaleX, scaleY;
     private ShapeRenderer shapeRenderer;
 
     public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
@@ -42,6 +43,10 @@ public class GameRenderer {
         myMonster = myMap.getMonster();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
+        //help from marcus
+        scaleX = AssetLoader.maskLayer.getWidth()/screenWidth;
+        scaleY = AssetLoader.maskLayer.getHeight()/screenHeight;
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
@@ -74,6 +79,8 @@ public class GameRenderer {
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
+
+
 
         cam.position.set(myMonster.getMyPosition(), 0);
         cam.update();
@@ -110,6 +117,8 @@ public class GameRenderer {
                 batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],myMonster.getMyPosition().x,myMonster.getMyPosition().y);
                 break;
         }
+        //help from marcus
+//        batcher.draw(new TextureRegion(AssetLoader.maskLayer),0,0,0,0, AssetLoader.maskLayer.getWidth(), AssetLoader.maskLayer.getHeight(),scaleX,scaleY, 0);
         batcher.disableBlending();
         batcher.end();
 
