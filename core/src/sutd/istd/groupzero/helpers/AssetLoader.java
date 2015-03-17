@@ -27,7 +27,7 @@ public class AssetLoader {
         powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
         powerUp.flip(false,true);
 
-        maskLayer = new Texture(Gdx.files.internal("data/maskingLayer.png"));
+//        maskLayer = new Texture(Gdx.files.internal("data/maskingLayer.png"));
 
 
         for (TextureRegion[] t:texture)

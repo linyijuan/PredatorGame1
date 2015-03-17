@@ -61,10 +61,10 @@ public class TouchPad {
 		this.monster = gameWorld.getMap().getMonster();
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();
-		moveUp = new Vector2(0, -0.008f);
-		moveDown = new Vector2(0, 0.008f);
-		moveLeft = new Vector2(-0.008f, 0);
-		moveRight = new Vector2(0.008f, 0);
+		moveUp = new Vector2(0, -0.003f);
+		moveDown = new Vector2(0, 0.003f);
+		moveLeft = new Vector2(-0.003f, 0);
+		moveRight = new Vector2(0.003f, 0);
         touchpadcenter = new Vector2(width/2, height/2);
 	}
 
@@ -86,19 +86,15 @@ public class TouchPad {
                         while(touchUp == false){
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
-
-
-                            
                             float angle = getAngle(x, y);
-                            Gdx.app.log("angle", angle + "");
+//                            Gdx.app.log("angle", angle + "");
                             
                             if(angle>=45 && angle <=135)
                             {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                 for (Tree t: map.getTreeList() ){
-                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                    .getBound().getHeight()), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                         break;
                                     }
@@ -108,10 +104,8 @@ public class TouchPad {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                 for (Tree t: map.getTreeList() ){
-                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                            .getBound().getHeight()), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveUp));
-
                                         break;
                                     }
                                 }
@@ -120,10 +114,8 @@ public class TouchPad {
                                 monster.setDirection(Direction.LEFT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                 for (Tree t: map.getTreeList() ){
-                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                            .getBound().getHeight()), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveRight));
-
                                         break;
                                     }
                                 }
@@ -131,26 +123,30 @@ public class TouchPad {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                 for (Tree t: map.getTreeList() ){
-                                    if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                            .getBound().getHeight()), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveLeft));
-
                                         break;
                                     }
                                 }
                             }
+                            Food food_c = null;
                             for (Food f: map.getFoodList()){
-                                if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                        .getBound().getHeight()), f.getBound())){
-                                    f.setShouldShow(false);
+                                if (Intersector.overlaps(monster.getBound(), f.getBound())){
+                                    food_c = f;
+                                    break;
                                 }
                             }
+                            if (food_c != null)
+                                map.regenFood(food_c);
+                            PowerUps p_c = null;
                             for (PowerUps p: map.getPowerUpsList()){
-                                if (Intersector.overlaps(new Rectangle(monster.getMyPosition().x, monster.getMyPosition().y, monster.getBound().getWidth(), monster
-                                        .getBound().getHeight()), p.getBound())){
-                                    p.setShouldShow(false);
+                                if (Intersector.overlaps(monster.getBound(), p.getBound())){
+                                    p_c = p;
+                                    break;
                                 }
                             }
+                            if (p_c != null)
+                                map.regenPU(p_c);
                         }
                         Direction d = monster.getDirection();
                         switch (d) {
@@ -180,8 +176,7 @@ public class TouchPad {
 	}
 
 	
-	public float getAngle(float x, float y)
-	{
+	public float getAngle(float x, float y){
 		float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x);
 		temp = (float) (temp * 57.2957795);
 		return 	temp;

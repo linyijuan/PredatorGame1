@@ -45,8 +45,8 @@ public class GameRenderer {
         this.screenHeight = screenHeight;
 
         //help from marcus
-        scaleX = AssetLoader.maskLayer.getWidth()/screenWidth;
-        scaleY = AssetLoader.maskLayer.getHeight()/screenHeight;
+//        scaleX = AssetLoader.maskLayer.getWidth()/screenWidth;
+//        scaleY = AssetLoader.maskLayer.getHeight()/screenHeight;
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
