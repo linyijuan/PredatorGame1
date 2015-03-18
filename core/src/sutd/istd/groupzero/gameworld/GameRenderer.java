@@ -9,14 +9,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
-import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
@@ -102,21 +100,22 @@ public class GameRenderer {
 
         switch (d) {
             case TOP:
-                batcher.draw(animationSet[1].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
+                batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
             case LEFT:
-               batcher.draw(animationSet[0].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
+                batcher.draw(animationSet[0].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
             case RIGHT:
-               batcher.draw(animationSet[2].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
+                batcher.draw(animationSet[2].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
             case BOTTOM:
-                batcher.draw(animationSet[3].getKeyFrame(runTime),myMonster.getMyPosition().x,myMonster.getMyPosition().y);
+                batcher.draw(animationSet[3].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
             default:
-                batcher.draw(directionSet[myMonster.getDirection().getKeycode()-5],myMonster.getMyPosition().x,myMonster.getMyPosition().y);
+                batcher.draw(directionSet[myMonster.getDirection().getKeycode()%4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
         }
+
         //help from marcus
 //        batcher.draw(new TextureRegion(AssetLoader.maskLayer),0,0,0,0, AssetLoader.maskLayer.getWidth(), AssetLoader.maskLayer.getHeight(),scaleX,scaleY, 0);
         batcher.disableBlending();
