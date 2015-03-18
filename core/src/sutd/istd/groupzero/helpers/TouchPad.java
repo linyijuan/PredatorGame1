@@ -88,7 +88,7 @@ public class TouchPad {
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
 //                            Gdx.app.log("angle", angle + "");
-                            
+
                             if(angle>=45 && angle <=135)
                             {
                                 monster.setDirection(Direction.TOP);
@@ -99,6 +99,8 @@ public class TouchPad {
                                         break;
                                     }
                                 }
+                                monster.setDirection(Direction.TOP);
+
 
                             } else if (angle <= -45 && angle >= -135) {
                                 monster.setDirection(Direction.BOTTOM);
@@ -109,9 +111,12 @@ public class TouchPad {
                                         break;
                                     }
                                 }
+                                monster.setDirection(Direction.BOTTOM);
+
 
                             } else if (angle>=135 || angle <=-135) {
                                 monster.setDirection(Direction.LEFT);
+
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                 for (Tree t: map.getTreeList() ){
                                     if (Intersector.overlaps(monster.getBound(), t.getBound())){
@@ -119,7 +124,9 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                            } else if (angle<=45 && angle >=-45) {
+                                monster.setDirection(Direction.LEFT);
+
+                            } else if (angle<=45 && angle >=-45 && angle != 0) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                 for (Tree t: map.getTreeList() ){
@@ -128,48 +135,83 @@ public class TouchPad {
                                         break;
                                     }
                                 }
+                                monster.setDirection(Direction.RIGHT);
+
                             }
-                            Food food_c = null;
                             for (Food f: map.getFoodList()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
-                                    food_c = f;
+                                    map.regenFood(f);
                                     break;
                                 }
                             }
-                            if (food_c != null)
-                                map.regenFood(food_c);
-                            PowerUps p_c = null;
+
                             for (PowerUps p: map.getPowerUpsList()){
                                 if (Intersector.overlaps(monster.getBound(), p.getBound())){
-                                    p_c = p;
+                                    map.regenPU(p);
                                     break;
                                 }
                             }
-                            if (p_c != null)
-                                map.regenPU(p_c);
+
+
                         }
+
                         Direction d = monster.getDirection();
                         switch (d) {
                             case TOP:
+                                Gdx.app.log("setdirection", "TOP");
                                 monster.setDirection(Direction.STATIONARY_TOP);
                                 break;
                             case LEFT:
+                                Gdx.app.log("setdirection", "LEFT");
+
                                 monster.setDirection(Direction.STATIONARY_LEFT);
                                 break;
                             case RIGHT:
+                                Gdx.app.log("setdirection", "RIGHT");
+
                                 monster.setDirection(Direction.STATIONARY_RIGHT);
                                 break;
                             case BOTTOM:
+                                Gdx.app.log("setdirection", "BOTTOM");
+
                                 monster.setDirection(Direction.STATIONARY_BOTTOM);
                                 break;
                             default:
                                 break;
                         }
+
                     }
                 });
                 return true;
             }
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {touchUp = true;}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                touchUp = true;
+
+                float xx = touchpad.getKnobX();
+                float yy = touchpad.getKnobY();
+                float angle = getAngle(xx, yy);
+                Gdx.app.log("angle", angle + "");
+
+//                Direction d = monster.getDirection();
+//                switch (d) {
+//                    case TOP:
+//                        monster.setDirection(Direction.STATIONARY_TOP);
+//                        break;
+//                    case LEFT:
+//                        monster.setDirection(Direction.STATIONARY_LEFT);
+//                        break;
+//                    case RIGHT:
+//                        monster.setDirection(Direction.STATIONARY_RIGHT);
+//                        break;
+//                    case BOTTOM:
+//                        monster.setDirection(Direction.STATIONARY_BOTTOM);
+//                        break;
+//                    default:
+//                        break;
+//                }
+
+
+                }
         });
 
 		return stage;

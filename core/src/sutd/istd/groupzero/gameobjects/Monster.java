@@ -66,13 +66,13 @@ public class Monster {
             }
             else if(this.equals(STATIONARY_TOP))
             {
-                return 6;
-            }
-            else if(this.equals(STATIONARY_LEFT))
-            {
                 return 5;
             }
             else if(this.equals(STATIONARY_RIGHT))
+            {
+                return 6;
+            }
+            else if(this.equals(STATIONARY_LEFT))
             {
                 return 7;
             }
