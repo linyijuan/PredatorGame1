@@ -99,9 +99,6 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                                monster.setDirection(Direction.TOP);
-
-
                             } else if (angle <= -45 && angle >= -135) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
@@ -111,9 +108,6 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                                monster.setDirection(Direction.BOTTOM);
-
-
                             } else if (angle>=135 || angle <=-135) {
                                 monster.setDirection(Direction.LEFT);
 
@@ -124,8 +118,6 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                                monster.setDirection(Direction.LEFT);
-
                             } else if (angle<=45 && angle >=-45 && angle != 0) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
@@ -135,8 +127,6 @@ public class TouchPad {
                                         break;
                                     }
                                 }
-                                monster.setDirection(Direction.RIGHT);
-
                             }
                             for (Food f: map.getFoodList()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
@@ -191,26 +181,6 @@ public class TouchPad {
                 float yy = touchpad.getKnobY();
                 float angle = getAngle(xx, yy);
                 Gdx.app.log("angle", angle + "");
-
-//                Direction d = monster.getDirection();
-//                switch (d) {
-//                    case TOP:
-//                        monster.setDirection(Direction.STATIONARY_TOP);
-//                        break;
-//                    case LEFT:
-//                        monster.setDirection(Direction.STATIONARY_LEFT);
-//                        break;
-//                    case RIGHT:
-//                        monster.setDirection(Direction.STATIONARY_RIGHT);
-//                        break;
-//                    case BOTTOM:
-//                        monster.setDirection(Direction.STATIONARY_BOTTOM);
-//                        break;
-//                    default:
-//                        break;
-//                }
-
-
                 }
         });
 
