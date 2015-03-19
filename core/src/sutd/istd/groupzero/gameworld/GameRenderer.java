@@ -1,20 +1,22 @@
 package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
+import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
@@ -26,14 +28,17 @@ public class GameRenderer {
 
     private OrthographicCamera cam;
     private SpriteBatch batcher;
-    public static Texture gridBg;
-    public static TextureRegion grid;
-    public static TextureRegion[] directionSet;
-    public static Animation[] animationSet;
-    public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
-    public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
-    private static float scaleX, scaleY;
+    public  Texture gridBg;
+    public  TextureRegion grid;
+    public  TextureRegion[] directionSet;
+    public  Animation[] animationSet;
+    public  TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    private float scaleX, scaleY;
     private ShapeRenderer shapeRenderer;
+
+    private Texture arrow;
+    private Sprite spriteArrow;
 
     public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
         myWorld = world;
@@ -70,6 +75,13 @@ public class GameRenderer {
         rightaAnimation = AssetLoader.rightaAnimation;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
+
+        // testing arrow drawing
+        arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
+        spriteArrow = new Sprite(arrow);
+
+
+
     }
     public void render(float runTime) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -79,12 +91,12 @@ public class GameRenderer {
         Direction d = myMonster.getDirection();
 
 
-
-        cam.position.set(myMonster.getMyPosition(), 0);
+        Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth()/2, myMonster.getMyPosition().y + myMonster.getBoundHeight()/2);
+        cam.position.set(camPost, 0);
         cam.update();
         batcher.setProjectionMatrix(cam.combined);
         batcher.draw(gridBg, 0, 0);
-        for(sutd.istd.groupzero.gameobjects.Tree tree : myMap.getTreeList()){
+        for(Tree tree : myMap.getTreeList()){
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
         for(PowerUps p: myMap.getPowerUpsList()){
@@ -116,17 +128,25 @@ public class GameRenderer {
                 break;
         }
 
+        // Drawing of arrow
+        spriteArrow.setRotation(myMonster.getAngle());
+        spriteArrow.setBounds(myMonster.getArrowPostX(), myMonster.getArrowPostY(), myMonster.getBoundWidth(), myMonster.getBoundWidth());
+        spriteArrow.setOriginCenter();
+        spriteArrow.draw(batcher);
+
         //help from marcus
 //        batcher.draw(new TextureRegion(AssetLoader.maskLayer),0,0,0,0, AssetLoader.maskLayer.getWidth(), AssetLoader.maskLayer.getHeight(),scaleX,scaleY, 0);
-        batcher.disableBlending();
+//        batcher.disableBlending();
         batcher.end();
 
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.setProjectionMatrix(cam.combined);
-//        shapeRenderer.rect(myMonster.getBound().x,myMonster.getBound().y,myMonster.getBound().width,myMonster.getBound().height);
-        shapeRenderer.end();
+
+
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.setProjectionMatrix(cam.combined);
+////        shapeRenderer.rect(myMonster.getBound().x,myMonster.getBound().y,myMonster.getBound().width,myMonster.getBound().height);
+//        shapeRenderer.end();
     }
 
 
