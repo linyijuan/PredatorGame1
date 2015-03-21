@@ -1,6 +1,7 @@
 package sutd.istd.groupzero.gameobjects;
 
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Map{
     private int mapSizeY = 960; // Same as for X
     private float screenWidth;
     private float screenHeight;
+
 
     private int noOfObstacles = 30;
     private int noOfFood=10;
@@ -39,12 +41,14 @@ public class Map{
     }
 
     public Map(float screenWidth, float screenHeight){
-        genObstacles();
-        genFood();
-        genPowerUps();
         monster = new Monster(foodList,powerUpsList,treeList, Direction.BOTTOM, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        genObstacles();
+        genFood();
+        genPowerUps();
+
+
     }
 
     private synchronized void genObstacles() {
@@ -55,7 +59,7 @@ public class Map{
             Tree tree = new Tree(v);
             if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(), (tree.getBound()))){
+                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
@@ -74,7 +78,7 @@ public class Map{
             Food food = new Food(v);
             if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),food.getBound())){
+                    if (Intersector.overlaps(i.getBound(),food.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
@@ -93,7 +97,7 @@ public class Map{
             PowerUps powerUp = new PowerUps(v);
             if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),powerUp.getBound())){
+                    if (Intersector.overlaps(i.getBound(),powerUp.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
