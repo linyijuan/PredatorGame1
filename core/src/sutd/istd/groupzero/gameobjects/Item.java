@@ -3,9 +3,6 @@ package sutd.istd.groupzero.gameobjects;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-/**
- * Created by linyijuan on 17/3/15.
- */
 public class Item {
     private Vector2 position;
     private float boundWidth;

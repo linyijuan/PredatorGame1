@@ -35,6 +35,8 @@ public class Monster {
     private float angle;
     private float arrowPostX;
     private float arrowPostY;
+    private int strength = 0;
+    private int visibility = 1;//max=5
 
     // radius of the arrow's orbit around the player
     private float radius = 35f;
@@ -144,5 +146,27 @@ public class Monster {
 
     public float getArrowPostX() {
         return arrowPostX;
+    }
+
+    public void setStrength(int s){
+        strength = s;
+    }
+    public void obtainFood(){
+        strength++;
+    }
+    public int getStrength(){
+        return strength;
+    }
+
+    public int getVisibility(){
+        return visibility;
+    }
+    public void setVisibility(int v){
+        if (v<=5)
+            visibility = v;
+    }
+    public void obtainVisibility(){
+        if (visibility <5)
+            visibility++;
     }
 }

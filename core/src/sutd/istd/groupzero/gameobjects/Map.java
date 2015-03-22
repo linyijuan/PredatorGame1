@@ -15,7 +15,6 @@ public class Map{
     private float screenWidth;
     private float screenHeight;
 
-
     private int noOfObstacles = 30;
     private int noOfFood=10;
     private int noOfPowerUps=10;
@@ -94,7 +93,10 @@ public class Map{
         while(powerUpsList.size() < noOfPowerUps) {
             toPlace = true;
             Vector2 v = new Vector2(cap(0,mapSizeX-22),cap(0,mapSizeY-21));
-            PowerUps powerUp = new PowerUps(v);
+            PowerUps powerUp = new PowerUps(v,"s");
+            if ((powerUpsList.size() % 2) == 0){
+                powerUp.setKind("v");
+            }
             if (!itemList.isEmpty())
                 for (Item i :itemList)
                     if (Intersector.overlaps(i.getBound(),powerUp.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
