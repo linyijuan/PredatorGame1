@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 public class AssetLoader {
@@ -17,6 +18,8 @@ public class AssetLoader {
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
     public static TextureRegion tree,steak,powerUp;
     public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
+    public static BitmapFont font, shadow;
+
     public static void load(){
         source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
@@ -47,11 +50,16 @@ public class AssetLoader {
         leftaAnimation.setPlayMode(PlayMode.LOOP);
         rightaAnimation.setPlayMode(PlayMode.LOOP);
 
-
+        font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
+        font.setScale(.25f, -.25f);
+        shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
+        shadow.setScale(.25f, -.25f);
 
     }
     public static void dispose(){
         source.dispose();
+        font.dispose();
+        shadow.dispose();
     }
 
 }

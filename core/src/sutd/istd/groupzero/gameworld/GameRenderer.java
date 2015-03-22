@@ -134,19 +134,15 @@ public class GameRenderer {
         spriteArrow.setOriginCenter();
         spriteArrow.draw(batcher);
 
+        batcher.disableBlending();
+        AssetLoader.shadow.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-7,myMonster.getMyPosition().y-21);
+        AssetLoader.font.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-6,myMonster.getMyPosition().y-20);
+
         //help from marcus
 //        batcher.draw(new TextureRegion(AssetLoader.maskLayer),0,0,0,0, AssetLoader.maskLayer.getWidth(), AssetLoader.maskLayer.getHeight(),scaleX,scaleY, 0);
 //        batcher.disableBlending();
         batcher.end();
 
-
-
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.setProjectionMatrix(cam.combined);
-////        shapeRenderer.rect(myMonster.getBound().x,myMonster.getBound().y,myMonster.getBound().width,myMonster.getBound().height);
-//        shapeRenderer.end();
     }
 
 
