@@ -1,7 +1,6 @@
 package sutd.istd.groupzero.gameobjects;
 
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class Map{
     }
 
     public Map(float screenWidth, float screenHeight){
-        monster = new Monster(foodList,powerUpsList,treeList, Direction.BOTTOM, screenWidth, screenHeight);
+        monster = new Monster(Direction.BOTTOM, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         genObstacles();
@@ -50,7 +49,7 @@ public class Map{
 
     }
 
-    private synchronized void genObstacles() {
+    private void genObstacles() {
         boolean toPlace;
         while(treeList.size() < noOfObstacles) {
             toPlace = true;
@@ -69,37 +68,41 @@ public class Map{
         }
     }
 
-    private synchronized void genFood() {
+    private void genFood() {
         boolean toPlace;
-        while(foodList.size() < noOfFood) {
+
+        while (foodList.size() < noOfFood) {
             toPlace = true;
-            Vector2 v = new Vector2(cap(0,mapSizeX-30),cap(0,mapSizeY-21));
+            Vector2 v = new Vector2(cap(0, mapSizeX - 30), cap(0, mapSizeY - 21));
             Food food = new Food(v);
             if (!itemList.isEmpty())
-                for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),food.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
+                for (Item i : itemList)
+                    if (Intersector.overlaps(i.getBound(), food.getBound()) || Intersector.overlaps(i.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
-            if (toPlace){
+            if (toPlace) {
                 foodList.add(food);
                 itemList.add(food);
             }
+
         }
+
     }
 
-    private synchronized void genPowerUps(){
+    private void genPowerUps(){
         boolean toPlace;
-        while(powerUpsList.size() < noOfPowerUps) {
+
+        while (powerUpsList.size() < noOfPowerUps) {
             toPlace = true;
-            Vector2 v = new Vector2(cap(0,mapSizeX-22),cap(0,mapSizeY-21));
-            PowerUps powerUp = new PowerUps(v,"s");
-            if ((powerUpsList.size() % 2) == 0){
+            Vector2 v = new Vector2(cap(0, mapSizeX - 22), cap(0, mapSizeY - 21));
+            PowerUps powerUp = new PowerUps(v, "s");
+            if ((powerUpsList.size() % 2) == 0) {
                 powerUp.setKind("v");
             }
             if (!itemList.isEmpty())
-                for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),powerUp.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
+                for (Item i : itemList)
+                    if (Intersector.overlaps(i.getBound(), powerUp.getBound()) || Intersector.overlaps(i.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
@@ -111,40 +114,43 @@ public class Map{
 
     }
 
-    public synchronized void regenFood(Food f){
+    public void regenFood(Food f){
+
         foodList.remove(f);
         itemList.remove(f);
         genFood();
+
     }
 
-    public synchronized void regenPU(PowerUps p){
+    public void regenPU(PowerUps p){
+
         powerUpsList.remove(p);
         itemList.remove(p);
         genPowerUps();
+
     }
 
 
     ///////////////////// Getters and setters /////////////////////////////
-    public synchronized ArrayList<Item> getItemList(){return itemList;}
-    public synchronized ArrayList<PowerUps> getPowerUpsList() {
+//    public synchronized ArrayList<Item> getItemList(){return itemList;}
+//    public synchronized ArrayList<PowerUps> getPowerUpsList() {
+//        return powerUpsList;
+//    }
+//    public synchronized ArrayList<Food> getFoodList() {
+//        return foodList;
+//    }
+//    public synchronized ArrayList<Tree> getTreeList() {
+//        return treeList;
+//    }
+    public ArrayList<Item> getItemList(){return itemList;}
+    public ArrayList<PowerUps> getPowerUpsList() {
         return powerUpsList;
     }
-    public synchronized ArrayList<Food> getFoodList() {
+    public ArrayList<Food> getFoodList() {
         return foodList;
     }
-    public synchronized ArrayList<Tree> getTreeList() {
+    public ArrayList<Tree> getTreeList() {
         return treeList;
     }
-    //    public void setNoOfObstacles(int noOfObstacles) {
-//        this.noOfObstacles = noOfObstacles;
-//    }
-//    public void setNoOfFood(int noOfFood) {
-//        this.noOfFood = noOfFood;
-//    }
-//    public void setNoOfPowerUps(int noOfPowerUps) {
-//        this.noOfPowerUps = noOfPowerUps;
-//    }
-//    public void setTreeList(ArrayList<Tree> treeList) {
-//        this.treeList = treeList;
-//    }
+
 }

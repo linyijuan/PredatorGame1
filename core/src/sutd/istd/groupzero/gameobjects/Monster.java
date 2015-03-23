@@ -1,7 +1,6 @@
 package sutd.istd.groupzero.gameobjects;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -92,8 +91,8 @@ public class Monster {
         }
     }
 
-
-    public Monster(ArrayList<Food> foodList,ArrayList<PowerUps> powerUpsList,ArrayList<Tree> treeList, Direction direction1, float screenWidth, float screenHeight)
+    // Can help see if this is still needed?
+    public Monster(/*ArrayList<Food> foodList,ArrayList<PowerUps> powerUpsList,ArrayList<Tree> treeList, */Direction direction1, float screenWidth, float screenHeight)
     {
         this.direction = direction1;
         this.screenWidth = screenWidth;
@@ -103,9 +102,11 @@ public class Monster {
         this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
         this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
-        this.foodList = foodList;
-        this.treeList = treeList;
-        this.powerUpsList = powerUpsList;
+        // This is not needed right?
+
+//        this.foodList = foodList;
+//        this.treeList = treeList;
+//        this.powerUpsList = powerUpsList;
 
         // Arbitary target for now
         target = new Vector2(270, 480);
@@ -119,9 +120,7 @@ public class Monster {
         angle = directionVectorToTarget.angle() - 180;
         arrowPostX = myPosition.x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
         arrowPostY = myPosition.y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
-        Gdx.app.log("angle", Float.toString(directionVectorToTarget.angle()));
-//        Gdx.app.log("arrowPostX", Float.toString(arrowPostX));
-//        Gdx.app.log("arrowPostY", Float.toString(arrowPostY));
+
     }
 
     public float getBoundWidth() {
