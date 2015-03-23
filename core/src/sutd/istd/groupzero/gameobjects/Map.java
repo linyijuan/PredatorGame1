@@ -1,10 +1,13 @@
 package sutd.istd.groupzero.gameobjects;
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.Random;
+
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
 
 public class Map{
     private int mapSizeX = 540;  // Not too sure of this value yet
@@ -12,36 +15,15 @@ public class Map{
     private float screenWidth;
     private float screenHeight;
 
-    private int noOfObstacles = 20;
-    private int noOfFood=5;
-    private int noOfPowerUps=3;
-    public void setNoOfObstacles(int noOfObstacles) {
-        this.noOfObstacles = noOfObstacles;
-    }
-    public void setNoOfFood(int noOfFood) {
-        this.noOfFood = noOfFood;
-    }
-    public void setNoOfPowerUps(int noOfPowerUps) {
-        this.noOfPowerUps = noOfPowerUps;
-    }
+    private int noOfObstacles = 30;
+    private int noOfFood=10;
+    private int noOfPowerUps=10;
 
     private ArrayList<Item> itemList = new ArrayList<Item>();
-    public synchronized ArrayList<Item> getItemList(){return itemList;}
     private ArrayList<Tree> treeList = new ArrayList<Tree>();
-    public synchronized ArrayList<Tree> getTreeList() {
-        return treeList;
-    }
-    public void setTreeList(ArrayList<Tree> treeList) {
-        this.treeList = treeList;
-    }
     private ArrayList<Food> foodList = new ArrayList<Food>();
-    public synchronized ArrayList<Food> getFoodList() {
-        return foodList;
-    }
     private ArrayList<PowerUps> powerUpsList = new ArrayList<PowerUps>();
-    public synchronized ArrayList<PowerUps> getPowerUpsList() {
-        return powerUpsList;
-    }
+
 
     private Random r = new Random();
     public int cap(int min, int max){
@@ -58,12 +40,14 @@ public class Map{
     }
 
     public Map(float screenWidth, float screenHeight){
-        genObstacles();
-        genFood();
-        genPowerUps();
         monster = new Monster(foodList,powerUpsList,treeList, Direction.BOTTOM, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        genObstacles();
+        genFood();
+        genPowerUps();
+
+
     }
 
     private synchronized void genObstacles() {
@@ -71,15 +55,16 @@ public class Map{
         while(treeList.size() < noOfObstacles) {
             toPlace = true;
             Vector2 v = new Vector2(cap(0,mapSizeX-52),cap(0,mapSizeY-52));
-            if (!treeList.isEmpty() & !itemList.isEmpty())
+            Tree tree = new Tree(v);
+            if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(), (new Tree(v)).getBound())){
+                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
             if (toPlace){
-                treeList.add(new Tree(v));
-                itemList.add(new Tree(v));
+                treeList.add(tree);
+                itemList.add(tree);
             }
         }
     }
@@ -89,15 +74,16 @@ public class Map{
         while(foodList.size() < noOfFood) {
             toPlace = true;
             Vector2 v = new Vector2(cap(0,mapSizeX-30),cap(0,mapSizeY-21));
-            if (!foodList.isEmpty()& !itemList.isEmpty())
+            Food food = new Food(v);
+            if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),(new Food(v)).getBound())){
+                    if (Intersector.overlaps(i.getBound(),food.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
             if (toPlace){
-                foodList.add(new Food(v));
-                itemList.add(new Tree(v));
+                foodList.add(food);
+                itemList.add(food);
             }
         }
     }
@@ -107,15 +93,19 @@ public class Map{
         while(powerUpsList.size() < noOfPowerUps) {
             toPlace = true;
             Vector2 v = new Vector2(cap(0,mapSizeX-22),cap(0,mapSizeY-21));
-            if (!powerUpsList.isEmpty()& !itemList.isEmpty())
+            PowerUps powerUp = new PowerUps(v,"s");
+            if ((powerUpsList.size() % 2) == 0){
+                powerUp.setKind("v");
+            }
+            if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(),(new PowerUps(v)).getBound())){
+                    if (Intersector.overlaps(i.getBound(),powerUp.getBound())|| Intersector.overlaps(i.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
             if (toPlace) {
-                powerUpsList.add(new PowerUps(v));
-                itemList.add(new Tree(v));
+                powerUpsList.add(powerUp);
+                itemList.add(powerUp);
             }
         }
 
@@ -132,4 +122,29 @@ public class Map{
         itemList.remove(p);
         genPowerUps();
     }
+
+
+    ///////////////////// Getters and setters /////////////////////////////
+    public synchronized ArrayList<Item> getItemList(){return itemList;}
+    public synchronized ArrayList<PowerUps> getPowerUpsList() {
+        return powerUpsList;
+    }
+    public synchronized ArrayList<Food> getFoodList() {
+        return foodList;
+    }
+    public synchronized ArrayList<Tree> getTreeList() {
+        return treeList;
+    }
+    //    public void setNoOfObstacles(int noOfObstacles) {
+//        this.noOfObstacles = noOfObstacles;
+//    }
+//    public void setNoOfFood(int noOfFood) {
+//        this.noOfFood = noOfFood;
+//    }
+//    public void setNoOfPowerUps(int noOfPowerUps) {
+//        this.noOfPowerUps = noOfPowerUps;
+//    }
+//    public void setTreeList(ArrayList<Tree> treeList) {
+//        this.treeList = treeList;
+//    }
 }

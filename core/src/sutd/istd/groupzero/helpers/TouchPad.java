@@ -76,8 +76,6 @@ public class TouchPad {
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
-//                Gdx.app.log("x y",  touchpad.getKnobX() + " " + touchpad.getKnobY());
-
                 Executor executor = Executors.newSingleThreadExecutor();
                 executor.execute(new Runnable() {
 
@@ -87,10 +85,7 @@ public class TouchPad {
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
-//                            Gdx.app.log("angle", angle + "");
-
-                            if(angle>=45 && angle <=135)
-                            {
+                            if(angle>=45 && angle <=135){
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                 for (Tree t: map.getTreeList() ){
@@ -131,12 +126,22 @@ public class TouchPad {
                             for (Food f: map.getFoodList()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
                                     map.regenFood(f);
+                                    monster.obtainFood();
                                     break;
                                 }
                             }
 
                             for (PowerUps p: map.getPowerUpsList()){
                                 if (Intersector.overlaps(monster.getBound(), p.getBound())){
+                                    if (p.getKind() == PowerUps.PowerUp.Speed && moveDown.y <= 0.007f){
+                                        moveUp.set(0,moveUp.y-0.0003f);
+                                        moveDown.set(0,moveDown.y+0.0003f);
+                                        moveLeft.set(moveLeft.x-0.0003f,0);
+                                        moveRight.set(moveRight.x+0.0003f,0);
+                                    }
+                                    else{
+                                        monster.obtainVisibility();
+                                    }
                                     map.regenPU(p);
                                     break;
                                 }
@@ -148,22 +153,15 @@ public class TouchPad {
                         Direction d = monster.getDirection();
                         switch (d) {
                             case TOP:
-                                Gdx.app.log("setdirection", "TOP");
                                 monster.setDirection(Direction.STATIONARY_TOP);
                                 break;
                             case LEFT:
-                                Gdx.app.log("setdirection", "LEFT");
-
                                 monster.setDirection(Direction.STATIONARY_LEFT);
                                 break;
                             case RIGHT:
-                                Gdx.app.log("setdirection", "RIGHT");
-
                                 monster.setDirection(Direction.STATIONARY_RIGHT);
                                 break;
                             case BOTTOM:
-                                Gdx.app.log("setdirection", "BOTTOM");
-
                                 monster.setDirection(Direction.STATIONARY_BOTTOM);
                                 break;
                             default:
@@ -180,7 +178,6 @@ public class TouchPad {
                 float xx = touchpad.getKnobX();
                 float yy = touchpad.getKnobY();
                 float angle = getAngle(xx, yy);
-                Gdx.app.log("angle", angle + "");
                 }
         });
 

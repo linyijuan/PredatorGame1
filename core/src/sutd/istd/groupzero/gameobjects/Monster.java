@@ -1,15 +1,14 @@
 package sutd.istd.groupzero.gameobjects;
 
 
-import sutd.istd.groupzero.gameobjects.Monster.Direction;
-import sutd.istd.groupzero.helpers.AssetLoader;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+
+import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class Monster {
     private int mapSizeX = 540;  // Not too sure of this value yet
@@ -31,7 +30,16 @@ public class Monster {
     private float screenWidth, screenHeight;
     private Vector2 myPosition;
     private Vector2 original;
+    private Vector2 directionVectorToTarget = new Vector2();
+    private Vector2 target;
+    private float angle;
+    private float arrowPostX;
+    private float arrowPostY;
+    private int strength = 0;
+    private int visibility = 1;//max=5
 
+    // radius of the arrow's orbit around the player
+    private float radius = 35f;
 
     public Vector2 getMyPosition(){return  myPosition;}
 
@@ -98,32 +106,67 @@ public class Monster {
         this.foodList = foodList;
         this.treeList = treeList;
         this.powerUpsList = powerUpsList;
+
+        // Arbitary target for now
+        target = new Vector2(270, 480);
     }
 
-    public boolean collide(PowerUps p){
-
-        return  false;
-    }
-
-    public boolean collide(Food f){
-        return  false;
-    }
-
-    public boolean collide(ArrayList<Tree> treeList){
-        boolean collision = false;
-        for (Tree t:treeList){
-            if (Intersector.overlaps(bound,t.getBound())){
-                collision = true;
-            }
-        }
-        return collision;
-    }
 
 
     public void update(float delta)
     {
-
+        directionVectorToTarget = directionVectorToTarget.set(target.x - myPosition.x, target.y - myPosition.y);
+        angle = directionVectorToTarget.angle() - 180;
+        arrowPostX = myPosition.x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
+        arrowPostY = myPosition.y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
+        Gdx.app.log("angle", Float.toString(directionVectorToTarget.angle()));
+//        Gdx.app.log("arrowPostX", Float.toString(arrowPostX));
+//        Gdx.app.log("arrowPostY", Float.toString(arrowPostY));
     }
 
+    public float getBoundWidth() {
+        return boundWidth;
+    }
 
+    public float getBoundHeight() {
+        return boundHeight;
+    }
+
+    public Vector2 getDirectionVectorToTarget() {
+        return directionVectorToTarget;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public float getArrowPostY() {
+        return arrowPostY;
+    }
+
+    public float getArrowPostX() {
+        return arrowPostX;
+    }
+
+    public void setStrength(int s){
+        strength = s;
+    }
+    public void obtainFood(){
+        strength++;
+    }
+    public int getStrength(){
+        return strength;
+    }
+
+    public int getVisibility(){
+        return visibility;
+    }
+    public void setVisibility(int v){
+        if (v<=5)
+            visibility = v;
+    }
+    public void obtainVisibility(){
+        if (visibility <5)
+            visibility++;
+    }
 }

@@ -42,6 +42,7 @@ public class AndroidLauncher extends AndroidApplication implements GameHelper.Ga
     @Override
     public void loginGPGS() {
         try {
+
             runOnUiThread(new Runnable(){
                 public void run() {
                     gameHelper.beginUserInitiatedSignIn();

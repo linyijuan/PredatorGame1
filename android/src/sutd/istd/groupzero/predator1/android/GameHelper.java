@@ -975,8 +975,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
                 .setNeutralButton(android.R.string.ok, null).create();
     }
 
-    static Dialog
-    makeSimpleDialog(Activity activity, String title, String text) {
+    static Dialog makeSimpleDialog(Activity activity, String title, String text) {
         return (new AlertDialog.Builder(activity)).setMessage(text)
                 .setTitle(title).setNeutralButton(android.R.string.ok, null)
                 .create();
