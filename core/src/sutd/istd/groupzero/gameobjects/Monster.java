@@ -81,11 +81,11 @@ public class Monster {
             }
             else if(this.equals(STATIONARY_LEFT))
             {
-                return 7;
+                return 8;
             }
             else if(this.equals(STATIONARY_BOTTOM))
             {
-                return 8;
+                return 7;
             }
             return 10;
         }
