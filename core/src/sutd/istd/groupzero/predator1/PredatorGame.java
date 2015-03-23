@@ -20,7 +20,7 @@ public class PredatorGame extends Game {
 		Gdx.app.log("Predator1", "created");
 		AssetLoader.load();
 		setScreen(new GameScreen(this));
-        actionResolver.loginGPGS();
+//        actionResolver.loginGPGS();
 //        actionResolver.getSignedInGPGS();
 	}
 	
