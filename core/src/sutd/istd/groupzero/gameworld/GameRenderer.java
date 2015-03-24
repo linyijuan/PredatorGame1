@@ -162,6 +162,7 @@ public class GameRenderer {
 
         lightShader.begin();
         lightShader.setUniformf("resolution", width, height);
+
         lightShader.end();
 
         finalShader.begin();
@@ -174,17 +175,32 @@ public class GameRenderer {
         CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(myMap.getPowerUpsList());
         CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(myMap.getFoodList());
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        fbo.begin();
-        batcher.setShader(finalShader);
-        batcher.begin();
-        batcher.enableBlending();
-        Direction d = myMonster.getDirection();
         final float dt = Gdx.graphics.getRawDeltaTime();
         zAngle += dt * zSpeed;
         while(zAngle > PI2)
             zAngle -= PI2;
+
+        fbo.begin();
+        batcher.setShader(finalShader);
+        batcher.setProjectionMatrix(cam.combined);
+        batcher.begin();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
+        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
+        batcher.end();
+        fbo.end();
+
+
+
+        batcher.begin();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batcher.enableBlending();
+        Direction d = myMonster.getDirection();
+        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
+        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
+        //this is because our default and ambiant shader dont use multi texturing...
+        //youc can basically bind anything, it doesnt matter
 
         Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth()/2, myMonster.getMyPosition().y + myMonster.getBoundHeight()/2);
         cam.position.set(camPost, 0);
@@ -224,21 +240,6 @@ public class GameRenderer {
                 batcher.draw(directionSet[myMonster.getDirection().getKeycode()%4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
         }
-
-        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
-        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
-
-        fbo.end();
-
-        //draw the actual scene
-
-
-
-        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
-        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
-        //this is because our default and ambiant shader dont use multi texturing...
-        //youc can basically bind anything, it doesnt matter
-
         // Drawing of arrow
         spriteArrow.setRotation(myMonster.getAngle());
         spriteArrow.setBounds(myMonster.getArrowPostX(), myMonster.getArrowPostY(), myMonster.getBoundWidth(), myMonster.getBoundWidth());
