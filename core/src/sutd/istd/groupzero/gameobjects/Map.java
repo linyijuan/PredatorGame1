@@ -39,13 +39,13 @@ public class Map{
     }
 
     public Map(float screenWidth, float screenHeight){
-        monster = new Monster(Direction.BOTTOM, screenWidth, screenHeight);
+        // the number in the monster constructor is meant for the player number
+        monster = new Monster(1, Direction.BOTTOM, screenWidth, screenHeight);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         genObstacles();
         genFood();
         genPowerUps();
-
 
     }
 
@@ -57,7 +57,7 @@ public class Map{
             Tree tree = new Tree(v);
             if (!itemList.isEmpty())
                 for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(i.getBound(),monster.getBound())){
+                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(tree.getBound(),monster.getBound())){
                         toPlace = false;
                         break;
                     }
@@ -77,7 +77,7 @@ public class Map{
             Food food = new Food(v);
             if (!itemList.isEmpty())
                 for (Item i : itemList)
-                    if (Intersector.overlaps(i.getBound(), food.getBound()) || Intersector.overlaps(i.getBound(), monster.getBound())) {
+                    if (Intersector.overlaps(i.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
@@ -102,7 +102,7 @@ public class Map{
             }
             if (!itemList.isEmpty())
                 for (Item i : itemList)
-                    if (Intersector.overlaps(i.getBound(), powerUp.getBound()) || Intersector.overlaps(i.getBound(), monster.getBound())) {
+                    if (Intersector.overlaps(i.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
@@ -132,16 +132,7 @@ public class Map{
 
 
     ///////////////////// Getters and setters /////////////////////////////
-//    public synchronized ArrayList<Item> getItemList(){return itemList;}
-//    public synchronized ArrayList<PowerUps> getPowerUpsList() {
-//        return powerUpsList;
-//    }
-//    public synchronized ArrayList<Food> getFoodList() {
-//        return foodList;
-//    }
-//    public synchronized ArrayList<Tree> getTreeList() {
-//        return treeList;
-//    }
+
     public ArrayList<Item> getItemList(){return itemList;}
     public ArrayList<PowerUps> getPowerUpsList() {
         return powerUpsList;

@@ -109,16 +109,22 @@ public class Monster {
     }
 
     // Can help see if this is still needed?
-    public Monster(/*ArrayList<Food> foodList,ArrayList<PowerUps> powerUpsList,ArrayList<Tree> treeList, */Direction direction1, float screenWidth, float screenHeight)
+    public Monster(int playerNumber, Direction direction1, float screenWidth, float screenHeight)
     {
         this.direction = direction1;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.myPosition = new Vector2(0,0);
+        if (playerNumber == 1) {
+            this.myPosition = new Vector2(MathUtils.random(0, mapSizeX/5), MathUtils.random(0, mapSizeY - AssetLoader.monsterUp.getRegionHeight()));
+        }else{
+            this.myPosition = new Vector2(MathUtils.random((4*mapSizeX)/5, mapSizeX - AssetLoader.monsterUp.getRegionWidth()), MathUtils.random(0, mapSizeY - AssetLoader.monsterUp.getRegionHeight()));
+        }
         this.original = new Vector2(0,0);
         this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
         this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
+
+
         // This is not needed right?
 
 //        this.foodList = foodList;
