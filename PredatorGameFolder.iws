@@ -18,19 +18,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b193b7cd-c17d-4829-872a-064ee404b845" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/model_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/model_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameobjects/Monster.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameobjects/Monster.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PredatorGame1.iml" afterPath="$PROJECT_DIR$/PredatorGame1.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PredatorGameFolder.ipr" afterPath="$PROJECT_DIR$/PredatorGameFolder.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PredatorGameFolder.iws" afterPath="$PROJECT_DIR$/PredatorGameFolder.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android/android.iml" afterPath="$PROJECT_DIR$/android/android.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/core.iml" afterPath="$PROJECT_DIR$/core/core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/desktop/desktop.iml" afterPath="$PROJECT_DIR$/desktop/desktop.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/html/html.iml" afterPath="$PROJECT_DIR$/html/html.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ios/ios.iml" afterPath="$PROJECT_DIR$/ios/ios.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
     </list>
     <ignored path="PredatorGameFolder.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -3064,7 +3052,11 @@
       <created>1426964721355</created>
       <updated>1426964721355</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Timer">
+      <created>1427227791832</created>
+      <updated>1427227791832</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3137,7 +3129,8 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="Fixed Game start overlapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Game start overlapping" />
+    <MESSAGE value="Timer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Timer" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
