@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Timer;
 
 public class TouchPad {
 	private Stage stage;
@@ -41,6 +42,9 @@ public class TouchPad {
 	private float x, y, width, height;
     private GameWorld gameworld;
     private Map map;
+
+
+    private Timer speedTimer;//WIN ___ Timer
 
 	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld) {
 		touchpadSkin = new Skin();
@@ -61,10 +65,7 @@ public class TouchPad {
 		this.monster = gameWorld.getMap().getMonster();
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();
-		moveUp = new Vector2(0, -0.003f);
-		moveDown = new Vector2(0, 0.003f);
-		moveLeft = new Vector2(-0.003f, 0);
-		moveRight = new Vector2(0.003f, 0);
+
         touchpadcenter = new Vector2(width/2, height/2);
 	}
 
@@ -81,6 +82,12 @@ public class TouchPad {
 
                     @Override
                     public void run() {
+
+                        moveUp = new Vector2(0,-( monster.getSpeed() *0.003f));
+                        moveDown = new Vector2(0, monster.getSpeed() * 0.003f);
+                        moveLeft = new Vector2( -(monster.getSpeed() * 0.003f), 0);
+                        moveRight = new Vector2(monster.getSpeed() * 0.003f, 0);
+
                         while(touchUp == false){
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
@@ -133,11 +140,23 @@ public class TouchPad {
 
                             for (PowerUps p: map.getPowerUpsList()){
                                 if (Intersector.overlaps(monster.getBound(), p.getBound())){
-                                    if (p.getKind() == PowerUps.PowerUp.Speed && moveDown.y <= 0.007f){
-                                        moveUp.set(0,moveUp.y-0.0003f);
-                                        moveDown.set(0,moveDown.y+0.0003f);
-                                        moveLeft.set(moveLeft.x-0.0003f,0);
-                                        moveRight.set(moveRight.x+0.0003f,0);
+                                    if (p.getKind() == PowerUps.PowerUp.Speed)//&& moveDown.y <= 0.007f){
+                                    {
+                                        //WIN ___ Timer
+                                        speedTimer = new Timer();
+
+                                        monster.addSpeed(0.2f);
+                                        speedTimer.scheduleTask(new Timer.Task() {
+                                            @Override
+                                            public void run() {
+                                                monster.addSpeed(-0.2f);
+                                            }
+                                        },6);
+//                                        Gdx.app.log("WIN", monster.getSpeed()+"");
+//                                        moveUp.set(0,moveUp.y-0.0003f);
+//                                        moveDown.set(0,moveDown.y+0.0003f);
+//                                        moveLeft.set(moveLeft.x-0.0003f,0);
+//                                        moveRight.set(moveRight.x+0.0003f,0);
                                     }
                                     else{
                                         monster.obtainVisibility();

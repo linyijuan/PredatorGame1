@@ -35,7 +35,24 @@ public class Monster {
     private float arrowPostX;
     private float arrowPostY;
     private int strength = 0;
+    private float speed = 1;
     private int visibility = 1;//max=5
+
+
+    public float getSpeed()
+    {
+        return this.speed;
+    }
+
+    public void setSpeed(float newSpeed)
+    {
+        this.speed = newSpeed;
+    }
+
+    public void addSpeed(float speedIncrement)
+    {
+        this.speed += speedIncrement;
+    }
 
     // radius of the arrow's orbit around the player
     private float radius = 35f;
