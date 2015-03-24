@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,6 +20,8 @@ public class AssetLoader {
     public static TextureRegion tree,steak,powerUp;
     public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
     public static BitmapFont font, shadow;
+    public static Texture arrow;
+    public static Sprite spriteArrow;
 
     public static void load(){
         source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
@@ -55,6 +58,8 @@ public class AssetLoader {
         shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
         shadow.setScale(.25f, -.25f);
 
+        arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
+        spriteArrow = new Sprite(arrow);
     }
     public static void dispose(){
         source.dispose();

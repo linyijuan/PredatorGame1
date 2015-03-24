@@ -1,12 +1,7 @@
 package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
-<<<<<<< HEAD
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-=======
->>>>>>> 1f706466c13be3e3af8af992102d730e6debbafe
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -18,9 +13,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
@@ -47,8 +43,6 @@ public class GameRenderer {
     public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
     private float scaleX, scaleY;
     private ShapeRenderer shapeRenderer;
-
-<<<<<<< HEAD
     private Texture light;
     private FrameBuffer fbo;
     private boolean lightOscillate = true;
@@ -87,10 +81,8 @@ public class GameRenderer {
     };
 
 
-=======
     private Texture arrow;
     private Sprite spriteArrow;
->>>>>>> 1f706466c13be3e3af8af992102d730e6debbafe
 
     public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
         myWorld = world;
@@ -105,9 +97,6 @@ public class GameRenderer {
         music.setLooping(true);
         music.play();
 
-        //help from marcus
-//        scaleX = AssetLoader.maskLayer.getWidth()/screenWidth;
-//        scaleY = AssetLoader.maskLayer.getHeight()/screenHeight;
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
         defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
@@ -118,7 +107,7 @@ public class GameRenderer {
 
 
 
-        //fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 540, 960, false);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 540, 960, false);
 
         lightShader.begin();
         lightShader.setUniformi("u_lightmap", 1);
@@ -159,8 +148,8 @@ public class GameRenderer {
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
 
         // testing arrow drawing
-        arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
-        spriteArrow = new Sprite(arrow);
+        arrow = AssetLoader.arrow;
+        spriteArrow = AssetLoader.spriteArrow;
 
 
 
@@ -180,18 +169,21 @@ public class GameRenderer {
     }
 
     public void render(float runTime) {
+        // To prevent traversing through the arraylist while it is being modified
+        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(myMap.getPowerUpsList());
+        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(myMap.getFoodList());
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        fbo.begin();
-        batcher.setShader(finalShader);
+//        fbo.begin();
+//        batcher.setShader(finalShader);
         batcher.begin();
         batcher.enableBlending();
         Direction d = myMonster.getDirection();
-        final float dt = Gdx.graphics.getRawDeltaTime();
-        zAngle += dt * zSpeed;
-        while(zAngle > PI2)
-            zAngle -= PI2;
+//        final float dt = Gdx.graphics.getRawDeltaTime();
+//        zAngle += dt * zSpeed;
+//        while(zAngle > PI2)
+//            zAngle -= PI2;
 
         Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth()/2, myMonster.getMyPosition().y + myMonster.getBoundHeight()/2);
         cam.position.set(camPost, 0);
@@ -201,16 +193,18 @@ public class GameRenderer {
         for(Tree tree : myMap.getTreeList()){
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
-        for(PowerUps p: myMap.getPowerUpsList()){
+        for (PowerUps p : powerUpsList) {
             if (p.shouldShow()) {
                 batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
             }
         }
-        for(Food s:myMap.getFoodList()){
+
+        for (Food s : foodList) {
             if (s.shouldShow()) {
                 batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
             }
         }
+
 
         switch (d) {
             case TOP:
@@ -230,26 +224,20 @@ public class GameRenderer {
                 break;
         }
 
-<<<<<<< HEAD
+//        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
+//        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
 
-        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
-        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
-
-        fbo.end();
+//        fbo.end();
 
         //draw the actual scene
 
 
 
-        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
-        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
+//        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
+//        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
         //this is because our default and ambiant shader dont use multi texturing...
         //youc can basically bind anything, it doesnt matter
 
-
-
-
-=======
         // Drawing of arrow
         spriteArrow.setRotation(myMonster.getAngle());
         spriteArrow.setBounds(myMonster.getArrowPostX(), myMonster.getArrowPostY(), myMonster.getBoundWidth(), myMonster.getBoundWidth());
@@ -259,11 +247,7 @@ public class GameRenderer {
         batcher.disableBlending();
         AssetLoader.shadow.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-7,myMonster.getMyPosition().y-21);
         AssetLoader.font.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-6,myMonster.getMyPosition().y-20);
->>>>>>> 1f706466c13be3e3af8af992102d730e6debbafe
 
-        //help from marcus
-//        batcher.draw(new TextureRegion(AssetLoader.maskLayer),0,0,0,0, AssetLoader.maskLayer.getWidth(), AssetLoader.maskLayer.getHeight(),scaleX,scaleY, 0);
-//        batcher.disableBlending();
         batcher.end();
 
     }
