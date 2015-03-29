@@ -1,17 +1,16 @@
 package sutd.istd.groupzero.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameworld.GameRenderer;
 import sutd.istd.groupzero.gameworld.GameWorld;
-import sutd.istd.groupzero.helpers.InputHandler;
+import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.TouchPad;
 
 public class GameScreen implements Screen{
-    private Game game;
     float screenWidth;
     float screenHeight;
 	private GameWorld world;
@@ -19,13 +18,12 @@ public class GameScreen implements Screen{
 	private float runTime = 0;
 	private Stage stage;
 	
-	public GameScreen(Game game) {
-        this.game = game;
+	public GameScreen(ActionResolver actionResolver,Map map) {
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
-        world = new GameWorld(screenWidth, screenHeight);
-        renderer = new GameRenderer(world, screenWidth, screenHeight);
-        stage = new TouchPad(screenWidth/2, 15f, 200f, 200f, world).createTouchPad();
+        world = new GameWorld(screenWidth, screenHeight,actionResolver,map);
+        renderer = new GameRenderer(world, screenWidth, screenHeight,actionResolver);
+        stage = new TouchPad(screenWidth/2, 15f, 200f, 200f, world,actionResolver).createTouchPad();
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -34,8 +32,7 @@ public class GameScreen implements Screen{
 		runTime += delta;
         world.update(delta);
         renderer.render(runTime);
-        stage.draw();       
-        
+        stage.draw();
     }
 
     @Override

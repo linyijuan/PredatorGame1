@@ -1,33 +1,23 @@
 package sutd.istd.groupzero.gameobjects;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class PowerUps extends Item{
-    private PowerUp kind;
-    public PowerUp getKind(){
+    private String kind;
+    public String getKind(){
         return kind;
     }
     public void setKind(String s){
-        if (s.equals("s")){
-            kind = PowerUp.Speed;
-        }
-        else{
-            kind = PowerUp.Visibility;
-        }
+        kind = s;
     }
     public PowerUps(Vector2 _position,String kind){
         super(_position);
-        super.setBound(AssetLoader.powerUp.getRegionWidth(),AssetLoader.powerUp.getRegionHeight());
+//        super.setBound(AssetLoader.powerUp.getRegionWidth(),AssetLoader.powerUp.getRegionHeight());
+        super.setBound(22,21);
         if (kind.equals("v"))
-            this.kind = PowerUp.Visibility;
+            this.kind = "v";
         else
-            this.kind = PowerUp.Speed;
+            this.kind = "s";
     }
 
-    public enum PowerUp{
-        Visibility, Speed;
-
-    }
 }
