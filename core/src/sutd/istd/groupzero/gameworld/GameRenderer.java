@@ -58,7 +58,7 @@ public class GameRenderer {
     private ShaderProgram finalShader;
 
     //values passed to the shader
-    public static final float ambientIntensity = 0.7f;
+    public static final float ambientIntensity = 0.1f;
     public static final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
 
     //used to make the light flicker
@@ -207,8 +207,8 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
         batcher.begin();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
-        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
+        float lightSize = screenWidth/3 + 4f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
+        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.42f ,myMonster.getMyPosition().y  - lightSize*0.42f, lightSize, lightSize);
         batcher.end();
         fbo.end();
 
