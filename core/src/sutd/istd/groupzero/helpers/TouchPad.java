@@ -1,5 +1,17 @@
 package sutd.istd.groupzero.helpers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Timer;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -10,22 +22,6 @@ import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.gameworld.GameWorld;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Timer;
 
 public class TouchPad {
 	private Stage stage;
@@ -152,6 +148,7 @@ public class TouchPad {
                                                 monster.addSpeed(-0.2f);
                                             }
                                         },6);
+                                        speedTimer.start();
 //                                        Gdx.app.log("WIN", monster.getSpeed()+"");
 //                                        moveUp.set(0,moveUp.y-0.0003f);
 //                                        moveDown.set(0,moveDown.y+0.0003f);
@@ -159,7 +156,16 @@ public class TouchPad {
 //                                        moveRight.set(moveRight.x+0.0003f,0);
                                     }
                                     else{
-                                        monster.obtainVisibility();
+                                        speedTimer = new Timer();
+                                        monster.setVisibility(1.5f);
+                                        speedTimer.scheduleTask(new Timer.Task() {
+                                            @Override
+                                            public void run() {
+                                                monster.setVisibility(1f);
+                                            }
+                                        },6);
+                                        speedTimer.start();
+
                                     }
                                     map.regenPU(p);
                                     break;

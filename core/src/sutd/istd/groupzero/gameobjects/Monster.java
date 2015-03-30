@@ -36,7 +36,7 @@ public class Monster {
     private float arrowPostY;
     private int strength = 0;
     private float speed = 1;
-    private int visibility = 1;//max=5
+    private float visibility = 1;
 
 
     public float getSpeed()
@@ -180,10 +180,10 @@ public class Monster {
         return strength;
     }
 
-    public int getVisibility(){
+    public float getVisibility(){
         return visibility;
     }
-    public void setVisibility(int v){
+    public void setVisibility(float v){
         if (v<=5)
             visibility = v;
     }
