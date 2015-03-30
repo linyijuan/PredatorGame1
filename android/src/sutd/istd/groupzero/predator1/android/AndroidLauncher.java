@@ -483,6 +483,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onDisconnectedFromRoom(Room room) {
         mRoomId = null;
         showGameError();
+
     }
 
     // Show error message about game being cancelled and return to main screen.
@@ -644,26 +645,60 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         else if(buf[0] == 'e'){
             int i = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
-//            synchronized (foodLock) {
             Food a = foodList.remove(i);
             Log.i("renderRF",a.getPosition().x+"");
-//            }
         }
         else if(buf[0] == 'o'){
             int i = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
-//            synchronized (puLock) {
             PowerUps a = powerUpList.remove(i);
             Log.i("renderRP",a.getPosition().x+"");
-//            }
         }
         else{
-//            Log.i("roompeoplecall4","called");
-            opponentDirectionKeycode = buf[0];
-            opponentPosition = new Vector2(buf[1],buf[2]);
+            opponentDirectionKeycode = (buf[3] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[1] & 0xFF) << 16)| ((buf[0] & 0xFF) << 24);
+            int xx = (buf[4] & 0xFF)| ((buf[5] & 0xFF) << 8)| ((buf[6] & 0xFF) << 16)| ((buf[7] & 0xFF) << 24);
+            int yy = (buf[8] & 0xFF)| ((buf[9] & 0xFF) << 8)| ((buf[10] & 0xFF) << 16)| ((buf[11] & 0xFF) << 24);
+            opponentPosition = new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy));
+            Log.i("opporeceive",Float.intBitsToFloat(xx)+","+Float.intBitsToFloat(yy));
         }
 
     }
+    public void broadcastMyStatus(Vector2 currentPosition, Monster.Direction currentDirection){
+        if (!mMultiplayer)
+            return; // playing single-player mode
+        // First byte in message indicates monster direction
+        int d = currentDirection.getKeycode();
+        // Second and third byte are monster position x and y.
+        int x = Float.floatToIntBits(currentPosition.x);
+        int y = Float.floatToIntBits(currentPosition.y);
 
+        Log.i("opposend",x+","+y);
+
+        byte[] bytes = new byte[12];
+        bytes[0] = (byte) ((d >> 24) & 0xFF);
+        bytes[1] = (byte) ((d >> 16) & 0xFF);
+        bytes[2] = (byte) ((d >> 8) & 0xFF);
+        bytes[3] = (byte) (d & 0xFF);
+
+        bytes[4] = (byte)(x & 0xff);
+        bytes[5] = (byte)((x >> 8) & 0xff);
+        bytes[6] = (byte)((x >> 16) & 0xff);
+        bytes[7] = (byte)((x >> 24) & 0xff);
+
+        bytes[8] = (byte)(y & 0xff);
+        bytes[9] = (byte)((y >> 8) & 0xff);
+        bytes[10] = (byte)((y >> 16) & 0xff);
+        bytes[11] = (byte)((y >> 24) & 0xff);
+
+
+        // Send to every other participant.
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId))
+                continue;
+            if (p.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, bytes, mRoomId,p.getParticipantId());
+        }
+    }
     //pass the map to opponent
     public synchronized void broadcastMyMap(){
         if (mMultiplayer){
@@ -790,24 +825,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int requestOpponentDirection(){
         return opponentDirectionKeycode;
     }
-    public void broadcastMyStatus(Vector2 currentPosition, Monster.Direction currentDirection){
-        if (!mMultiplayer)
-            return; // playing single-player mode
-        // First byte in message indicates monster direction
-        mMsgBuf[0] = (byte) currentDirection.getKeycode();
-        // Second and third byte are monster position x and y.
-        mMsgBuf[1] = (byte) currentPosition.x;
-        mMsgBuf[2] = (byte) currentPosition.y;
 
-        // Send to every other participant.
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, mMsgBuf, mRoomId,p.getParticipantId());
-        }
-    }
 
     public ArrayList<Tree> requestTrees(){
 //        synchronized (treeLock) {

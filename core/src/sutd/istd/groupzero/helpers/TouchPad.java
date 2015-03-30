@@ -56,12 +56,11 @@ public class TouchPad {
 		touchpad.setBounds(x, y, width, height);
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.width = Gdx.graphics.getWidth()/4;
+		this.height = Gdx.graphics.getWidth()/4;
 		this.monster = gameWorld.getMap().getMonster();
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();
-
         touchpadcenter = new Vector2(width/2, height/2);
 	}
 
@@ -91,7 +90,7 @@ public class TouchPad {
                             if(angle>=45 && angle <=135){
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
-                                for (Tree t: map.getTreeList() ){
+                                for (Tree t: actionResolver.requestTrees() ){
                                     if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                         break;
@@ -100,7 +99,7 @@ public class TouchPad {
                             } else if (angle <= -45 && angle >= -135) {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
-                                for (Tree t: map.getTreeList() ){
+                                for (Tree t: actionResolver.requestTrees() ){
                                     if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                         break;
@@ -110,7 +109,7 @@ public class TouchPad {
                                 monster.setDirection(Direction.LEFT);
 
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
-                                for (Tree t: map.getTreeList() ){
+                                for (Tree t: actionResolver.requestTrees() ){
                                     if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                         break;
@@ -119,7 +118,7 @@ public class TouchPad {
                             } else if (angle<=45 && angle >=-45 && angle != 0) {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
-                                for (Tree t: map.getTreeList() ){
+                                for (Tree t: actionResolver.requestTrees() ){
                                     if (Intersector.overlaps(monster.getBound(), t.getBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                         break;
@@ -127,7 +126,7 @@ public class TouchPad {
                                 }
                             }
                             actionResolver.broadcastMyStatus(monster.getMyPosition(),monster.getDirection());
-                            for (Food f: map.getFoodList()){
+                            for (Food f: actionResolver.requestFoods()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
                                     actionResolver.eatFood(f);
                                     monster.obtainFood();
@@ -135,7 +134,7 @@ public class TouchPad {
                                 }
                             }
 
-                            for (PowerUps p: map.getPowerUpsList()){
+                            for (PowerUps p: actionResolver.requestPUs()){
                                 if (Intersector.overlaps(monster.getBound(), p.getBound())){
                                     if (p.getKind().equals("s")){
                                         //WIN ___ Timer

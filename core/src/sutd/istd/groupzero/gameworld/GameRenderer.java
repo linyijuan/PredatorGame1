@@ -161,8 +161,6 @@ public class GameRenderer {
 
     }
     public void resize(final int width, final int height) {
-
-
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
 
         lightShader.begin();
@@ -265,23 +263,24 @@ public class GameRenderer {
         if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
             Vector2 oppo_pos = actionResolver.requestOpponentPosition();
             int oppo_d = actionResolver.requestOpponentDirection();
-//            switch (oppo_d) {
-//                case 1:
-//                    batcher.draw(animationSet[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
-//                    break;
-//                case 0:
-//                    batcher.draw(animationSet[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
-//                    break;
-//                case 2:
-//                    batcher.draw(animationSet[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
-//                    break;
-//                case 3:
-//                    batcher.draw(animationSet[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
-//                    break;
-//                default:
-//                    batcher.draw(directionSet[oppo_d % 4], oppo_pos.x, oppo_pos.y);
-//                    break;
-//            }
+            switch (oppo_d) {
+                case 1:
+                    batcher.draw(animationSet[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    break;
+                case 0:
+                    batcher.draw(animationSet[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    break;
+                case 2:
+                    batcher.draw(animationSet[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    break;
+                case 3:
+                    batcher.draw(animationSet[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    break;
+                default:
+                    batcher.draw(directionSet[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                    break;
+            }
+
             directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
             angle = directionVectorToTarget.angle() - 180;
             arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));

@@ -183,7 +183,7 @@ public class Monster {
     }
     public void setVisibility(float v){
         if (v<=5)
-            visibility = v;
+            visibility = (int)v;
     }
     public void obtainVisibility(){
         if (visibility <5)
