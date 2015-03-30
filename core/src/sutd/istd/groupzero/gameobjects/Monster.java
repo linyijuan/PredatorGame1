@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-import sutd.istd.groupzero.helpers.AssetLoader;
-
 public class Monster {
     private int mapSizeX = 540;  // Not too sure of this value yet
     private int mapSizeY = 960; // Same as for X
@@ -26,7 +24,6 @@ public class Monster {
     public Direction getDirection() {
         return direction;
     }
-    private float screenWidth, screenHeight;
     private Vector2 myPosition;
     private Vector2 original;
     private Vector2 directionVectorToTarget = new Vector2();
@@ -35,8 +32,10 @@ public class Monster {
     private float arrowPostX;
     private float arrowPostY;
     private int strength = 0;
-    private float speed = 1;
-    private float visibility = 1;
+
+    private float speed = 50;
+    private int visibility = 1;//max=5
+
 
 
     public float getSpeed()
@@ -109,19 +108,22 @@ public class Monster {
     }
 
     // Can help see if this is still needed?
-    public Monster(int playerNumber, Direction direction1, float screenWidth, float screenHeight)
+    public Monster(int playerNumber, Direction direction1)
     {
         this.direction = direction1;
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-        if (playerNumber == 1) {
-            this.myPosition = new Vector2(MathUtils.random(0, mapSizeX/5), MathUtils.random(0, mapSizeY - AssetLoader.monsterUp.getRegionHeight()));
-        }else{
-            this.myPosition = new Vector2(MathUtils.random((4*mapSizeX)/5, mapSizeX - AssetLoader.monsterUp.getRegionWidth()), MathUtils.random(0, mapSizeY - AssetLoader.monsterUp.getRegionHeight()));
-        }
+
         this.original = new Vector2(0,0);
-        this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
-        this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
+//        this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
+        this.boundWidth = 27;
+//        this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
+        this.boundHeight = 34;
+
+        if (playerNumber == 1) {
+            this.myPosition = new Vector2(MathUtils.random(0, mapSizeX / 5), MathUtils.random(0, mapSizeY - this.boundHeight));
+        }else{
+            this.myPosition = new Vector2(MathUtils.random((4*mapSizeX)/5, mapSizeX - this.boundWidth), MathUtils.random(0, mapSizeY - this.boundHeight));
+        }
+
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
 
 
@@ -139,10 +141,6 @@ public class Monster {
 
     public void update(float delta)
     {
-        directionVectorToTarget = directionVectorToTarget.set(target.x - myPosition.x, target.y - myPosition.y);
-        angle = directionVectorToTarget.angle() - 180;
-        arrowPostX = myPosition.x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
-        arrowPostY = myPosition.y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
 
     }
 

@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import sutd.istd.groupzero.gameobjects.Food;
@@ -25,6 +26,7 @@ import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
+import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
 
 public class GameRenderer {
@@ -33,7 +35,7 @@ public class GameRenderer {
     private GameWorld myWorld;
     private Map myMap;
     private Monster myMonster;
-
+    private ActionResolver actionResolver;
     private OrthographicCamera cam;
     private SpriteBatch batcher;
     public  Texture gridBg;
@@ -56,7 +58,7 @@ public class GameRenderer {
     private ShaderProgram finalShader;
 
     //values passed to the shader
-    public static final float ambientIntensity = 0.7f;
+    public static final float ambientIntensity = 0.1f;
     public static final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
 
     //used to make the light flicker
@@ -84,11 +86,17 @@ public class GameRenderer {
 
     private Texture arrow;
     private Sprite spriteArrow;
+    private Vector2 directionVectorToTarget = new Vector2();
+    private float angle;
+    private float radius = 35f;
+    private float arrowPostX;
+    private float arrowPostY;
 
-    public GameRenderer(GameWorld world, float screenWidth, float screenHeight){
+    public GameRenderer(GameWorld world, float screenWidth, float screenHeight,ActionResolver actionResolver){
         myWorld = world;
         myMap = myWorld.getMap();
         myMonster = myMap.getMonster();
+        this.actionResolver = actionResolver;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
@@ -104,9 +112,6 @@ public class GameRenderer {
         ambientShader = new ShaderProgram(vertexShader, ambientPixelShader);
         lightShader = new ShaderProgram(vertexShader, lightPixelShader);
         finalShader = new ShaderProgram(vertexShader, finalPixelShader);
-
-
-
 
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 540, 960, false);
 
@@ -172,8 +177,24 @@ public class GameRenderer {
 
     public void render(float runTime) {
         // To prevent traversing through the arraylist while it is being modified
-        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(myMap.getPowerUpsList());
-        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(myMap.getFoodList());
+        ArrayList<Food> foods = actionResolver.requestFoods();
+        ArrayList<PowerUps> pus = actionResolver.requestPUs();
+        ArrayList<Tree> trees = actionResolver.requestTrees();
+
+        ArrayList<Food> foodCopy = new ArrayList<Food>();
+        ArrayList<PowerUps> puCopy = new ArrayList<PowerUps>();
+        for (Food f:foods){
+            foodCopy.add(f);
+        }
+        for (PowerUps p:pus){
+            puCopy.add(p);
+        }
+
+        myMap.setFoodList(foodCopy);
+        myMap.setPowerUpsList(puCopy);
+
+        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
+        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
         final float dt = Gdx.graphics.getRawDeltaTime();
@@ -186,8 +207,8 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
         batcher.begin();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float lightSize = screenWidth/5 + 2f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
-        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.4f ,myMonster.getMyPosition().y  - lightSize*0.4f, lightSize, lightSize);
+        float lightSize = screenWidth/3 + 4f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
+        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.42f ,myMonster.getMyPosition().y  - lightSize*0.42f, lightSize, lightSize);
         batcher.end();
         fbo.end();
 
@@ -207,7 +228,7 @@ public class GameRenderer {
         cam.update();
         batcher.setProjectionMatrix(cam.combined);
         batcher.draw(gridBg, 0, 0);
-        for(Tree tree : myMap.getTreeList()){
+        for(Tree tree : trees){
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
         for (PowerUps p : powerUpsList) {
@@ -241,10 +262,37 @@ public class GameRenderer {
                 break;
         }
         // Drawing of arrow
-        spriteArrow.setRotation(myMonster.getAngle());
-        spriteArrow.setBounds(myMonster.getArrowPostX(), myMonster.getArrowPostY(), myMonster.getBoundWidth(), myMonster.getBoundWidth());
-        spriteArrow.setOriginCenter();
-        spriteArrow.draw(batcher);
+        if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
+            Vector2 oppo_pos = actionResolver.requestOpponentPosition();
+            int oppo_d = actionResolver.requestOpponentDirection();
+//            switch (oppo_d) {
+//                case 1:
+//                    batcher.draw(animationSet[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+//                    break;
+//                case 0:
+//                    batcher.draw(animationSet[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+//                    break;
+//                case 2:
+//                    batcher.draw(animationSet[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+//                    break;
+//                case 3:
+//                    batcher.draw(animationSet[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+//                    break;
+//                default:
+//                    batcher.draw(directionSet[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+//                    break;
+//            }
+            directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
+            angle = directionVectorToTarget.angle() - 180;
+            arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
+            arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
+
+            // Drawing of arrow
+            spriteArrow.setRotation(angle);
+            spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
+            spriteArrow.setOriginCenter();
+            spriteArrow.draw(batcher);
+        }
 
         batcher.disableBlending();
         AssetLoader.shadow.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-7,myMonster.getMyPosition().y-21);

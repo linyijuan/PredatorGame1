@@ -30,7 +30,7 @@ public class TouchPad {
 	private Drawable touchBackground;
 	private Drawable touchKnob;
 	public Skin touchpadSkin;
-
+    private ActionResolver actionResolver;
     private Vector2 touchpadcenter;
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
@@ -42,11 +42,11 @@ public class TouchPad {
 
     private Timer speedTimer;//WIN ___ Timer
 
-	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld) {
+	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld,ActionResolver actionResolver) {
 		touchpadSkin = new Skin();
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
-
+        this.actionResolver = actionResolver;
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
@@ -126,9 +126,10 @@ public class TouchPad {
                                     }
                                 }
                             }
+                            actionResolver.broadcastMyStatus(monster.getMyPosition(),monster.getDirection());
                             for (Food f: map.getFoodList()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
-                                    map.regenFood(f);
+                                    actionResolver.eatFood(f);
                                     monster.obtainFood();
                                     break;
                                 }
@@ -136,11 +137,9 @@ public class TouchPad {
 
                             for (PowerUps p: map.getPowerUpsList()){
                                 if (Intersector.overlaps(monster.getBound(), p.getBound())){
-                                    if (p.getKind() == PowerUps.PowerUp.Speed)//&& moveDown.y <= 0.007f){
-                                    {
+                                    if (p.getKind().equals("s")){
                                         //WIN ___ Timer
                                         speedTimer = new Timer();
-
                                         monster.addSpeed(0.2f);
                                         speedTimer.scheduleTask(new Timer.Task() {
                                             @Override
@@ -148,12 +147,7 @@ public class TouchPad {
                                                 monster.addSpeed(-0.2f);
                                             }
                                         },6);
-                                        speedTimer.start();
-//                                        Gdx.app.log("WIN", monster.getSpeed()+"");
-//                                        moveUp.set(0,moveUp.y-0.0003f);
-//                                        moveDown.set(0,moveDown.y+0.0003f);
-//                                        moveLeft.set(moveLeft.x-0.0003f,0);
-//                                        moveRight.set(moveRight.x+0.0003f,0);
+
                                     }
                                     else{
                                         speedTimer = new Timer();
@@ -167,7 +161,7 @@ public class TouchPad {
                                         speedTimer.start();
 
                                     }
-                                    map.regenPU(p);
+                                    actionResolver.obtainPowerUp(p);
                                     break;
                                 }
                             }

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
+import sutd.istd.groupzero.helpers.ActionResolver;
 
 public class Map{
     private int mapSizeX = 540;  // Not too sure of this value yet
     private int mapSizeY = 960; // Same as for X
-    private float screenWidth;
-    private float screenHeight;
+    private ActionResolver actionResolver;
 
     private int noOfObstacles = 30;
     private int noOfFood=10;
@@ -38,11 +38,10 @@ public class Map{
         return monster;
     }
 
-    public Map(float screenWidth, float screenHeight){
+    public Map(ActionResolver actionResolver){
         // the number in the monster constructor is meant for the player number
-        monster = new Monster(1, Direction.BOTTOM, screenWidth, screenHeight);
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        monster = new Monster(1, Direction.BOTTOM);
+        this.actionResolver = actionResolver;
         genObstacles();
         genFood();
         genPowerUps();
@@ -142,6 +141,17 @@ public class Map{
     }
     public ArrayList<Tree> getTreeList() {
         return treeList;
+    }
+
+    public synchronized void setPowerUpsList(ArrayList<PowerUps> powerUpsList) {
+        this.powerUpsList = powerUpsList;
+
+    }
+    public synchronized void setFoodList(ArrayList<Food> foodList) {
+        this.foodList = foodList;
+    }
+    public synchronized void setTreeList(ArrayList<Tree> treeList) {
+        this.treeList = treeList;
     }
 
 }
