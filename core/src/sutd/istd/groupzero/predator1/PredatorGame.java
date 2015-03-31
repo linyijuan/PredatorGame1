@@ -21,7 +21,7 @@ public class PredatorGame extends Game {
 	public void create() {
 		Gdx.app.log("Predator1", "created");
 		AssetLoader.load();
-		setScreen(new GameScreen(actionResolver,map));
+		setScreen(new GameScreen(actionResolver,map, this));
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package sutd.istd.groupzero.gameworld;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -28,6 +31,7 @@ import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
+import sutd.istd.groupzero.screens.TugOfWarScreen;
 
 public class GameRenderer {
     private float screenWidth;
@@ -91,8 +95,10 @@ public class GameRenderer {
     private float radius = 35f;
     private float arrowPostX;
     private float arrowPostY;
+    private Game game;
 
-    public GameRenderer(GameWorld world, float screenWidth, float screenHeight,ActionResolver actionResolver){
+    public GameRenderer(GameWorld world, float screenWidth, float screenHeight,ActionResolver actionResolver, Game game){
+        this.game = game;
         myWorld = world;
         myMap = myWorld.getMap();
         myMonster = myMap.getMonster();
@@ -282,6 +288,13 @@ public class GameRenderer {
             }
 
             directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
+
+            Rectangle oppoBound = new Rectangle(oppo_pos.x,oppo_pos.y,27,34);
+            if(Intersector.overlaps(oppoBound,myMonster.getBound()))
+            {
+                this.game.setScreen(new TugOfWarScreen());
+            }
+
             angle = directionVectorToTarget.angle() - 180;
             arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
             arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));

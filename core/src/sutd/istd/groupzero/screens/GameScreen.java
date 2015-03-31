@@ -1,5 +1,6 @@
 package sutd.istd.groupzero.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,12 +18,14 @@ public class GameScreen implements Screen{
 	private GameRenderer renderer;
 	private float runTime = 0;
 	private Stage stage;
+    private Game game;
 	
-	public GameScreen(ActionResolver actionResolver,Map map) {
+	public GameScreen(ActionResolver actionResolver,Map map, Game game) {
+        this.game = game;
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
         world = new GameWorld(screenWidth, screenHeight,actionResolver,map);
-        renderer = new GameRenderer(world, screenWidth, screenHeight,actionResolver);
+        renderer = new GameRenderer(world, screenWidth, screenHeight,actionResolver, game);
         stage = new TouchPad(screenWidth/2, 15f, 200f, 200f, world,actionResolver).createTouchPad();
         Gdx.input.setInputProcessor(stage);
     }
@@ -41,7 +44,7 @@ public class GameScreen implements Screen{
     }
 
     @Override
-    public void show() {
+    public void show(   ) {
     }
 
     @Override
