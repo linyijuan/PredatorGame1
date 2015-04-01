@@ -34,7 +34,7 @@ public class Monster {
     private int strength = 0;
 
     private float speed = 1;
-    private int visibility = 1;//max=5
+    private float visibility = 1;//max=5
 
 
 
@@ -177,8 +177,7 @@ public class Monster {
         return visibility;
     }
     public void setVisibility(float v){
-        if (v<=5)
-            visibility = (int)v;
+        visibility = v;
     }
     public void obtainVisibility(){
         if (visibility <5)

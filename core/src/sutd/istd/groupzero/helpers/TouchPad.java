@@ -152,13 +152,13 @@ public class TouchPad {
                                     }
                                     else{
                                         speedTimer = new Timer();
-                                        monster.setVisibility(1.5f);
+                                        monster.setVisibility(3f);
                                         speedTimer.scheduleTask(new Timer.Task() {
                                             @Override
                                             public void run() {
                                                 monster.setVisibility(1f);
                                             }
-                                        },6);
+                                        },12);
                                         speedTimer.start();
 
                                     }

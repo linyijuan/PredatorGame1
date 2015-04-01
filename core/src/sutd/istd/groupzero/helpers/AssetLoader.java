@@ -60,6 +60,8 @@ public class AssetLoader {
 
         arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
         spriteArrow = new Sprite(arrow);
+
+        movement = Gdx.audio.newSound(Gdx.files.internal("data/walking_in_grass.wav"));
     }
     public static void dispose(){
         source.dispose();

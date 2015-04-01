@@ -2,7 +2,6 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -106,10 +105,10 @@ public class GameRenderer {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
-        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
-        music.setLooping(true);
-        music.play();
+//        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
+//        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
+//        music.setLooping(true);
+//        music.play();
 
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
@@ -217,12 +216,10 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
         batcher.begin();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float lightSize = screenWidth/3 + 4f * (float)Math.sin(zAngle) + .2f* MathUtils.random();
+        float lightSize = (screenWidth/3 + 4f * (float)Math.sin(zAngle) + .2f* MathUtils.random())*myMonster.getVisibility();
         batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.42f ,myMonster.getMyPosition().y  - lightSize*0.42f, lightSize, lightSize);
         batcher.end();
         fbo.end();
-
-
 
         batcher.begin();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

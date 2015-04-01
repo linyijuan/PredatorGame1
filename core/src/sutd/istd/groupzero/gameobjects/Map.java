@@ -1,6 +1,7 @@
 package sutd.istd.groupzero.gameobjects;
 
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -48,18 +49,44 @@ public class Map{
 
     }
 
+//    private void genObstacles() {
+//        boolean toPlace;
+//        while(treeList.size() < noOfObstacles) {
+//            toPlace = true;
+//            Vector2 v = new Vector2(cap(0,mapSizeX-52),cap(0,mapSizeY-52));
+//            Tree tree = new Tree(v);
+//            if (!itemList.isEmpty())
+//                for (Item i :itemList)
+//                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(tree.getBound(),monster.getBound())){
+//                        toPlace = false;
+//                        break;
+//                    }
+//            if (toPlace){
+//                treeList.add(tree);
+//                itemList.add(tree);
+//            }
+//        }
+//    }
+
     private void genObstacles() {
         boolean toPlace;
         while(treeList.size() < noOfObstacles) {
             toPlace = true;
-            Vector2 v = new Vector2(cap(0,mapSizeX-52),cap(0,mapSizeY-52));
+            Vector2 v = new Vector2(cap((int)monster.getBoundWidth(), mapSizeX - 52 - (int)monster.getBoundWidth()), cap((int)monster.getBoundHeight(), mapSizeY - 52 - (int)monster.getBoundHeight()));
             Tree tree = new Tree(v);
-            if (!itemList.isEmpty())
-                for (Item i :itemList)
-                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(tree.getBound(),monster.getBound())){
+            if (!treeList.isEmpty()){
+                for (Item i : treeList) {
+                    // Getting the position of the current tree in context
+                    float treeX = i.getPosition().x;
+                    float treeY = i.getPosition().y;
+                    // Creating a rectangle with padding around the tree object which is enough to fit one monster in
+                    Rectangle boundCheck = new Rectangle(treeX - monster.getBoundWidth(), treeY - monster.getBoundHeight(), 2 * monster.getBoundWidth() + i.getBound().getWidth(), 2 * monster.getBoundHeight() + i.getBound().getHeight());
+                    if (Intersector.overlaps(boundCheck, (tree.getBound())) || Intersector.overlaps(tree.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
+                }
+            }
             if (toPlace){
                 treeList.add(tree);
                 itemList.add(tree);
