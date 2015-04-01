@@ -33,7 +33,7 @@ public class Monster {
     private float arrowPostY;
     private int strength = 0;
 
-    private float speed = 50;
+    private float speed = 1;
     private int visibility = 1;//max=5
 
 
@@ -66,6 +66,8 @@ public class Monster {
         if (myPosition.x > mapSizeX - boundWidth){this.myPosition.x = mapSizeX - boundWidth;}
         if (myPosition.y < 0){this.myPosition.y = 0;}
         if (myPosition.y > mapSizeY - boundHeight){this.myPosition.y = mapSizeY- boundHeight;}
+
+
     }
 
     public enum Direction{
@@ -135,13 +137,6 @@ public class Monster {
 
         // Arbitary target for now
         target = new Vector2(270, 480);
-    }
-
-
-
-    public void update(float delta)
-    {
-
     }
 
     public float getBoundWidth() {

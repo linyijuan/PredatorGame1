@@ -1,5 +1,6 @@
 package sutd.istd.groupzero.helpers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
@@ -38,11 +39,12 @@ public class TouchPad {
 	private float x, y, width, height;
     private GameWorld gameworld;
     private Map map;
+    private Game game;
 
 
     private Timer speedTimer;//WIN ___ Timer
 
-	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld,ActionResolver actionResolver) {
+	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld,ActionResolver actionResolver,Game game) {
 		touchpadSkin = new Skin();
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
@@ -62,6 +64,7 @@ public class TouchPad {
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();
         touchpadcenter = new Vector2(width/2, height/2);
+        this.game = game;
 	}
 
 
@@ -77,7 +80,6 @@ public class TouchPad {
 
                     @Override
                     public void run() {
-
                         moveUp = new Vector2(0,-( monster.getSpeed() *0.003f));
                         moveDown = new Vector2(0, monster.getSpeed() * 0.003f);
                         moveLeft = new Vector2( -(monster.getSpeed() * 0.003f), 0);
@@ -125,7 +127,7 @@ public class TouchPad {
                                     }
                                 }
                             }
-                            actionResolver.broadcastMyStatus(monster.getMyPosition(),monster.getDirection());
+
                             for (Food f: actionResolver.requestFoods()){
                                 if (Intersector.overlaps(monster.getBound(), f.getBound())){
                                     actionResolver.eatFood(f);

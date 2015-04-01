@@ -13,9 +13,6 @@ public class GameWorld {
 		this.map = map;
 		monster = map.getMonster();
 	}
-	public void update(float delta) {
-        monster.update(delta);
-    }
 	
 	public Map getMap(){
 		return map;

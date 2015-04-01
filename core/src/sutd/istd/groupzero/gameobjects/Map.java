@@ -149,6 +149,7 @@ public class Map{
     }
     public synchronized void setFoodList(ArrayList<Food> foodList) {
         this.foodList = foodList;
+
     }
     public synchronized void setTreeList(ArrayList<Tree> treeList) {
         this.treeList = treeList;

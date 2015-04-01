@@ -1,5 +1,6 @@
 package sutd.istd.groupzero.gameworld;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -28,12 +31,14 @@ import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
+import sutd.istd.groupzero.screens.TugOfWarScreen;
 
 public class GameRenderer {
     private float screenWidth;
     private float screenHeight;
     private GameWorld myWorld;
     private Map myMap;
+    private Game game;
     private Monster myMonster;
     private ActionResolver actionResolver;
     private OrthographicCamera cam;
@@ -92,14 +97,14 @@ public class GameRenderer {
     private float arrowPostX;
     private float arrowPostY;
 
-    public GameRenderer(GameWorld world, float screenWidth, float screenHeight,ActionResolver actionResolver){
+    public GameRenderer(GameWorld world, float screenWidth, float screenHeight,ActionResolver actionResolver,Game game){
+        this.game = game;
         myWorld = world;
         myMap = myWorld.getMap();
         myMonster = myMap.getMonster();
         this.actionResolver = actionResolver;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-
 
         Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
         music.setVolume(0.5f);                 // sets the volume to half the maximum volume
@@ -136,7 +141,6 @@ public class GameRenderer {
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
-        Gdx.app.log("Screen Height and Width ", screenWidth + "  " + screenHeight);
 
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
@@ -190,7 +194,15 @@ public class GameRenderer {
 
         myMap.setFoodList(foodCopy);
         myMap.setPowerUpsList(puCopy);
+        myMap.setTreeList(trees);
 
+        actionResolver.broadcastMyStatus(myMonster.getMyPosition(),myMonster.getDirection());
+        if (actionResolver.requestOpponentPosition() != null){
+            if (Intersector.overlaps(myMonster.getBound(),
+                    new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))){
+                game.setScreen(new TugOfWarScreen(actionResolver));
+            }
+        }
         CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
         CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
         Gdx.gl.glClearColor(0, 0, 0, 1);
