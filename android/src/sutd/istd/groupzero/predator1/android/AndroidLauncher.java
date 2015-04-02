@@ -71,6 +71,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private Object puLock = new Object();
     private int mapSizeX = 540;
     private int mapSizeY = 960;
+    private int opponentStrength = -1;
 
     // Current state of the game:
     ArrayList<Food> foodList = new ArrayList<Food>();
@@ -89,6 +90,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     Vector2 mystartPos = null;
     private int myTapCount = 0;
     private int oppoTapCount = 0;
+    private int playerNum = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -461,10 +463,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         mMultiplayer = true;
         if (mParticipants.get(0).getParticipantId().equals(mMyId)){
             mystartPos = startPos[0];
+            playerNum = 1;
             broadcastMyMap();
         }
         else{
             mystartPos = startPos[1];
+            playerNum = 2;
         }
 
         // print out the list of participants (for debug purposes)
@@ -648,6 +652,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         return myTapCount;
     }
 
+    public int requestOpponentStrength(){
+        return opponentStrength;
+    }
+    public void broadcastMyStrength(int strength){
+        byte[] bytes = new byte[5];
+        bytes[0] = 'b';
+        int i = strength;
+        bytes[1] = (byte) ((i >> 24) & 0xFF);
+        bytes[2] = (byte) ((i >> 16) & 0xFF);
+        bytes[3] = (byte) ((i >> 8) & 0xFF);
+        bytes[4] = (byte) (i & 0xFF);
+
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId))
+                continue;
+            if (p.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId,p.getParticipantId());
+        }
+    }
+
     @Override
     public void onRealTimeMessageReceived(RealTimeMessage rtm) {
         byte[] buf = rtm.getMessageData();
@@ -680,6 +705,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         else if (buf[0] == 'a'){
             oppoTapCount++;
+        }
+        else if(buf[0] == 'b'){
+            opponentStrength = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
         else{
             opponentDirectionKeycode = (buf[3] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[1] & 0xFF) << 16)| ((buf[0] & 0xFF) << 24);
@@ -898,6 +926,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         return powerUpList;
 //        }
+    }
+    public int requestMyPlayerNum(){
+        return playerNum;
     }
 
     public void log(String tag, String s){

@@ -21,5 +21,8 @@ public interface ActionResolver {
     public void broadcastMyTapping();
     public int requestOppoTapCount();
     public int requestMyTapCount();
+    public int requestMyPlayerNum();
+    public int requestOpponentStrength();
+    public void broadcastMyStrength(int strength);
 }
 

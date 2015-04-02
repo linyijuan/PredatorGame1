@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 public class AssetLoader {
+    public static TextureRegion vsScreenGreenBot, vsScreenRedBot;
     public static TextureRegion[][] texture;
     public static Texture source;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
@@ -41,6 +42,11 @@ public class AssetLoader {
         monsterDown = texture[0][0];
         monsterLeft = texture[2][0];
         monsterRight = texture[1][0];
+
+        vsScreenGreenBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen.png")));
+        vsScreenGreenBot.flip(false,true);
+        vsScreenRedBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen2.png")));
+        vsScreenRedBot.flip(false,true);
 
         upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
         downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});

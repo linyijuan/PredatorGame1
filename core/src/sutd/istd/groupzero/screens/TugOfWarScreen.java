@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import sutd.istd.groupzero.helpers.ActionResolver;
@@ -16,18 +17,43 @@ public class TugOfWarScreen implements Screen{
     private SpriteBatch batcher;
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
+    private int playerNum, opponentStrength,myStrength;
+    private TextureRegion pic;
+    private float ratio;
+    private float x,y;
 
-    public TugOfWarScreen(ActionResolver actionResolver) {
+
+    public TugOfWarScreen(ActionResolver actionResolver,int myStrength) {
         this.actionResolver = actionResolver;
+        this.myStrength = myStrength;
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
 
+        playerNum = actionResolver.requestMyPlayerNum();
+        if (playerNum == 1){
+            pic = AssetLoader.vsScreenGreenBot;
+        }
+        else{
+            pic = AssetLoader.vsScreenRedBot;
+        }
+        while(actionResolver.requestOpponentStrength()== -1){
+            opponentStrength =actionResolver.requestOpponentStrength();
+        }
+        if(myStrength+opponentStrength == 0)
+        {
+            ratio = 1;
+        }
+        else {
+            ratio = myStrength / (myStrength + opponentStrength);
+        }
         batcher = new SpriteBatch();
+        batcher.enableBlending();
         batcher.setProjectionMatrix(cam.combined);
 
 //        shapeRenderer = new ShapeRenderer();
 //        shapeRenderer.setProjectionMatrix(cam.combined);
+
 
         Gdx.input.setInputProcessor(new InputHandler(actionResolver));
 
@@ -38,9 +64,13 @@ public class TugOfWarScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         batcher.begin();
+
         AssetLoader.font.draw(batcher,"ME:"+actionResolver.requestMyTapCount(),100,100);
         AssetLoader.font.draw(batcher,"OPPO:"+actionResolver.requestOppoTapCount(),100,150);
+        batcher.draw(AssetLoader.monsterDown, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+
         batcher.end();
 
 
