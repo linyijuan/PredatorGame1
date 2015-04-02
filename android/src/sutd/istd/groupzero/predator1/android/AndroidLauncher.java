@@ -909,6 +909,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
+        ArrayList<Food> copy = new ArrayList<Food>();
+
         return foodList;
 //        }
 

@@ -13,11 +13,14 @@ import sutd.istd.groupzero.helpers.AssetLoader;
 import sutd.istd.groupzero.helpers.InputHandler;
 
 public class TugOfWarScreen implements Screen{
+    private float screenWidth;
+    private float screenHeight;
     private ActionResolver actionResolver;
     private SpriteBatch batcher;
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
     private int playerNum, opponentStrength,myStrength;
+
     private TextureRegion pic;
     private float ratio;
     private float x,y;
@@ -28,8 +31,9 @@ public class TugOfWarScreen implements Screen{
         this.myStrength = myStrength;
 
         cam = new OrthographicCamera();
-        cam.setToOrtho(true, 180, 360);
-
+        cam.setToOrtho(true, 200, 400);
+        screenWidth = 200;
+        screenHeight = 400;
         playerNum = actionResolver.requestMyPlayerNum();
         if (playerNum == 1){
             pic = AssetLoader.vsScreenGreenBot;
@@ -40,22 +44,18 @@ public class TugOfWarScreen implements Screen{
         while(actionResolver.requestOpponentStrength()== -1){
             opponentStrength =actionResolver.requestOpponentStrength();
         }
-        if(myStrength+opponentStrength == 0)
-        {
-            ratio = 1;
-        }
-        else {
-            ratio = myStrength / (myStrength + opponentStrength);
-        }
+        opponentStrength =actionResolver.requestOpponentStrength();
+
+        ratio = (-myStrength+opponentStrength+10f)/20f;
+
         batcher = new SpriteBatch();
-        batcher.enableBlending();
         batcher.setProjectionMatrix(cam.combined);
 
 //        shapeRenderer = new ShapeRenderer();
 //        shapeRenderer.setProjectionMatrix(cam.combined);
 
 
-        Gdx.input.setInputProcessor(new InputHandler(actionResolver));
+        Gdx.input.setInputProcessor(new InputHandler(actionResolver,0));
 
     }
 
@@ -64,14 +64,30 @@ public class TugOfWarScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        int diff = -actionResolver.requestMyTapCount()-myStrength + actionResolver.requestOppoTapCount()+opponentStrength;
+        ratio = (diff+10f)/20f;
 
-        batcher.begin();
+        if (ratio >=1){
+            batcher.begin();
+            AssetLoader.font.draw(batcher,"YOU LOSE",80,150);
+            batcher.end();
+            Gdx.input.setInputProcessor(new InputHandler(actionResolver,1));
+        }
+        else if (ratio <=0){
+            batcher.begin();
+            AssetLoader.font.draw(batcher,"YOU WIN",80,150);
+            batcher.end();
+            Gdx.input.setInputProcessor(new InputHandler(actionResolver,1));
+        }
+        else{
+            batcher.begin();
+            batcher.disableBlending();
+            batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*1.5f)/2, screenWidth, screenHeight*1.5f);
+            AssetLoader.font.draw(batcher,"RATIO:"+ratio,100,50);
+            batcher.end();
+        }
 
-        AssetLoader.font.draw(batcher,"ME:"+actionResolver.requestMyTapCount(),100,100);
-        AssetLoader.font.draw(batcher,"OPPO:"+actionResolver.requestOppoTapCount(),100,150);
-        batcher.draw(AssetLoader.monsterDown, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 
-        batcher.end();
 
 
     }

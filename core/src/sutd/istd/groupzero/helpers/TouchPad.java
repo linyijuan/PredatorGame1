@@ -36,7 +36,6 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
-	private float x, y, width, height;
     private GameWorld gameworld;
     private Map map;
     private Game game;
@@ -54,12 +53,13 @@ public class TouchPad {
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
+
 		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
-		touchpad.setBounds(x, y, width, height);
-		this.x = x;
-		this.y = y;
-		this.width = Gdx.graphics.getWidth()/4;
-		this.height = Gdx.graphics.getWidth()/4;
+
+
+
+        touchpad.setBounds(x, y, width, height);
+
 		this.monster = gameWorld.getMap().getMonster();
         this.gameworld = gameWorld;
         this.map = gameWorld.getMap();

@@ -4,8 +4,10 @@ import com.badlogic.gdx.InputProcessor;
 
 public class InputHandler implements InputProcessor{
    private ActionResolver actionResolver;
-	public InputHandler(ActionResolver actionResolver){
+    private int mode;
+	public InputHandler(ActionResolver actionResolver,int mode){
 		this.actionResolver = actionResolver;
+        this.mode = mode;
 	}
 	@Override
 	public boolean keyDown(int keycode) {
@@ -29,7 +31,13 @@ public class InputHandler implements InputProcessor{
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        actionResolver.broadcastMyTapping();
+        if (mode == 0){
+            actionResolver.broadcastMyTapping();
+        }
+        else if (mode == 1){
+
+        }
+
         return false;
 	}
 

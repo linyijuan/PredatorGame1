@@ -24,7 +24,9 @@ public class GameScreen implements Screen{
 		screenHeight = Gdx.graphics.getHeight();
         world = new GameWorld(screenWidth, screenHeight,actionResolver,map);
         renderer = new GameRenderer(world, screenWidth, screenHeight,actionResolver,game);
-        stage = new TouchPad(screenWidth/2, 15f, 200f, 200f, world,actionResolver,game).createTouchPad();
+
+        stage = new TouchPad(screenWidth/2, 15f, 300f, 300f, world,actionResolver,game).createTouchPad();
+
         Gdx.input.setInputProcessor(stage);
     }
 
