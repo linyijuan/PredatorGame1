@@ -910,8 +910,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             }
         }
         ArrayList<Food> copy = new ArrayList<Food>();
-
-        return foodList;
+        for (Food food : foodList){
+            copy.add(new Food(food.getPosition()));
+        }
+        return copy;
 //        }
 
     }
@@ -926,7 +928,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
-        return powerUpList;
+        ArrayList<PowerUps> copy = new ArrayList<PowerUps>();
+        for (PowerUps pu : powerUpList){
+            copy.add(new PowerUps(pu.getPosition(), pu.getKind()));
+        }
+        return copy;
 //        }
     }
     public int requestMyPlayerNum(){
