@@ -9,6 +9,7 @@ public class Item {
     private float boundHeight;
     private boolean showing;
     private Rectangle bound;
+    private Rectangle walkingBound;
 
     public Item(Vector2 _position){
         this.position = _position;
@@ -17,7 +18,11 @@ public class Item {
     public void setBound(float boundWidth, float boundHeight){
        this.boundWidth = boundWidth;
        this.boundHeight = boundHeight;
-       this.bound = new Rectangle(position.x,position.y,boundWidth,boundHeight);
+       this.bound = new Rectangle(position.x, position.y,boundWidth,boundHeight);
+    }
+
+    public void setWalkingBound(float boundWidth, float boundHeight){
+        this.walkingBound = new Rectangle(position.x + 3,position.y,boundWidth - 6,boundHeight);
     }
     public boolean shouldShow(){return showing;}
     public void setShouldShow(boolean s){this.showing = s;}
@@ -31,5 +36,9 @@ public class Item {
     }
 
     public Rectangle getBound(){return bound;}
+
+    public Rectangle getWalkingBound(){
+        return walkingBound;
+    }
 
 }

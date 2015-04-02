@@ -93,7 +93,7 @@ public class TouchPad {
                                 monster.setDirection(Direction.TOP);
                                 monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                 for (Tree t: actionResolver.requestTrees() ){
-                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getWalkingBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                         break;
                                     }
@@ -102,7 +102,7 @@ public class TouchPad {
                                 monster.setDirection(Direction.BOTTOM);
                                 monster.setMyPosition(monster.getMyPosition().add(moveDown));
                                 for (Tree t: actionResolver.requestTrees() ){
-                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getWalkingBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveUp));
                                         break;
                                     }
@@ -112,7 +112,7 @@ public class TouchPad {
 
                                 monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                 for (Tree t: actionResolver.requestTrees() ){
-                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getWalkingBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                         break;
                                     }
@@ -121,7 +121,7 @@ public class TouchPad {
                                 monster.setDirection(Direction.RIGHT);
                                 monster.setMyPosition(monster.getMyPosition().add(moveRight));
                                 for (Tree t: actionResolver.requestTrees() ){
-                                    if (Intersector.overlaps(monster.getBound(), t.getBound())){
+                                    if (Intersector.overlaps(monster.getBound(), t.getWalkingBound())){
                                         monster.setMyPosition(monster.getMyPosition().add(moveLeft));
                                         break;
                                     }

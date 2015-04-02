@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
@@ -173,16 +174,16 @@ public class Map{
         return treeList;
     }
 
-    public synchronized void setPowerUpsList(ArrayList<PowerUps> powerUpsList) {
-        this.powerUpsList = powerUpsList;
+    public synchronized void setPowerUpsList(List<PowerUps> powerUpsList) {
+        this.powerUpsList = new ArrayList<PowerUps>(powerUpsList);
 
     }
-    public synchronized void setFoodList(ArrayList<Food> foodList) {
-        this.foodList = foodList;
+    public synchronized void setFoodList(List<Food> foodList) {
+        this.foodList = new ArrayList<Food>(foodList);
 
     }
-    public synchronized void setTreeList(ArrayList<Tree> treeList) {
-        this.treeList = treeList;
+    public synchronized void setTreeList(List<Tree> treeList) {
+        this.treeList = new ArrayList<Tree>(treeList);
     }
 
 }

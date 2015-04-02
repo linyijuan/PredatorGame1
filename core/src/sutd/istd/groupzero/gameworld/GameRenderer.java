@@ -19,7 +19,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import sutd.istd.groupzero.gameobjects.Food;
@@ -178,21 +177,25 @@ public class GameRenderer {
 
     public void render(float runTime) {
         // To prevent traversing through the arraylist while it is being modified
-        ArrayList<Food> foods = actionResolver.requestFoods();
-        ArrayList<PowerUps> pus = actionResolver.requestPUs();
-        ArrayList<Tree> trees = actionResolver.requestTrees();
+//        ArrayList<Food> foods = actionResolver.requestFoods();
+//        ArrayList<PowerUps> pus = actionResolver.requestPUs();
+//        ArrayList<Tree> trees = actionResolver.requestTrees();
 
-        ArrayList<Food> foodCopy = new ArrayList<Food>();
-        ArrayList<PowerUps> puCopy = new ArrayList<PowerUps>();
-        for (Food f:foods){
-            foodCopy.add(f);
-        }
-        for (PowerUps p:pus){
-            puCopy.add(p);
-        }
+        CopyOnWriteArrayList<Food> foods = new CopyOnWriteArrayList(actionResolver.requestFoods());
+        CopyOnWriteArrayList<PowerUps> pus = new CopyOnWriteArrayList(actionResolver.requestPUs());
+        CopyOnWriteArrayList<Tree> trees = new CopyOnWriteArrayList(actionResolver.requestTrees());
 
-        myMap.setFoodList(foodCopy);
-        myMap.setPowerUpsList(puCopy);
+//        ArrayList<Food> foodCopy = new ArrayList<Food>();
+//        ArrayList<PowerUps> puCopy = new ArrayList<PowerUps>();
+//        for (Food f:foods){
+//            foodCopy.add(f);
+//        }
+//        for (PowerUps p:pus){
+//            puCopy.add(p);
+//        }
+
+        myMap.setFoodList(foods);
+        myMap.setPowerUpsList(pus);
         myMap.setTreeList(trees);
 
         actionResolver.broadcastMyStatus(myMonster.getMyPosition(),myMonster.getDirection());
