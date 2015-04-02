@@ -62,7 +62,7 @@ public class GameRenderer {
     private ShaderProgram finalShader;
 
     //values passed to the shader
-    public static final float ambientIntensity = 0.1f;
+    public static final float ambientIntensity = 0.05f;
     public static final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
 
     //used to make the light flicker

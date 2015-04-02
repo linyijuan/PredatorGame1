@@ -13,8 +13,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 public class AssetLoader {
     public static TextureRegion[][] texture;
     public static Texture source;
-    public static Texture maskLayer;
-    public static TextureRegion gridBg;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
     public static TextureRegion tree,steak,powerUp;
@@ -26,15 +24,15 @@ public class AssetLoader {
     public static void load(){
         source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
-        tree = new TextureRegion(new Texture(Gdx.files.internal("data/treesmall.png")));
+        tree = new TextureRegion(new Texture(Gdx.files.internal("data/tree3.png")));
         tree.flip(false,true);
-        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
+//        Gdx.app.log("tree",tree.getRegionWidth()+","+tree.getRegionHeight());
+        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak_copy.png")));
         steak.flip(false,true);
-        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
+//        Gdx.app.log("steak",steak.getRegionWidth()+","+steak.getRegionHeight());
+        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerup.png")));
         powerUp.flip(false,true);
-
-//        maskLayer = new Texture(Gdx.files.internal("data/maskingLayer.png"));
-
+//        Gdx.app.log("powerup",powerUp.getRegionWidth()+","+powerUp.getRegionHeight());
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)

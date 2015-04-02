@@ -72,7 +72,7 @@ public class Map{
         boolean toPlace;
         while(treeList.size() < noOfObstacles) {
             toPlace = true;
-            Vector2 v = new Vector2(cap((int)monster.getBoundWidth(), mapSizeX - 52 - (int)monster.getBoundWidth()), cap((int)monster.getBoundHeight(), mapSizeY - 52 - (int)monster.getBoundHeight()));
+            Vector2 v = new Vector2(cap((int)monster.getBoundWidth(), mapSizeX - 52 - (int)monster.getBoundWidth()), cap((int)monster.getBoundHeight(), mapSizeY - 49 - (int)monster.getBoundHeight()));
             Tree tree = new Tree(v);
             if (!treeList.isEmpty()){
                 for (Item i : treeList) {
