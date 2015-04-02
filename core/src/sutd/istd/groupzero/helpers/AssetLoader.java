@@ -25,7 +25,7 @@ public class AssetLoader {
     public static void load(){
         source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
-        tree = new TextureRegion(new Texture(Gdx.files.internal("data/tree3.png")));
+        tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
         tree.flip(false,true);
 //        Gdx.app.log("tree",tree.getRegionWidth()+","+tree.getRegionHeight());
         steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak_copy.png")));

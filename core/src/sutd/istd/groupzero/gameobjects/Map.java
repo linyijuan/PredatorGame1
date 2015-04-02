@@ -19,6 +19,9 @@ public class Map{
     private int noOfFood=10;
     private int noOfPowerUps=10;
 
+    private int treeWidth = 39;
+    private int treeHeight = 56;
+
     private ArrayList<Item> itemList = new ArrayList<Item>();
     private ArrayList<Tree> treeList = new ArrayList<Tree>();
     private ArrayList<Food> foodList = new ArrayList<Food>();
@@ -72,7 +75,7 @@ public class Map{
         boolean toPlace;
         while(treeList.size() < noOfObstacles) {
             toPlace = true;
-            Vector2 v = new Vector2(cap((int)monster.getBoundWidth(), mapSizeX - 52 - (int)monster.getBoundWidth()), cap((int)monster.getBoundHeight(), mapSizeY - 49 - (int)monster.getBoundHeight()));
+            Vector2 v = new Vector2(cap((int)monster.getBoundWidth(), mapSizeX - treeWidth - (int)monster.getBoundWidth()), cap((int)monster.getBoundHeight(), mapSizeY - treeHeight - (int)monster.getBoundHeight()));
             Tree tree = new Tree(v);
             if (!treeList.isEmpty()){
                 for (Item i : treeList) {
