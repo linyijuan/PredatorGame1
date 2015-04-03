@@ -179,148 +179,154 @@ public class GameRenderer {
     }
 
     public void render(float runTime) {
-        // To prevent traversing through the arraylist while it is being modified
-        List<Food> foods = Collections.synchronizedList(actionResolver.requestFoods());
-        List<PowerUps> pus = Collections.synchronizedList(actionResolver.requestPUs());
-        ArrayList<Tree> trees = actionResolver.requestTrees();
-        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
-        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
+        if(runTime < 180) {
+            // To prevent traversing through the arraylist while it is being modified
+            List<Food> foods = Collections.synchronizedList(actionResolver.requestFoods());
+            List<PowerUps> pus = Collections.synchronizedList(actionResolver.requestPUs());
+            ArrayList<Tree> trees = actionResolver.requestTrees();
+            CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
+            CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
 
-        myMap.setFoodList(foodList);
-        myMap.setPowerUpsList(powerUpsList);
-        myMap.setTreeList(trees);
+            myMap.setFoodList(foodList);
+            myMap.setPowerUpsList(powerUpsList);
+            myMap.setTreeList(trees);
 
-        actionResolver.broadcastMyStatus(myMonster.getMyPosition(),myMonster.getDirection());
-        if (actionResolver.requestOpponentPosition() != null){
-            Gdx.app.log("GameRenderer oppo post", "" + actionResolver.requestOpponentPosition().x + ", " + actionResolver.requestOpponentPosition().y);
-            Gdx.app.log("GameRenderer my post", "" + myMonster.getMyPosition().x + ", " + myMonster.getMyPosition().y);
-            if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))){
-                actionResolver.broadcastMyStrength(myMonster.getStrength());
-                Gdx.app.log("GameRenderer", "Setting new screen");
-                game.setScreen(new TugOfWarScreen(actionResolver,myMonster.getStrength()));
+            actionResolver.broadcastMyStatus(myMonster.getMyPosition(), myMonster.getDirection());
+            if (actionResolver.requestOpponentPosition() != null) {
+                Gdx.app.log("GameRenderer oppo post", "" + actionResolver.requestOpponentPosition().x + ", " + actionResolver.requestOpponentPosition().y);
+                Gdx.app.log("GameRenderer my post", "" + myMonster.getMyPosition().x + ", " + myMonster.getMyPosition().y);
+                if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))) {
+                    actionResolver.broadcastMyStrength(myMonster.getStrength());
+                    Gdx.app.log("GameRenderer", "Setting new screen");
+                    game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
+                }
             }
-        }
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClearColor(0, 0, 0, 1);
 
-        final float dt = Gdx.graphics.getRawDeltaTime();
-        zAngle += dt * zSpeed;
-        while(zAngle > PI2)
-            zAngle -= PI2;
+            final float dt = Gdx.graphics.getRawDeltaTime();
+            zAngle += dt * zSpeed;
+            while (zAngle > PI2)
+                zAngle -= PI2;
 
-        fbo.begin();
-        batcher.setShader(finalShader);
-        batcher.setProjectionMatrix(cam.combined);
-        batcher.begin();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float lightSize = (screenWidth/3 + 4f * (float)Math.sin(zAngle) + .2f* MathUtils.random())*myMonster.getVisibility();
-        batcher.draw(light,myMonster.getMyPosition().x - lightSize*0.42f ,myMonster.getMyPosition().y  - lightSize*0.42f, lightSize, lightSize);
-        batcher.end();
-        fbo.end();
+            fbo.begin();
+            batcher.setShader(finalShader);
+            batcher.setProjectionMatrix(cam.combined);
+            batcher.begin();
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            float lightSize = (screenWidth / 3 + 4f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) * myMonster.getVisibility();
+            batcher.draw(light, myMonster.getMyPosition().x - lightSize * 0.42f, myMonster.getMyPosition().y - lightSize * 0.42f, lightSize, lightSize);
+            batcher.end();
+            fbo.end();
 
-        batcher.begin();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batcher.enableBlending();
-        Direction d = myMonster.getDirection();
-        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
-        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
-        //this is because our default and ambiant shader dont use multi texturing...
-        //youc can basically bind anything, it doesnt matter
+            batcher.begin();
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            batcher.enableBlending();
+            Direction d = myMonster.getDirection();
+            fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
+            light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
+            //this is because our default and ambiant shader dont use multi texturing...
+            //youc can basically bind anything, it doesnt matter
 
-        Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth()/2, myMonster.getMyPosition().y + myMonster.getBoundHeight()/2);
-        cam.position.set(camPost, 0);
-        cam.update();
-        batcher.setProjectionMatrix(cam.combined);
+            Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2, myMonster.getMyPosition().y + myMonster.getBoundHeight() / 2);
+            cam.position.set(camPost, 0);
+            cam.update();
+            batcher.setProjectionMatrix(cam.combined);
 //        shapeRenderer.setProjectionMatrix(cam.combined);
-        batcher.draw(gridBg, 0, 0);
+            batcher.draw(gridBg, 0, 0);
 
 
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 //        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for(Tree tree : trees){
+            for (Tree tree : trees) {
 //            shapeRenderer.setColor(Color.BLUE);
 //            shapeRenderer.circle(tree.getWalkingBound().x, tree.getWalkingBound().y, tree.getWalkingBound().radius);
-            batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
-        }
+                batcher.draw(AssetLoader.tree, tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
+            }
 //        shapeRenderer.end();
 
-        for (PowerUps p : powerUpsList) {
-            if (p.shouldShow()) {
-                batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+            for (PowerUps p : powerUpsList) {
+                if (p.shouldShow()) {
+                    batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+                }
             }
-        }
 
-        for (Food s : foodList) {
-            if (s.shouldShow()) {
-                batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+            for (Food s : foodList) {
+                if (s.shouldShow()) {
+                    batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+                }
             }
-        }
 
 
-        switch (d) {
-            case TOP:
-                batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case LEFT:
-                batcher.draw(animationSet[0].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case RIGHT:
-                batcher.draw(animationSet[2].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case BOTTOM:
-                batcher.draw(animationSet[3].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            default:
-                batcher.draw(directionSet[myMonster.getDirection().getKeycode()%4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-        }
-
-        // Drawing of arrow
-        if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
-            Vector2 oppo_pos = actionResolver.requestOpponentPosition();
-            int oppo_d = actionResolver.requestOpponentDirection();
-            switch (oppo_d) {
-                case 1:
-                    batcher.draw(animationSetoppo[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+            switch (d) {
+                case TOP:
+                    batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 0:
-                    batcher.draw(animationSetoppo[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case LEFT:
+                    batcher.draw(animationSet[0].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 2:
-                    batcher.draw(animationSetoppo[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case RIGHT:
+                    batcher.draw(animationSet[2].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 3:
-                    batcher.draw(animationSetoppo[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case BOTTOM:
+                    batcher.draw(animationSet[3].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
                 default:
-                    batcher.draw(directionSetoppo[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                    batcher.draw(directionSet[myMonster.getDirection().getKeycode() % 4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
             }
 
-
-
-
-            directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
-            angle = directionVectorToTarget.angle() - 180;
-            arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
-            arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
-
             // Drawing of arrow
-            spriteArrow.setRotation(angle);
-            spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
-            spriteArrow.setOriginCenter();
-            spriteArrow.draw(batcher);
+            if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
+                Vector2 oppo_pos = actionResolver.requestOpponentPosition();
+                int oppo_d = actionResolver.requestOpponentDirection();
+                switch (oppo_d) {
+                    case 1:
+                        batcher.draw(animationSetoppo[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 0:
+                        batcher.draw(animationSetoppo[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 2:
+                        batcher.draw(animationSetoppo[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 3:
+                        batcher.draw(animationSetoppo[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    default:
+                        batcher.draw(directionSetoppo[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                        break;
+                }
+
+
+                directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
+                angle = directionVectorToTarget.angle() - 180;
+                arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
+                arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
+
+                // Drawing of arrow
+                spriteArrow.setRotation(angle);
+                spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
+                spriteArrow.setOriginCenter();
+                spriteArrow.draw(batcher);
+            }
+
+            batcher.disableBlending();
+            AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 7, myMonster.getMyPosition().y - 21);
+            AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 6, myMonster.getMyPosition().y - 20);
+
+            //speed display
+            AssetLoader.shadow.draw(batcher, "" + myMonster.getSpeed(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 7, myMonster.getMyPosition().y - 51);
+            AssetLoader.font.draw(batcher, "" + myMonster.getSpeed(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 6, myMonster.getMyPosition().y - 50);
+
+            batcher.end();
         }
-
-        batcher.disableBlending();
-        AssetLoader.shadow.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-7,myMonster.getMyPosition().y-21);
-        AssetLoader.font.draw(batcher,""+myMonster.getStrength(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-6,myMonster.getMyPosition().y-20);
-
-        //speed display
-        AssetLoader.shadow.draw(batcher,""+myMonster.getSpeed(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-7,myMonster.getMyPosition().y-51);
-        AssetLoader.font.draw(batcher,""+myMonster.getSpeed(),myMonster.getMyPosition().x + myMonster.getBoundWidth()/2-6,myMonster.getMyPosition().y-50);
-
-        batcher.end();
+        else
+        {
+            actionResolver.broadcastMyStrength(myMonster.getStrength());
+            Gdx.app.log("GameRenderer", "Setting new screen");
+            game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
+        }
 
     }
 
