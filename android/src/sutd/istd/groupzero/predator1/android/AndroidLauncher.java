@@ -460,8 +460,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         ArrayList<String> ids = room.getParticipantIds();
         Collections.sort(ids);
         mMyId = room.getParticipantId(Games.Players.getCurrentPlayerId(mGoogleApiClient));
-        Log.d("roompeople1",String.valueOf(mMyId.equals(mParticipants.get(0).getParticipantId())));
-        Log.d("roompeople2",String.valueOf(mMyId.equals(mParticipants.get(1).getParticipantId())));
         mMultiplayer = true;
 
         if (mMyId.equals(ids.get(0))){
@@ -473,12 +471,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mystartPos = startPos[1];
             playerNum = 2;
         }
-
-
-        // print out the list of participants (for debug purposes)
-        Log.d(TAG, "Room ID: " + mRoomId);
-        Log.d(TAG, "My ID " + mMyId);
-        Log.d(TAG, "<< CONNECTED TO ROOM>>");
     }
 
     // Called when we've successfully left the room (this happens a result of voluntarily leaving

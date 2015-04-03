@@ -23,7 +23,6 @@ public class Map{
     private int treeWidth = 39;
     private int treeHeight = 56;
 
-    private ArrayList<Item> itemList = new ArrayList<Item>();
     private ArrayList<Tree> treeList = new ArrayList<Tree>();
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private ArrayList<PowerUps> powerUpsList = new ArrayList<PowerUps>();
@@ -53,25 +52,6 @@ public class Map{
 
     }
 
-//    private void genObstacles() {
-//        boolean toPlace;
-//        while(treeList.size() < noOfObstacles) {
-//            toPlace = true;
-//            Vector2 v = new Vector2(cap(0,mapSizeX-52),cap(0,mapSizeY-52));
-//            Tree tree = new Tree(v);
-//            if (!itemList.isEmpty())
-//                for (Item i :itemList)
-//                    if (Intersector.overlaps(i.getBound(), (tree.getBound())) || Intersector.overlaps(tree.getBound(),monster.getBound())){
-//                        toPlace = false;
-//                        break;
-//                    }
-//            if (toPlace){
-//                treeList.add(tree);
-//                itemList.add(tree);
-//            }
-//        }
-//    }
-
     private void genObstacles() {
         boolean toPlace;
         while(treeList.size() < noOfObstacles) {
@@ -93,7 +73,6 @@ public class Map{
             }
             if (toPlace){
                 treeList.add(tree);
-                itemList.add(tree);
             }
         }
     }
@@ -105,15 +84,31 @@ public class Map{
             toPlace = true;
             Vector2 v = new Vector2(cap(0, mapSizeX - 30), cap(0, mapSizeY - 21));
             Food food = new Food(v);
-            if (!itemList.isEmpty())
-                for (Item i : itemList)
-                    if (Intersector.overlaps(i.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), monster.getBound())) {
+            if (!treeList.isEmpty()){
+                for (Tree t : treeList)
+                    if (Intersector.overlaps(t.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
+            }
+            if (toPlace && !powerUpsList.isEmpty()){
+                for (PowerUps p : powerUpsList)
+                    if (Intersector.overlaps(p.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), monster.getBound())) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
+            if (toPlace && !foodList.isEmpty()){
+                for (Food f : foodList)
+                    if (Intersector.overlaps(f.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), monster.getBound())) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
             if (toPlace) {
                 foodList.add(food);
-                itemList.add(food);
             }
 
         }
@@ -130,40 +125,37 @@ public class Map{
             if ((powerUpsList.size() % 2) == 0) {
                 powerUp.setKind("v");
             }
-            if (!itemList.isEmpty())
-                for (Item i : itemList)
-                    if (Intersector.overlaps(i.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), monster.getBound())) {
+            if (!treeList.isEmpty()){
+                for (Tree t : treeList)
+                    if (Intersector.overlaps(t.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), monster.getBound())) {
                         toPlace = false;
                         break;
                     }
+            }
+            if (toPlace && !powerUpsList.isEmpty()){
+                for (PowerUps p : powerUpsList)
+                    if (Intersector.overlaps(p.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), monster.getBound())) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
+            if (toPlace && !foodList.isEmpty()){
+                for (Food f : foodList)
+                    if (Intersector.overlaps(f.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), monster.getBound())) {
+                        toPlace = false;
+                        break;
+                    }
+            }
             if (toPlace) {
                 powerUpsList.add(powerUp);
-                itemList.add(powerUp);
             }
         }
 
     }
 
-    public void regenFood(Food f){
-
-        foodList.remove(f);
-        itemList.remove(f);
-        genFood();
-
-    }
-
-    public void regenPU(PowerUps p){
-
-        powerUpsList.remove(p);
-        itemList.remove(p);
-        genPowerUps();
-
-    }
-
-
     ///////////////////// Getters and setters /////////////////////////////
 
-    public ArrayList<Item> getItemList(){return itemList;}
     public ArrayList<PowerUps> getPowerUpsList() {
         return powerUpsList;
     }
@@ -176,11 +168,11 @@ public class Map{
 
     public synchronized void setPowerUpsList(List<PowerUps> powerUpsList) {
         this.powerUpsList = new ArrayList<PowerUps>(powerUpsList);
-
+        genPowerUps();
     }
     public synchronized void setFoodList(List<Food> foodList) {
         this.foodList = new ArrayList<Food>(foodList);
-
+        genFood();
     }
     public synchronized void setTreeList(List<Tree> treeList) {
         this.treeList = new ArrayList<Tree>(treeList);
