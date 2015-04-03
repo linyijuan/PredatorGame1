@@ -127,7 +127,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.button_single_player:
             case R.id.button_single_player_2:
                 // play a single-player game
 //                resetGameVars();
@@ -974,7 +973,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
             R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
-            R.id.button_sign_out, R.id.button_single_player,
+            R.id.button_sign_out,
             R.id.button_single_player_2
     };
 
