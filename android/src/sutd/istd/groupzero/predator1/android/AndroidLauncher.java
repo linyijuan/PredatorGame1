@@ -31,6 +31,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.android.gms.plus.Plus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import sutd.istd.groupzero.gameobjects.Food;
@@ -457,11 +458,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // get room ID, participants and my ID:
         mRoomId = room.getRoomId();
         mParticipants = room.getParticipants();
+        ArrayList<String> ids = room.getParticipantIds();
+        Collections.sort(ids);
         mMyId = room.getParticipantId(Games.Players.getCurrentPlayerId(mGoogleApiClient));
         Log.d("roompeople1",String.valueOf(mMyId.equals(mParticipants.get(0).getParticipantId())));
         Log.d("roompeople2",String.valueOf(mMyId.equals(mParticipants.get(1).getParticipantId())));
         mMultiplayer = true;
-        if (mParticipants.get(0).getParticipantId().equals(mMyId)){
+
+        if (mMyId.equals(ids.get(0))){
             mystartPos = startPos[0];
             playerNum = 1;
             broadcastMyMap();
@@ -470,6 +474,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mystartPos = startPos[1];
             playerNum = 2;
         }
+
 
         // print out the list of participants (for debug purposes)
         Log.d(TAG, "Room ID: " + mRoomId);
@@ -602,6 +607,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             }
 
         }
+
     }
 
     /*
@@ -694,14 +700,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             oppopowerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
         }
         else if(buf[0] == 'e'){
-            int i = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
-            Food a = foodList.remove(i);
-            Log.i("renderRF",a.getPosition().x+"");
+            int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
+            foodList.remove(new Food(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy))));
         }
         else if(buf[0] == 'o'){
-            int i = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
-            PowerUps a = powerUpList.remove(i);
-            Log.i("renderRP",a.getPosition().x+"");
+            int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
+            powerUpList.remove(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
         }
         else if (buf[0] == 'a'){
             oppoTapCount++;
@@ -805,7 +811,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                     if (pp.getStatus() != Participant.STATUS_JOINED)
                         continue;
                     Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, buf, mRoomId, pp.getParticipantId());
-                }            }
+                }
+            }
             for (Tree t:treeList){
                 int x = Float.floatToIntBits(t.getPosition().x);
                 int y = Float.floatToIntBits(t.getPosition().y);
@@ -835,20 +842,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     public void eatFood(Food f){
         if (mMultiplayer) {
-            byte[] bytes = new byte[5];
-            bytes[0] = 'e';
-            int i = foodList.indexOf(f);
-            bytes[1] = (byte) ((i >> 24) & 0xFF);
-            bytes[2] = (byte) ((i >> 16) & 0xFF);
-            bytes[3] = (byte) ((i >> 8) & 0xFF);
-            bytes[4] = (byte) (i & 0xFF);
+            int x = Float.floatToIntBits(f.getPosition().x);
+            int y = Float.floatToIntBits(f.getPosition().y);
+            byte[] buf = new byte[9];
+            buf[0] = 'e';
+
+            buf[1] = (byte)(x & 0xff);
+            buf[2] = (byte)((x >> 8) & 0xff);
+            buf[3] = (byte)((x >> 16) & 0xff);
+            buf[4] = (byte)((x >> 24) & 0xff);
+
+            buf[5] = (byte)(y & 0xff);
+            buf[6] = (byte)((y >> 8) & 0xff);
+            buf[7] = (byte)((y >> 16) & 0xff);
+            buf[8] = (byte)((y >> 24) & 0xff);
 
             for (Participant p : mParticipants) {
                 if (p.getParticipantId().equals(mMyId))
                     continue;
                 if (p.getStatus() != Participant.STATUS_JOINED)
                     continue;
-                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, buf, mRoomId, p.getParticipantId());
             }
         }
         foodList.remove(f);
@@ -856,20 +870,28 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
     public void obtainPowerUp(PowerUps p){
         if (mMultiplayer){
-            byte[] bytes = new byte[5];
-            bytes[0] = 'o';
-            int i = powerUpList.indexOf(p);
-            bytes[1] = (byte) ((i >> 24) & 0xFF);
-            bytes[2] = (byte) ((i >> 16) & 0xFF);
-            bytes[3] = (byte) ((i >> 8) & 0xFF);
-            bytes[4] = (byte) (i & 0xFF);
+            int x = Float.floatToIntBits(p.getPosition().x);
+            int y = Float.floatToIntBits(p.getPosition().y);
+            byte[] buf = new byte[10];
+            buf[0] = 'o';
 
+            buf[1] = (byte)(x & 0xff);
+            buf[2] = (byte)((x >> 8) & 0xff);
+            buf[3] = (byte)((x >> 16) & 0xff);
+            buf[4] = (byte)((x >> 24) & 0xff);
+
+            buf[5] = (byte)(y & 0xff);
+            buf[6] = (byte)((y >> 8) & 0xff);
+            buf[7] = (byte)((y >> 16) & 0xff);
+            buf[8] = (byte)((y >> 24) & 0xff);
+
+            buf[9] = (byte)(p.getKind().equals("s")?'s':'v');
             for (Participant pp : mParticipants) {
                 if (pp.getParticipantId().equals(mMyId))
                     continue;
                 if (pp.getStatus() != Participant.STATUS_JOINED)
                     continue;
-                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId,pp.getParticipantId());
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, buf, mRoomId, pp.getParticipantId());
             }
         }
         powerUpList.remove(p);
@@ -905,18 +927,18 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 useOppoFood = true;
                 foodList = new ArrayList<Food>();
                 for (Food f : oppofoodList) {
-                    foodList.add(f);
+                    foodList.add(new Food(f.getPosition()));
                 }
             }
         }
-        ArrayList<Food> copy = new ArrayList<Food>();
-        for (Food food : foodList){
-            copy.add(new Food(food.getPosition()));
-        }
-        return copy;
+//        ArrayList<Food> copy = new ArrayList<Food>();
+//        for (Food food : foodList){
+//            copy.add(new Food(food.getPosition()));
 //        }
-
+        return foodList;
+//        }
     }
+
     public ArrayList<PowerUps> requestPUs(){
 //        synchronized (puLock) {
         if (oppopowerUpList.size() > 1) {
@@ -924,15 +946,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 useOppoPU = true;
                 powerUpList = new ArrayList<PowerUps>();
                 for (PowerUps p : oppopowerUpList) {
-                    powerUpList.add(p);
+                    powerUpList.add(new PowerUps(p.getPosition(), p.getKind()));
                 }
             }
         }
-        ArrayList<PowerUps> copy = new ArrayList<PowerUps>();
-        for (PowerUps pu : powerUpList){
-            copy.add(new PowerUps(pu.getPosition(), pu.getKind()));
-        }
-        return copy;
+//        ArrayList<PowerUps> copy = new ArrayList<PowerUps>();
+//        for (PowerUps pu : powerUpList){
+//            copy.add(new PowerUps(pu.getPosition(), pu.getKind()));
+//        }
+        return powerUpList;
 //        }
     }
     public int requestMyPlayerNum(){
@@ -942,19 +964,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void log(String tag, String s){
         Log.i(tag,s);
     }
-
-//    public void broadcastMyFood(Food f){
-//        Log.i("broad1",f.toString());
-//        foodList.add(f);
-//    }
-//    public void broadcastMyPU(PowerUps p){
-//        Log.i("broad2",p.toString());
-//        powerUpList.add(p);
-//    }
-//    public void broadcastMyTree(Tree t){
-//        Log.i("broad3",t.toString());
-//        treeList.add(t);
-//    }
 
     /*
      * UI SECTION. Methods that implement the game's UI.

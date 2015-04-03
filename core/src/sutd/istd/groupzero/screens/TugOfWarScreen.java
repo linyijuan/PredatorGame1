@@ -83,7 +83,7 @@ public class TugOfWarScreen implements Screen{
             batcher.begin();
             batcher.disableBlending();
             batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*1.5f)/2, screenWidth, screenHeight*1.5f);
-            AssetLoader.font.draw(batcher,"RATIO:"+ratio,100,50);
+//            AssetLoader.font.draw(batcher,"RATIO:"+ratio,100,50);
             batcher.end();
         }
 
