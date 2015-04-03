@@ -19,6 +19,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import sutd.istd.groupzero.gameobjects.Food;
@@ -177,37 +180,40 @@ public class GameRenderer {
 
     public void render(float runTime) {
         // To prevent traversing through the arraylist while it is being modified
-//        ArrayList<Food> foods = actionResolver.requestFoods();
-//        ArrayList<PowerUps> pus = actionResolver.requestPUs();
-//        ArrayList<Tree> trees = actionResolver.requestTrees();
-
-        CopyOnWriteArrayList<Food> foods = new CopyOnWriteArrayList(actionResolver.requestFoods());
-        CopyOnWriteArrayList<PowerUps> pus = new CopyOnWriteArrayList(actionResolver.requestPUs());
-        CopyOnWriteArrayList<Tree> trees = new CopyOnWriteArrayList(actionResolver.requestTrees());
+        List<Food> foods = Collections.synchronizedList(actionResolver.requestFoods());
+        List<PowerUps> pus = Collections.synchronizedList(actionResolver.requestPUs());
+        ArrayList<Tree> trees = actionResolver.requestTrees();
+        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
+        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
 
 //        ArrayList<Food> foodCopy = new ArrayList<Food>();
 //        ArrayList<PowerUps> puCopy = new ArrayList<PowerUps>();
-//        for (Food f:foods){
-//            foodCopy.add(f);
-//        }
-//        for (PowerUps p:pus){
-//            puCopy.add(p);
-//        }
 
-        myMap.setFoodList(foods);
-        myMap.setPowerUpsList(pus);
+//        synchronized (foods) {
+//            for (Food f : foods) {
+//                foodCopy.add(new Food(f.getPosition()));
+//            }
+//        }
+//        synchronized (pus) {
+//            for (PowerUps p : pus) {
+//                puCopy.add(new PowerUps(p.getPosition(), p.getKind()));
+//            }
+//        }
+        myMap.setFoodList(foodList);
+        myMap.setPowerUpsList(powerUpsList);
         myMap.setTreeList(trees);
 
         actionResolver.broadcastMyStatus(myMonster.getMyPosition(),myMonster.getDirection());
         if (actionResolver.requestOpponentPosition() != null){
-            if (Intersector.overlaps(myMonster.getBound(),
-                    new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))){
+            Gdx.app.log("GameRenderer oppo post", "" + actionResolver.requestOpponentPosition().x + ", " + actionResolver.requestOpponentPosition().y);
+            Gdx.app.log("GameRenderer my post", "" + myMonster.getMyPosition().x + ", " + myMonster.getMyPosition().y);
+            if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))){
                 actionResolver.broadcastMyStrength(myMonster.getStrength());
+                Gdx.app.log("GameRenderer", "Setting new screen");
                 game.setScreen(new TugOfWarScreen(actionResolver,myMonster.getStrength()));
             }
         }
-        CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
-        CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
         final float dt = Gdx.graphics.getRawDeltaTime();
@@ -238,10 +244,19 @@ public class GameRenderer {
         cam.position.set(camPost, 0);
         cam.update();
         batcher.setProjectionMatrix(cam.combined);
+//        shapeRenderer.setProjectionMatrix(cam.combined);
         batcher.draw(gridBg, 0, 0);
+
+
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         for(Tree tree : trees){
+//            shapeRenderer.setColor(Color.BLUE);
+//            shapeRenderer.circle(tree.getWalkingBound().x, tree.getWalkingBound().y, tree.getWalkingBound().radius);
             batcher.draw(AssetLoader.tree, tree.getPosition().x,tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
+//        shapeRenderer.end();
+
         for (PowerUps p : powerUpsList) {
             if (p.shouldShow()) {
                 batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
@@ -272,6 +287,7 @@ public class GameRenderer {
                 batcher.draw(directionSet[myMonster.getDirection().getKeycode()%4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
         }
+
         // Drawing of arrow
         if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
             Vector2 oppo_pos = actionResolver.requestOpponentPosition();
@@ -293,6 +309,9 @@ public class GameRenderer {
                     batcher.draw(directionSet[oppo_d % 4], oppo_pos.x, oppo_pos.y);
                     break;
             }
+
+
+
 
             directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
             angle = directionVectorToTarget.angle() - 180;
