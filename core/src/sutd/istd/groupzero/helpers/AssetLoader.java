@@ -21,9 +21,15 @@ public class AssetLoader {
     public static BitmapFont font, shadow;
     public static Texture arrow;
     public static Sprite spriteArrow;
+    public static ActionResolver actionResolver;
 
     public static void load(){
-        source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+        if (actionResolver.requestMyPlayerNum() == 1){
+            source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+        }
+        else{
+            source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+        }
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
         tree.flip(false,true);
