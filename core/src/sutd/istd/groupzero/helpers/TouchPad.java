@@ -41,6 +41,8 @@ public class TouchPad {
     private GameWorld gameworld;
     private Map map;
     private Game game;
+    private List<Food> foodSynchroList;
+    private List<PowerUps> puSynchroList;
 
 
     private Timer speedTimer;//WIN ___ Timer
@@ -131,7 +133,7 @@ public class TouchPad {
                                     }
                                 }
                             }
-                            List<Food> foodSynchroList = Collections.synchronizedList(actionResolver.requestFoods());
+                            foodSynchroList = Collections.synchronizedList(actionResolver.requestFoods());
                             synchronized (foodSynchroList) {
                                 for (Food f : foodSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
@@ -141,7 +143,8 @@ public class TouchPad {
                                     }
                                 }
                             }
-                            List<PowerUps> puSynchroList = Collections.synchronizedList(actionResolver.requestPUs());
+
+                            puSynchroList = Collections.synchronizedList(actionResolver.requestPUs());
                             synchronized (puSynchroList) {
                                 for (PowerUps p : puSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
