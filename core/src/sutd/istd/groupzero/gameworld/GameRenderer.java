@@ -46,8 +46,9 @@ public class GameRenderer {
     private SpriteBatch batcher;
     public  Texture gridBg;
     public  TextureRegion grid;
-    public  TextureRegion[] directionSet;
+    public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet;
+    public  Animation[] animationSetoppo;
     public  TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
     private float scaleX, scaleY;
@@ -156,14 +157,13 @@ public class GameRenderer {
         leftaAnimation = AssetLoader.leftaAnimation;
         rightaAnimation = AssetLoader.rightaAnimation;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
+        directionSetoppo = new TextureRegion[] {AssetLoader.oppoLeft,AssetLoader.oppoUp,AssetLoader.oppoRight,AssetLoader.oppoDown};
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
+        animationSetoppo = new Animation[]{AssetLoader.leftaAnimationoppo,AssetLoader.upAnimationoppo,AssetLoader.rightaAnimationoppo,AssetLoader.downaAnimationoppo};
 
         // testing arrow drawing
         arrow = AssetLoader.arrow;
         spriteArrow = AssetLoader.spriteArrow;
-
-
-
     }
     public void resize(final int width, final int height) {
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
@@ -186,19 +186,6 @@ public class GameRenderer {
         CopyOnWriteArrayList<PowerUps> powerUpsList = new CopyOnWriteArrayList<PowerUps>(pus);
         CopyOnWriteArrayList<Food> foodList = new CopyOnWriteArrayList<Food>(foods);
 
-//        ArrayList<Food> foodCopy = new ArrayList<Food>();
-//        ArrayList<PowerUps> puCopy = new ArrayList<PowerUps>();
-
-//        synchronized (foods) {
-//            for (Food f : foods) {
-//                foodCopy.add(new Food(f.getPosition()));
-//            }
-//        }
-//        synchronized (pus) {
-//            for (PowerUps p : pus) {
-//                puCopy.add(new PowerUps(p.getPosition(), p.getKind()));
-//            }
-//        }
         myMap.setFoodList(foodList);
         myMap.setPowerUpsList(powerUpsList);
         myMap.setTreeList(trees);
@@ -294,19 +281,19 @@ public class GameRenderer {
             int oppo_d = actionResolver.requestOpponentDirection();
             switch (oppo_d) {
                 case 1:
-                    batcher.draw(animationSet[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    batcher.draw(animationSetoppo[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
                     break;
                 case 0:
-                    batcher.draw(animationSet[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    batcher.draw(animationSetoppo[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
                     break;
                 case 2:
-                    batcher.draw(animationSet[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    batcher.draw(animationSetoppo[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
                     break;
                 case 3:
-                    batcher.draw(animationSet[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    batcher.draw(animationSetoppo[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
                     break;
                 default:
-                    batcher.draw(directionSet[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                    batcher.draw(directionSetoppo[oppo_d % 4], oppo_pos.x, oppo_pos.y);
                     break;
             }
 

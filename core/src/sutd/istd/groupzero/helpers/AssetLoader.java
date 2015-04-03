@@ -12,10 +12,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class AssetLoader {
     public static TextureRegion vsScreenGreenBot, vsScreenRedBot;
-    public static TextureRegion[][] texture;
-    public static Texture source;
+    public static TextureRegion[][] texture,oppoTexture;
+    public static Texture source,oppoSource;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
+    public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo;
     public static TextureRegion tree,steak,powerUp;
     public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
     public static BitmapFont font, shadow;
@@ -26,11 +28,14 @@ public class AssetLoader {
     public static void load(){
         if (actionResolver.requestMyPlayerNum() == 1){
             source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+            oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
         }
         else{
-            source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+            source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
+            oppoSource = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
         }
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
+        oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
         tree.flip(false,true);
 //        Gdx.app.log("tree",tree.getRegionWidth()+","+tree.getRegionHeight());
@@ -44,10 +49,18 @@ public class AssetLoader {
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)
                 tt.flip(false, true);
+        for (TextureRegion[] t:oppoTexture)
+            for (TextureRegion tt: t)
+                tt.flip(false, true);
         monsterUp = texture[3][0];
         monsterDown = texture[0][0];
         monsterLeft = texture[2][0];
         monsterRight = texture[1][0];
+
+        oppoUp = oppoTexture[3][0];
+        oppoDown = oppoTexture[0][0];
+        oppoLeft = oppoTexture[2][0];
+        oppoRight = oppoTexture[1][0];
 
         vsScreenGreenBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen.png")));
         vsScreenGreenBot.flip(false,true);
@@ -62,6 +75,15 @@ public class AssetLoader {
         downaAnimation.setPlayMode(PlayMode.LOOP);
         leftaAnimation.setPlayMode(PlayMode.LOOP);
         rightaAnimation.setPlayMode(PlayMode.LOOP);
+
+        upAnimationoppo = new Animation(0.15f,new TextureRegion[] {oppoUp,oppoTexture[3][1],oppoUp,oppoTexture[3][2]});
+        downaAnimationoppo = new Animation(0.15f,new TextureRegion[] {oppoDown,oppoTexture[0][1],oppoDown,oppoTexture[0][2]});
+        leftaAnimationoppo = new Animation(0.15f,new TextureRegion[] {oppoLeft,oppoTexture[2][1],oppoLeft,oppoTexture[2][2]});
+        rightaAnimationoppo = new Animation(0.15f,new TextureRegion[] {oppoRight,oppoTexture[1][1],oppoRight,oppoTexture[1][2]});
+        upAnimationoppo.setPlayMode(PlayMode.LOOP);
+        downaAnimationoppo.setPlayMode(PlayMode.LOOP);
+        leftaAnimationoppo.setPlayMode(PlayMode.LOOP);
+        rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
 
         font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
         font.setScale(.25f, -.25f);
