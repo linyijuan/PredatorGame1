@@ -9,14 +9,14 @@ public class Tree extends Item{
     private Circle bound;
     private int treeWidth = 39;
     private int treeHeight = 56;
-    private int offset = 15;
+//    private int offset = 15;
 
     public Tree(Vector2 _position) {
         super(_position);
 //        super.setBound(AssetLoader.tree.getRegionWidth(),AssetLoader.tree.getRegionHeight());
 //        this.bound = new Circle(_position,(float)49);
         super.setBound(treeWidth, treeHeight);
-        super.setWalkingBound(treeWidth, treeHeight - offset);
+        super.setWalkingBound(treeWidth, treeHeight, 13f);
     }
 
 
