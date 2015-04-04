@@ -2,6 +2,7 @@ package sutd.istd.groupzero.helpers;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -43,6 +44,7 @@ public class TouchPad {
     private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
+    private Sound movement;
 
 
     private Timer speedTimer;//WIN ___ Timer
@@ -69,6 +71,8 @@ public class TouchPad {
         this.map = gameWorld.getMap();
         touchpadcenter = new Vector2(width/2, height/2);
         this.game = game;
+
+        movement = AssetLoader.movement;
 	}
 
 

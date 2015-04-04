@@ -23,10 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b193b7cd-c17d-4829-872a-064ee404b845" name="Default" comment="most updated ver">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android/src/sutd/istd/groupzero/predator1/android/AndroidLauncher.java" afterPath="$PROJECT_DIR$/android/src/sutd/istd/groupzero/predator1/android/AndroidLauncher.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/AssetLoader.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/AssetLoader.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PredatorGameFolder.iws" afterPath="$PROJECT_DIR$/PredatorGameFolder.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" afterPath="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" />
     </list>
     <ignored path="PredatorGameFolder.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -85,21 +85,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AndroidLauncher.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="AndroidLauncher.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/android/src/sutd/istd/groupzero/predator1/android/AndroidLauncher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6375839" vertical-offset="0" max-vertical-offset="14385">
-              <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4335" max-vertical-offset="14385">
+              <caret line="63" column="24" selection-start-line="63" selection-start-column="24" selection-end-line="63" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TouchPad.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TouchPad.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1485" max-vertical-offset="2925">
-              <caret line="139" column="66" selection-start-line="139" selection-start-column="66" selection-end-line="139" selection-end-column="66" />
+            <state vertical-scroll-proportion="0.49579832" vertical-offset="979" max-vertical-offset="2970">
+              <caret line="109" column="33" selection-start-line="109" selection-start-column="33" selection-end-line="109" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -108,9 +108,13 @@
       <file leaf-file-name="GameRenderer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3722" max-vertical-offset="4530">
-              <caret line="291" column="23" selection-start-line="291" selection-start-column="23" selection-end-line="291" selection-end-column="23" />
-              <folding />
+            <state vertical-scroll-proportion="-6.923077" vertical-offset="2520" max-vertical-offset="5100">
+              <caret line="180" column="24" selection-start-line="180" selection-start-column="24" selection-end-line="180" selection-end-column="24" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#7671#7681#0" expanded="true" />
+                <element signature="e#7762#7768#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -118,8 +122,8 @@
       <file leaf-file-name="AssetLoader.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/AssetLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="527" max-vertical-offset="1545">
-              <caret line="93" column="40" selection-start-line="93" selection-start-column="40" selection-end-line="93" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="868" max-vertical-offset="1545">
+              <caret line="95" column="46" selection-start-line="95" selection-start-column="46" selection-end-line="95" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -130,6 +134,26 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="37" max-vertical-offset="555">
               <caret line="22" column="52" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TugOfWarScreen.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/TugOfWarScreen.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1770">
+              <caret line="25" column="22" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GameScreen.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="960">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1887,7 +1911,6 @@
         <option value="$PROJECT_DIR$/android/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/desktop/src/sutd/istd/groupzero/predator1/desktop/DesktopLauncher.java" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/ActionResolver.java" />
-        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/InputHandler.java" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/TugOfWarScreen.java" />
         <option value="$PROJECT_DIR$/android/res/drawable/btn_quickgame.xml" />
@@ -1896,11 +1919,12 @@
         <option value="$PROJECT_DIR$/android/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/android/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameobjects/Map.java" />
-        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/predator1/PredatorGame.java" />
         <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/AssetLoader.java" />
-        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" />
         <option value="$PROJECT_DIR$/android/src/sutd/istd/groupzero/predator1/android/AndroidLauncher.java" />
+        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java" />
+        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java" />
+        <option value="$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java" />
       </list>
     </option>
   </component>
@@ -2229,6 +2253,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PredatorGameFolder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PredatorGame1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -2255,7 +2301,7 @@
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="LGD85589166027 42f78b0648b1bf4d" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="LGD85589166027 42f7733e77a6af61" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="AVD1" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="367" />
   </component>
@@ -2284,6 +2330,30 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="UPDATED" />
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/inviteplayers.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/inviteplayersd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/quickgame.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/quickgamed.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/viewinvites.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-hdpi/viewinvitesd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/inviteplayers.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/inviteplayersd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/quickgame.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/quickgamed.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/viewinvites.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-mdpi/viewinvitesd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/inviteplayers.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/inviteplayersd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/quickgame.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/quickgamed.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/viewinvites.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xhdpi/viewinvitesd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/inviteplayers.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/inviteplayersd.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/quickgame.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/quickgamed.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/viewinvites.png</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/res/drawable-xxhdpi/viewinvitesd.png</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Created" />
@@ -2291,7 +2361,6 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="CREATED" />
-            <PATH vcs="Git" revision="">$PROJECT_DIR$/android/assets/data/spritesheetred.png</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Deleted" />
@@ -2630,7 +2699,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32152975" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30878186" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26770538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2849,13 +2918,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="960">
-          <caret line="27" column="53" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/.classpath">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="195">
@@ -2882,14 +2944,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5690073" vertical-offset="5" max-vertical-offset="420">
           <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/TugOfWarScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1770">
-          <caret line="25" column="22" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3022,34 +3076,54 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1485" max-vertical-offset="2925">
-          <caret line="139" column="66" selection-start-line="139" selection-start-column="66" selection-end-line="139" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/AssetLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="692" max-vertical-offset="1545">
-          <caret line="93" column="40" selection-start-line="93" selection-start-column="40" selection-end-line="93" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3722" max-vertical-offset="4530">
-          <caret line="291" column="23" selection-start-line="291" selection-start-column="23" selection-end-line="291" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="868" max-vertical-offset="1545">
+          <caret line="95" column="46" selection-start-line="95" selection-start-column="46" selection-end-line="95" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/src/sutd/istd/groupzero/predator1/android/AndroidLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6375839" vertical-offset="0" max-vertical-offset="14385">
-          <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="14385">
+          <caret line="63" column="24" selection-start-line="63" selection-start-column="24" selection-end-line="63" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/TugOfWarScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1770">
+          <caret line="25" column="22" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/screens/GameScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="960">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/gameworld/GameRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.923077" vertical-offset="2520" max-vertical-offset="5100">
+          <caret line="180" column="24" selection-start-line="180" selection-start-column="24" selection-end-line="180" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#7671#7681#0" expanded="true" />
+            <element signature="e#7762#7768#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sutd/istd/groupzero/helpers/TouchPad.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49579832" vertical-offset="979" max-vertical-offset="2970">
+          <caret line="109" column="33" selection-start-line="109" selection-start-column="33" selection-end-line="109" selection-end-column="33" />
           <folding />
         </state>
       </provider>
