@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,6 +35,7 @@ import com.google.android.gms.plus.Plus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
@@ -45,7 +48,7 @@ import sutd.istd.groupzero.predator1.PredatorGame;
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
         RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener,ActionResolver{
-    final static String TAG = "ButtonClicker2000";
+    final static String TAG = "PredatorGame";
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_INVITATION_INBOX = 10001;
     final static int RC_WAITING_ROOM = 10002;
@@ -72,7 +75,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private Object puLock = new Object();
     private int mapSizeX = 540;
     private int mapSizeY = 960;
-    private int opponentStrength = -1;
+    private int opponentStrength = 0;
+    private Rectangle myCurrentBound = null;
 
     // Current state of the game:
     ArrayList<Food> foodList = new ArrayList<Food>();
@@ -91,6 +95,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     Vector2 mystartPos = null;
     private int myTapCount = 0;
     private int oppoTapCount = 0;
+    private float oppoSpeed = 1.0f;
     private int playerNum = 0;
 
     @Override
@@ -693,18 +698,50 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         else if(buf[0] == 'e'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
-            foodList.remove(new Food(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy))));
+            float x = Float.intBitsToFloat(xx);
+            float y = Float.intBitsToFloat(yy);
+            Food remove = null;
+            for (Food f:foodList){
+                if (f.getPosition().x == x && f.getPosition().y == y){
+                    remove = f;
+                    break;
+                }
+            }
+            boolean a = foodList.remove(remove);
+        }
+        else if(buf[0] == 'd'){
+            int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
+            foodList.add(new Food(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy))));
         }
         else if(buf[0] == 'o'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
-            powerUpList.remove(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
+            float x = Float.intBitsToFloat(xx);
+            float y = Float.intBitsToFloat(yy);
+            PowerUps remove = null;
+            for (PowerUps p :powerUpList){
+                if (p.getPosition().x == x && p.getPosition().y == y){
+                    remove = p;
+                    break;
+                }
+            }
+            powerUpList.remove(remove);
+        }
+        else if(buf[0] == 'c'){
+            int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
+            powerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
         }
         else if (buf[0] == 'a'){
             oppoTapCount++;
         }
         else if(buf[0] == 'b'){
             opponentStrength = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
+        }
+        else if(buf[0] == 's'){
+            int s = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            oppoSpeed = Float.intBitsToFloat(s);
         }
         else{
             opponentDirectionKeycode = (buf[3] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[1] & 0xFF) << 16)| ((buf[0] & 0xFF) << 24);
@@ -716,6 +753,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     }
     public void broadcastMyStatus(Vector2 currentPosition, Monster.Direction currentDirection){
+        myCurrentBound = new Rectangle(currentPosition.x,currentPosition.y,27,34);
         if (!mMultiplayer)
             return; // playing single-player mode
         // First byte in message indicates monster direction
@@ -858,6 +896,62 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         foodList.remove(f);
 
+        //food regeneration
+        boolean toPlace;
+        while (foodList.size() < 10) {
+            toPlace = true;
+            Vector2 v = new Vector2(cap(0, mapSizeX - 30), cap(0, mapSizeY - 21));
+            Food food = new Food(v);
+            if (!treeList.isEmpty()){
+                for (Tree t : treeList)
+                    if (Intersector.overlaps(t.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+            if (toPlace && !powerUpList.isEmpty()){
+                for (PowerUps p : powerUpList)
+                    if (Intersector.overlaps(p.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
+            if (toPlace && !foodList.isEmpty()){
+                for (Food ff : foodList)
+                    if (Intersector.overlaps(ff.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
+            if (toPlace) {
+                foodList.add(food);
+                int x = Float.floatToIntBits(food.getPosition().x);
+                int y = Float.floatToIntBits(food.getPosition().y);
+                byte[] buf1 = new byte[9];
+                buf1[0] = 'd';
+
+                buf1[1] = (byte)(x & 0xff);
+                buf1[2] = (byte)((x >> 8) & 0xff);
+                buf1[3] = (byte)((x >> 16) & 0xff);
+                buf1[4] = (byte)((x >> 24) & 0xff);
+
+                buf1[5] = (byte)(y & 0xff);
+                buf1[6] = (byte)((y >> 8) & 0xff);
+                buf1[7] = (byte)((y >> 16) & 0xff);
+                buf1[8] = (byte)((y >> 24) & 0xff);
+
+                for (Participant p : mParticipants) {
+                    if (p.getParticipantId().equals(mMyId))
+                        continue;
+                    if (p.getStatus() != Participant.STATUS_JOINED)
+                        continue;
+                    Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,buf1, mRoomId, p.getParticipantId());
+                }
+            }
+        }
+
     }
     public void obtainPowerUp(PowerUps p){
         if (mMultiplayer){
@@ -887,6 +981,63 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         powerUpList.remove(p);
 
+        //powerup regeneration
+        boolean toPlace;
+        while (powerUpList.size() < 10) {
+            toPlace = true;
+            Vector2 v = new Vector2(cap(0, mapSizeX - 22), cap(0, mapSizeY - 21));
+            PowerUps powerUp = new PowerUps(v, "s");
+            powerUp.setKind(p.getKind());
+            if (!treeList.isEmpty()){
+                for (Tree t : treeList)
+                    if (Intersector.overlaps(t.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+            if (toPlace && !powerUpList.isEmpty()){
+                for (PowerUps pp : powerUpList)
+                    if (Intersector.overlaps(pp.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+
+            if (toPlace && !foodList.isEmpty()){
+                for (Food f : foodList)
+                    if (Intersector.overlaps(f.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                        toPlace = false;
+                        break;
+                    }
+            }
+            if (toPlace) {
+                powerUpList.add(powerUp);
+                int x = Float.floatToIntBits(powerUp.getPosition().x);
+                int y = Float.floatToIntBits(powerUp.getPosition().y);
+                byte[] buf1 = new byte[10];
+                buf1[0] = 'c';
+
+                buf1[1] = (byte)(x & 0xff);
+                buf1[2] = (byte)((x >> 8) & 0xff);
+                buf1[3] = (byte)((x >> 16) & 0xff);
+                buf1[4] = (byte)((x >> 24) & 0xff);
+
+                buf1[5] = (byte)(y & 0xff);
+                buf1[6] = (byte)((y >> 8) & 0xff);
+                buf1[7] = (byte)((y >> 16) & 0xff);
+                buf1[8] = (byte)((y >> 24) & 0xff);
+
+                buf1[9] = (byte)(powerUp.getKind().equals("s")?'s':'v');
+                for (Participant pp : mParticipants) {
+                    if (pp.getParticipantId().equals(mMyId))
+                        continue;
+                    if (pp.getStatus() != Participant.STATUS_JOINED)
+                        continue;
+                    Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,buf1, mRoomId, pp.getParticipantId());
+                }
+            }
+        }
+
     }
     public Vector2 requestOpponentPosition(){
         return opponentPosition;
@@ -894,10 +1045,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int requestOpponentDirection(){
         return opponentDirectionKeycode;
     }
+    public float requestOpponentSpeed(){return oppoSpeed;}
+    public void broadcastMySpeed(float speed){
+        int x = Float.floatToIntBits(speed);
+        byte[] buf = new byte[5];
+        buf[0] = 's';
+        buf[1] = (byte)(x & 0xff);
+        buf[2] = (byte)((x >> 8) & 0xff);
+        buf[3] = (byte)((x >> 16) & 0xff);
+        buf[4] = (byte)((x >> 24) & 0xff);
+
+        for (Participant pp : mParticipants) {
+            if (pp.getParticipantId().equals(mMyId))
+                continue;
+            if (pp.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,buf, mRoomId, pp.getParticipantId());
+        }
+    }
 
 
     public ArrayList<Tree> requestTrees(){
-//        synchronized (treeLock) {
         if (oppotreeList.size() > 1) {
             if (!useOppoTree) {
                 useOppoTree = true;
@@ -908,11 +1076,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             }
         }
         return treeList;
-//        }
-    }
+   }
 
     public ArrayList<Food> requestFoods(){
-//        synchronized (foodLock) {
         if (oppofoodList.size() > 1) {
             if (!useOppoFood) {
                 useOppoFood = true;
@@ -922,16 +1088,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
-//        ArrayList<Food> copy = new ArrayList<Food>();
-//        for (Food food : foodList){
-//            copy.add(new Food(food.getPosition()));
-//        }
         return foodList;
-//        }
-    }
+   }
 
     public ArrayList<PowerUps> requestPUs(){
-//        synchronized (puLock) {
         if (oppopowerUpList.size() > 1) {
             if (!useOppoPU) {
                 useOppoPU = true;
@@ -941,13 +1101,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
-//        ArrayList<PowerUps> copy = new ArrayList<PowerUps>();
-//        for (PowerUps pu : powerUpList){
-//            copy.add(new PowerUps(pu.getPosition(), pu.getKind()));
-//        }
         return powerUpList;
-//        }
-    }
+   }
     public int requestMyPlayerNum(){
         return playerNum;
     }
@@ -1013,6 +1168,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // handshake when setting up a game, because if the screen turns off, the
     // game will be
     // cancelled.
+    private Random r = new Random();
+    public int cap(int min, int max){
+        int  x = r.nextInt();
+        while(x > max || x < min){
+            x = r.nextInt(max);
+        }
+        return x;
+    }
+
     void keepScreenOn() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }

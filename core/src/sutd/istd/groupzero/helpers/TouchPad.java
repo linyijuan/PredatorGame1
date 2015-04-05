@@ -152,6 +152,7 @@ public class TouchPad {
                                         eating.play(0.8f);
                                         actionResolver.eatFood(f);
                                         monster.obtainFood();
+                                        actionResolver.broadcastMyStrength(monster.getStrength());
                                         break;
                                     }
                                 }
@@ -167,12 +168,15 @@ public class TouchPad {
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
+                                            actionResolver.broadcastMySpeed((float)(Math.round(monster.getSpeed()*10))/10);
                                             speedTimer.scheduleTask(new Timer.Task() {
                                                 @Override
                                                 public void run() {
                                                     monster.addSpeed(-0.2f);
+                                                    actionResolver.broadcastMySpeed((float)(Math.round(monster.getSpeed()*10))/10);
                                                 }
                                             }, 6);
+
                                         } else {
                                             visible.play(0.8f);
                                             speedTimer = new Timer();

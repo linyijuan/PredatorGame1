@@ -24,16 +24,24 @@ public class AssetLoader {
     public static Texture arrow;
     public static Sprite spriteArrow;
     public static ActionResolver actionResolver;
+    public static TextureRegion myHead,oppoHead;
+    public static Animation clock;
 
     public static void load(){
         if (actionResolver.requestMyPlayerNum() == 1){
             source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
             oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
+            myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
+            oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
             oppoSource = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+            myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
+            oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
         }
+        myHead.flip(false,true);
+        oppoHead.flip(false,true);
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
@@ -84,6 +92,22 @@ public class AssetLoader {
         downaAnimationoppo.setPlayMode(PlayMode.LOOP);
         leftaAnimationoppo.setPlayMode(PlayMode.LOOP);
         rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
+
+        TextureRegion[] clocks = new TextureRegion[8];
+        clocks[0] = new TextureRegion(new Texture(Gdx.files.internal("data/clock0.png")));
+        clocks[1] = new TextureRegion(new Texture(Gdx.files.internal("data/clock1.png")));
+        clocks[2] = new TextureRegion(new Texture(Gdx.files.internal("data/clock2.png")));
+        clocks[3] = new TextureRegion(new Texture(Gdx.files.internal("data/clock3.png")));
+        clocks[4] = new TextureRegion(new Texture(Gdx.files.internal("data/clock4.png")));
+        clocks[5] = new TextureRegion(new Texture(Gdx.files.internal("data/clock5.png")));
+        clocks[6] = new TextureRegion(new Texture(Gdx.files.internal("data/clock6.png")));
+        clocks[7] = new TextureRegion(new Texture(Gdx.files.internal("data/clock7.png")));
+        for (TextureRegion t:clocks){
+            t.flip(false,true);
+        }
+        clock = new Animation(.5f,clocks);
+        clock.setPlayMode(PlayMode.LOOP);
+
 
         font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
         font.setScale(1f, -1f);

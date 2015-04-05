@@ -20,7 +20,7 @@ public class TugOfWarScreen implements Screen{
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
     private int playerNum, opponentStrength,myStrength;
-
+    private InputHandler handler;
     private TextureRegion pic;
     private float ratio;
     private float x,y;
@@ -29,11 +29,11 @@ public class TugOfWarScreen implements Screen{
     public TugOfWarScreen(ActionResolver actionResolver,int myStrength) {
         this.actionResolver = actionResolver;
         this.myStrength = myStrength;
-
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
         cam = new OrthographicCamera();
-        cam.setToOrtho(true, 200, 400);
-        screenWidth = 200;
-        screenHeight = 400;
+        cam.setToOrtho(true, screenWidth, screenHeight);
+
         playerNum = actionResolver.requestMyPlayerNum();
         if (playerNum == 1){
             pic = AssetLoader.vsScreenGreenBot;
@@ -54,8 +54,8 @@ public class TugOfWarScreen implements Screen{
 //        shapeRenderer = new ShapeRenderer();
 //        shapeRenderer.setProjectionMatrix(cam.combined);
 
-
-        Gdx.input.setInputProcessor(new InputHandler(actionResolver,0));
+        handler = new InputHandler(actionResolver,0);
+        Gdx.input.setInputProcessor(handler);
 
     }
 
@@ -69,27 +69,22 @@ public class TugOfWarScreen implements Screen{
 
         if (ratio >=1){
             batcher.begin();
-            AssetLoader.font.draw(batcher,"YOU LOSE",80,150);
+            AssetLoader.font.draw(batcher,"YOU LOSE",screenWidth/2,screenHeight/2);
             batcher.end();
-            Gdx.input.setInputProcessor(new InputHandler(actionResolver,1));
+            handler.setMode(1);
         }
         else if (ratio <=0){
             batcher.begin();
-            AssetLoader.font.draw(batcher,"YOU WIN",80,150);
+            AssetLoader.font.draw(batcher,"YOU WIN",screenWidth/2,screenHeight/2);
             batcher.end();
-            Gdx.input.setInputProcessor(new InputHandler(actionResolver,1));
+            handler.setMode(1);
         }
         else{
             batcher.begin();
             batcher.disableBlending();
             batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*1.5f)/2, screenWidth, screenHeight*1.5f);
-//            AssetLoader.font.draw(batcher,"RATIO:"+ratio,100,50);
             batcher.end();
         }
-
-
-
-
     }
 
     @Override

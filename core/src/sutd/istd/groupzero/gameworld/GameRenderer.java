@@ -2,7 +2,7 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -47,12 +47,12 @@ public class GameRenderer {
     private OrthographicCamera cam2;
     private SpriteBatch batcher;
     public  Texture gridBg;
-    public  TextureRegion grid;
+    public  TextureRegion grid,myHead,oppoHead,food,speed;
     public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet;
     public  Animation[] animationSetoppo;
     public  TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock;
     private float scaleX, scaleY;
     private ShapeRenderer shapeRenderer;
     private Texture light;
@@ -110,10 +110,10 @@ public class GameRenderer {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-      // Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
-       // music.setVolume(0.5f);                 // sets the volume to half the maximum volume
-       //music.setLooping(true);
-      // music.play();
+//        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
+//        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
+//        music.setLooping(true);
+//        music.play();
 
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
@@ -145,7 +145,7 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
 
         shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.setProjectionMatrix(cam2.combined);
 
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
@@ -159,10 +159,15 @@ public class GameRenderer {
         downaAnimation = AssetLoader.downaAnimation;
         leftaAnimation = AssetLoader.leftaAnimation;
         rightaAnimation = AssetLoader.rightaAnimation;
+        clock = AssetLoader.clock;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
         directionSetoppo = new TextureRegion[] {AssetLoader.oppoLeft,AssetLoader.oppoUp,AssetLoader.oppoRight,AssetLoader.oppoDown};
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
         animationSetoppo = new Animation[]{AssetLoader.leftaAnimationoppo,AssetLoader.upAnimationoppo,AssetLoader.rightaAnimationoppo,AssetLoader.downaAnimationoppo};
+        myHead = AssetLoader.myHead;
+        oppoHead = AssetLoader.oppoHead;
+        food = AssetLoader.steak;
+        speed = AssetLoader.powerUp;
 
         // testing arrow drawing
         arrow = AssetLoader.arrow;
@@ -196,11 +201,8 @@ public class GameRenderer {
 
             actionResolver.broadcastMyStatus(myMonster.getMyPosition(), myMonster.getDirection());
             if (actionResolver.requestOpponentPosition() != null) {
-                Gdx.app.log("GameRenderer oppo post", "" + actionResolver.requestOpponentPosition().x + ", " + actionResolver.requestOpponentPosition().y);
-                Gdx.app.log("GameRenderer my post", "" + myMonster.getMyPosition().x + ", " + myMonster.getMyPosition().y);
                 if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))) {
                     actionResolver.broadcastMyStrength(myMonster.getStrength());
-                    Gdx.app.log("GameRenderer", "Setting new screen");
                     game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
                 }
             }
@@ -218,12 +220,11 @@ public class GameRenderer {
             batcher.begin();
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             float visibility = myMonster.getVisibility();
-            float lightSize = (240f + 6f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
-            Gdx.app.log("MyTag",String.valueOf(screenWidth/3));
+            float lightSize = (screenWidth / 3 + 5f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
             if(visibility > 1f){
-                visibility = 1.07f;
+                visibility = 1.05f;
             }
-            float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.42f*visibility));
+            float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.43f*visibility));
             float lightposy =  (myMonster.getMyPosition().y - (lightSize * 0.42f*visibility));
             batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
             batcher.end();
@@ -325,27 +326,43 @@ public class GameRenderer {
             batcher.setProjectionMatrix(cam2.combined);
             batcher.setShader(defaultShader);
             batcher.begin();
-            batcher.disableBlending();
-            // strength display
-            AssetLoader.shadow.draw(batcher, "STR: " + myMonster.getStrength(), 5, 79);
-            AssetLoader.font.draw(batcher, "STR: " + myMonster.getStrength(), 4, 80);
+            batcher.enableBlending();
 
+            batcher.draw(myHead,40,65);
+            batcher.draw(food,40 + myHead.getRegionWidth() + 30,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+            batcher.draw(speed,40 + myHead.getRegionWidth() + 30,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+            // strength display
+            AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(),100+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40-1);
+            AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 100+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40);
             //speed display
-            AssetLoader.shadow.draw(batcher, "SPD: " + myMonster.getSpeed(), 5, 159);
-            AssetLoader.font.draw(batcher, "SPD: " + myMonster.getSpeed(), 4, 160);
+            AssetLoader.shadow.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125-1);
+            AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
 
             //time display
-            // the values 75 and 74 aligns the font to the left side of the screen
-            AssetLoader.shadow.draw(batcher, "TIME: " + (int)runTime, 5, 1);
-            AssetLoader.font.draw(batcher, "TIME: " + (int)runTime/60 + ":" + (int)runTime%60, 4, 0);
+            AssetLoader.font.draw(batcher, "" + (int)runTime/60 + ":" + (int)runTime%60, 150+myHead.getRegionWidth()*2, 55);
+            batcher.draw(clock.getKeyFrame(runTime),150+myHead.getRegionWidth()*2,105,myHead.getRegionWidth()/1.5f,myHead.getRegionWidth()/1.5f);
 
+            //opponent information display
+            batcher.draw(oppoHead,screenWidth-40-oppoHead.getRegionWidth(),65);
+            batcher.draw(food,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+            batcher.draw(speed,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+            // strength display
+            AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentStrength(),screenWidth-140-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40-1);
+            AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40);
+            //speed display
+            AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth-170-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125-1);
+            AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125);
             batcher.end();
 
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(180-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*5f),10f);
+
+            shapeRenderer.end();
         }
         else
         {
             actionResolver.broadcastMyStrength(myMonster.getStrength());
-            Gdx.app.log("GameRenderer", "Setting new screen");
             game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
         }
 
