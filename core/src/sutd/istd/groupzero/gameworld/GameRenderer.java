@@ -2,6 +2,7 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -109,10 +110,10 @@ public class GameRenderer {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-//        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
-//        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
-//        music.setLooping(true);
-//        music.play();
+      // Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
+       // music.setVolume(0.5f);                 // sets the volume to half the maximum volume
+       //music.setLooping(true);
+      // music.play();
 
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
@@ -217,11 +218,12 @@ public class GameRenderer {
             batcher.begin();
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             float visibility = myMonster.getVisibility();
-            float lightSize = (screenWidth / 3 + 5f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
+            float lightSize = (240f + 6f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
+            Gdx.app.log("MyTag",String.valueOf(screenWidth/3));
             if(visibility > 1f){
-                visibility = 1.05f;
+                visibility = 1.07f;
             }
-            float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.43f*visibility));
+            float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.42f*visibility));
             float lightposy =  (myMonster.getMyPosition().y - (lightSize * 0.42f*visibility));
             batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
             batcher.end();
