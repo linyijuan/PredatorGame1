@@ -216,8 +216,14 @@ public class GameRenderer {
             batcher.setProjectionMatrix(cam.combined);
             batcher.begin();
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            float lightSize = (screenWidth / 3 + 4f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) * myMonster.getVisibility();
-            batcher.draw(light, myMonster.getMyPosition().x - lightSize * 0.42f, myMonster.getMyPosition().y - lightSize * 0.42f, lightSize, lightSize);
+            float visibility = myMonster.getVisibility();
+            float lightSize = (screenWidth / 3 + 5f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
+            if(visibility > 1f){
+                visibility = 1.05f;
+            }
+            float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.43f*visibility));
+            float lightposy =  (myMonster.getMyPosition().y - (lightSize * 0.42f*visibility));
+            batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
             batcher.end();
             fbo.end();
 
