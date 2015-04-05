@@ -24,16 +24,23 @@ public class AssetLoader {
     public static Texture arrow;
     public static Sprite spriteArrow;
     public static ActionResolver actionResolver;
+    public static TextureRegion myHead,oppoHead;
 
     public static void load(){
         if (actionResolver.requestMyPlayerNum() == 1){
             source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
             oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
+            myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
+            oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
             oppoSource = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+            myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
+            oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
         }
+        myHead.flip(false,true);
+        oppoHead.flip(false,true);
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));

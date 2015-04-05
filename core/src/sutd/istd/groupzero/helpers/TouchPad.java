@@ -143,6 +143,7 @@ public class TouchPad {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
                                         actionResolver.eatFood(f);
                                         monster.obtainFood();
+                                        actionResolver.broadcastMyStrength(monster.getStrength());
                                         break;
                                     }
                                 }

@@ -24,5 +24,7 @@ public interface ActionResolver {
     public int requestMyPlayerNum();
     public int requestOpponentStrength();
     public void broadcastMyStrength(int strength);
+    public float requestOpponentSpeed();
+    public void broadcastMySpeed(float speed);
 }
 
