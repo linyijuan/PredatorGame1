@@ -2,6 +2,7 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -51,7 +52,7 @@ public class GameRenderer {
     public  Animation[] animationSet;
     public  Animation[] animationSetoppo;
     public  TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock;
     private float scaleX, scaleY;
     private ShapeRenderer shapeRenderer;
     private Texture light;
@@ -144,7 +145,7 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
 
         shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.setProjectionMatrix(cam2.combined);
 
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
@@ -158,6 +159,7 @@ public class GameRenderer {
         downaAnimation = AssetLoader.downaAnimation;
         leftaAnimation = AssetLoader.leftaAnimation;
         rightaAnimation = AssetLoader.rightaAnimation;
+        clock = AssetLoader.clock;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
         directionSetoppo = new TextureRegion[] {AssetLoader.oppoLeft,AssetLoader.oppoUp,AssetLoader.oppoRight,AssetLoader.oppoDown};
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
@@ -335,11 +337,12 @@ public class GameRenderer {
             //speed display
             AssetLoader.shadow.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125-1);
             AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
-//
-//            //time display
-//            // the values 75 and 74 aligns the font to the left side of the screen
-//            AssetLoader.shadow.draw(batcher, "TIME: " + (int)runTime, 5, 1);
-//            AssetLoader.font.draw(batcher, "TIME: " + (int)runTime/60 + ":" + (int)runTime%60, 4, 0);
+
+            //time display
+            AssetLoader.font.draw(batcher, "" + (int)runTime/60 + ":" + (int)runTime%60, 150+myHead.getRegionWidth()*2, 55);
+            batcher.draw(clock.getKeyFrame(runTime),150+myHead.getRegionWidth()*2,105,myHead.getRegionWidth()/1.5f,myHead.getRegionWidth()/1.5f);
+
+            //opponent information display
             batcher.draw(oppoHead,screenWidth-40-oppoHead.getRegionWidth(),65);
             batcher.draw(food,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
             batcher.draw(speed,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
@@ -349,9 +352,13 @@ public class GameRenderer {
             //speed display
             AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth-170-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125-1);
             AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125);
-
             batcher.end();
 
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(180-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*4.5f),10f);
+
+            shapeRenderer.end();
         }
         else
         {
