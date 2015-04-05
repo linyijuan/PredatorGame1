@@ -43,6 +43,7 @@ public class GameRenderer {
     private Monster myMonster;
     private ActionResolver actionResolver;
     private OrthographicCamera cam;
+    private OrthographicCamera cam2;
     private SpriteBatch batcher;
     public  Texture gridBg;
     public  TextureRegion grid;
@@ -137,7 +138,8 @@ public class GameRenderer {
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
-
+        cam2 = new OrthographicCamera();
+        cam2.setToOrtho(true, screenWidth, screenHeight);
         batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
 
@@ -202,7 +204,7 @@ public class GameRenderer {
                 }
             }
 
-            Gdx.gl.glClearColor(0, 0, 0, 1);
+//            Gdx.gl.glClearColor(0, 0, 0, 1);
 
             final float dt = Gdx.graphics.getRawDeltaTime();
             zAngle += dt * zSpeed;
@@ -310,16 +312,27 @@ public class GameRenderer {
                 spriteArrow.setOriginCenter();
                 spriteArrow.draw(batcher);
             }
+            batcher.end();
 
+            batcher.setProjectionMatrix(cam2.combined);
+            batcher.setShader(defaultShader);
+            batcher.begin();
             batcher.disableBlending();
-            AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 7, myMonster.getMyPosition().y - 21);
-            AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 6, myMonster.getMyPosition().y - 20);
+            // strength display
+            AssetLoader.shadow.draw(batcher, "STR: " + myMonster.getStrength(), 5, 79);
+            AssetLoader.font.draw(batcher, "STR: " + myMonster.getStrength(), 4, 80);
 
             //speed display
-            AssetLoader.shadow.draw(batcher, "" + myMonster.getSpeed(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 7, myMonster.getMyPosition().y - 51);
-            AssetLoader.font.draw(batcher, "" + myMonster.getSpeed(), myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2 - 6, myMonster.getMyPosition().y - 50);
+            AssetLoader.shadow.draw(batcher, "SPD: " + myMonster.getSpeed(), 5, 159);
+            AssetLoader.font.draw(batcher, "SPD: " + myMonster.getSpeed(), 4, 160);
+
+            //time display
+            // the values 75 and 74 aligns the font to the left side of the screen
+            AssetLoader.shadow.draw(batcher, "TIME: " + (int)runTime, 5, 1);
+            AssetLoader.font.draw(batcher, "TIME: " + (int)runTime/60 + ":" + (int)runTime%60, 4, 0);
 
             batcher.end();
+
         }
         else
         {

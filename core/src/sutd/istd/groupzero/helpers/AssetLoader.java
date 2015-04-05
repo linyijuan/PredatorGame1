@@ -86,9 +86,9 @@ public class AssetLoader {
         rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
 
         font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
-        font.setScale(.25f, -.25f);
+        font.setScale(1f, -1f);
         shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
-        shadow.setScale(.25f, -.25f);
+        shadow.setScale(1f, -1f);
 
         arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
         spriteArrow = new Sprite(arrow);
