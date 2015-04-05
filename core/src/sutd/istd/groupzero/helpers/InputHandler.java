@@ -9,6 +9,10 @@ public class InputHandler implements InputProcessor{
 		this.actionResolver = actionResolver;
         this.mode = mode;
 	}
+
+    public void setMode(int i ){
+        mode = i;
+    }
 	@Override
 	public boolean keyDown(int keycode) {
 		return false;
@@ -35,6 +39,9 @@ public class InputHandler implements InputProcessor{
             actionResolver.broadcastMyTapping();
         }
         else if (mode == 1){
+
+        }
+        else if (mode == 2){
 
         }
 

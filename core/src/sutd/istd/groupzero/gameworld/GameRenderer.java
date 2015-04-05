@@ -356,7 +356,7 @@ public class GameRenderer {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(180-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*4.5f),10f);
+            shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(180-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*5f),10f);
 
             shapeRenderer.end();
         }
