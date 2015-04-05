@@ -157,12 +157,15 @@ public class TouchPad {
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
+                                            actionResolver.broadcastMySpeed((float)(Math.round(monster.getSpeed()*10))/10);
                                             speedTimer.scheduleTask(new Timer.Task() {
                                                 @Override
                                                 public void run() {
                                                     monster.addSpeed(-0.2f);
+                                                    actionResolver.broadcastMySpeed((float)(Math.round(monster.getSpeed()*10))/10);
                                                 }
                                             }, 6);
+
                                         } else {
                                             speedTimer = new Timer();
                                             monster.setVisibility(1.5f);

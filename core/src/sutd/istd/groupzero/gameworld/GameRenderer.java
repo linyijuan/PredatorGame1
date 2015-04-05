@@ -199,11 +199,8 @@ public class GameRenderer {
 
             actionResolver.broadcastMyStatus(myMonster.getMyPosition(), myMonster.getDirection());
             if (actionResolver.requestOpponentPosition() != null) {
-//                Gdx.app.log("GameRenderer oppo post", "" + actionResolver.requestOpponentPosition().x + ", " + actionResolver.requestOpponentPosition().y);
-//                Gdx.app.log("GameRenderer my post", "" + myMonster.getMyPosition().x + ", " + myMonster.getMyPosition().y);
                 if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))) {
                     actionResolver.broadcastMyStrength(myMonster.getStrength());
-//                    Gdx.app.log("GameRenderer", "Setting new screen");
                     game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
                 }
             }
@@ -336,8 +333,8 @@ public class GameRenderer {
             AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(),100+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40-1);
             AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 100+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40);
             //speed display
-            AssetLoader.shadow.draw(batcher, "" + myMonster.getSpeed(), 90+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125-1);
-            AssetLoader.font.draw(batcher, "" + myMonster.getSpeed(), 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
+            AssetLoader.shadow.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125-1);
+            AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
 //
 //            //time display
 //            // the values 75 and 74 aligns the font to the left side of the screen
@@ -350,8 +347,8 @@ public class GameRenderer {
             AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentStrength(),screenWidth-140-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40-1);
             AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40);
             //speed display
-            AssetLoader.shadow.draw(batcher, "" + myMonster.getSpeed(), screenWidth-170-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125-1);
-            AssetLoader.font.draw(batcher, "" + myMonster.getSpeed(), screenWidth - 169-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125);
+            AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth-170-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125-1);
+            AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125);
 
             batcher.end();
 
@@ -359,7 +356,6 @@ public class GameRenderer {
         else
         {
             actionResolver.broadcastMyStrength(myMonster.getStrength());
-//            Gdx.app.log("GameRenderer", "Setting new screen");
             game.setScreen(new TugOfWarScreen(actionResolver, myMonster.getStrength()));
         }
 

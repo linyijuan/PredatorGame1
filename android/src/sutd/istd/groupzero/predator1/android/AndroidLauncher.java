@@ -48,7 +48,7 @@ import sutd.istd.groupzero.predator1.PredatorGame;
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
         RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener,ActionResolver{
-    final static String TAG = "ButtonClicker2000";
+    final static String TAG = "PredatorGame";
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_INVITATION_INBOX = 10001;
     final static int RC_WAITING_ROOM = 10002;
@@ -95,6 +95,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     Vector2 mystartPos = null;
     private int myTapCount = 0;
     private int oppoTapCount = 0;
+    private float oppoSpeed = 1.0f;
     private int playerNum = 0;
 
     @Override
@@ -738,6 +739,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         else if(buf[0] == 'b'){
             opponentStrength = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
+        else if(buf[0] == 's'){
+            int s = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
+            oppoSpeed = Float.intBitsToFloat(s);
+        }
         else{
             opponentDirectionKeycode = (buf[3] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[1] & 0xFF) << 16)| ((buf[0] & 0xFF) << 24);
             int xx = (buf[4] & 0xFF)| ((buf[5] & 0xFF) << 8)| ((buf[6] & 0xFF) << 16)| ((buf[7] & 0xFF) << 24);
@@ -1040,14 +1045,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int requestOpponentDirection(){
         return opponentDirectionKeycode;
     }
-    public float requestOpponentSpeed(){return 0;}
+    public float requestOpponentSpeed(){return oppoSpeed;}
     public void broadcastMySpeed(float speed){
+        int x = Float.floatToIntBits(speed);
+        byte[] buf = new byte[5];
+        buf[0] = 's';
+        buf[1] = (byte)(x & 0xff);
+        buf[2] = (byte)((x >> 8) & 0xff);
+        buf[3] = (byte)((x >> 16) & 0xff);
+        buf[4] = (byte)((x >> 24) & 0xff);
 
+        for (Participant pp : mParticipants) {
+            if (pp.getParticipantId().equals(mMyId))
+                continue;
+            if (pp.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,buf, mRoomId, pp.getParticipantId());
+        }
     }
 
 
     public ArrayList<Tree> requestTrees(){
-//        synchronized (treeLock) {
         if (oppotreeList.size() > 1) {
             if (!useOppoTree) {
                 useOppoTree = true;
@@ -1058,11 +1076,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             }
         }
         return treeList;
-//        }
-    }
+   }
 
     public ArrayList<Food> requestFoods(){
-//        synchronized (foodLock) {
         if (oppofoodList.size() > 1) {
             if (!useOppoFood) {
                 useOppoFood = true;
@@ -1072,16 +1088,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
-//        ArrayList<Food> copy = new ArrayList<Food>();
-//        for (Food food : foodList){
-//            copy.add(new Food(food.getPosition()));
-//        }
         return foodList;
-//        }
-    }
+   }
 
     public ArrayList<PowerUps> requestPUs(){
-//        synchronized (puLock) {
         if (oppopowerUpList.size() > 1) {
             if (!useOppoPU) {
                 useOppoPU = true;
@@ -1091,13 +1101,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 }
             }
         }
-//        ArrayList<PowerUps> copy = new ArrayList<PowerUps>();
-//        for (PowerUps pu : powerUpList){
-//            copy.add(new PowerUps(pu.getPosition(), pu.getKind()));
-//        }
         return powerUpList;
-//        }
-    }
+   }
     public int requestMyPlayerNum(){
         return playerNum;
     }
