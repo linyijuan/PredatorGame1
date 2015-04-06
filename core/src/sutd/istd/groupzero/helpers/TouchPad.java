@@ -25,7 +25,6 @@ import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
-import sutd.istd.groupzero.gameworld.GameWorld;
 
 public class TouchPad {
 	private Stage stage;
@@ -39,7 +38,7 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
-    private GameWorld gameworld;
+//    private GameWorld gameworld;
     private Map map;
     private Game game;
     private List<Food> foodSynchroList;
@@ -49,7 +48,7 @@ public class TouchPad {
 
     private Timer speedTimer;//WIN ___ Timer
 
-	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld,ActionResolver actionResolver,Game game) {
+	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
 		touchpadSkin = new Skin();
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
@@ -61,18 +60,15 @@ public class TouchPad {
 		touchpadStyle.knob = touchKnob;
 
 		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
-
-
-
         touchpad.setBounds(x, y, width, height);
 
-		this.monster = gameWorld.getMap().getMonster();
-        this.gameworld = gameWorld;
-        this.map = gameWorld.getMap();
+		this.monster = map.getMonster();
+        this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
         this.game = game;
 
         movement = AssetLoader.movement;
+
 	}
 
 
@@ -209,7 +205,6 @@ public class TouchPad {
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = true;
-
                 float xx = touchpad.getKnobX();
                 float yy = touchpad.getKnobY();
                 float angle = getAngle(xx, yy);
