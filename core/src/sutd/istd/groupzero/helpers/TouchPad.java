@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -43,6 +42,9 @@ public class TouchPad {
     private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
+
+//    private CopyOnWriteArrayList<Food> foodSynchroList;
+//    private CopyOnWriteArrayList<PowerUps> puSynchroList;
     private Sound movement;
 
 
@@ -90,8 +92,8 @@ public class TouchPad {
                         moveRight = new Vector2(monster.getSpeed() * 0.003f, 0);
 
                         while(touchUp == false){
-//                            ArrayList<Food> foodList = new ArrayList<Food>(actionResolver.requestFoods());
-//                            ArrayList<PowerUps> powerUpList = new ArrayList<PowerUps>(actionResolver.requestPUs());
+                            foodSynchroList = actionResolver.requestFoods();
+                            puSynchroList = actionResolver.requestPUs();
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
@@ -133,7 +135,8 @@ public class TouchPad {
                                     }
                                 }
                             }
-                            foodSynchroList = Collections.synchronizedList(actionResolver.requestFoods());
+
+
                             synchronized (foodSynchroList) {
                                 for (Food f : foodSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
@@ -145,9 +148,9 @@ public class TouchPad {
                                 }
                             }
 
-                            puSynchroList = Collections.synchronizedList(actionResolver.requestPUs());
+
                             synchronized (puSynchroList) {
-                                for (PowerUps p : puSynchroList) {
+                                for (PowerUps p : puSynchroList) {// concurrent exception
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
                                         if (p.getKind().equals("s")) {
                                             //WIN ___ Timer
@@ -220,6 +223,7 @@ public class TouchPad {
 		temp = (float) (temp * 57.2957795);
 		return 	temp;
 	}
+
 
 }
 

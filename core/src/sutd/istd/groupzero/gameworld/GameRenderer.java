@@ -98,7 +98,8 @@ public class GameRenderer {
         this.actionResolver = actionResolver;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-
+        Gdx.app.log("GAME RENDERER WIDTH", Float.toString(screenWidth));
+        Gdx.app.log("GAME RENDERER HEIGHT", Float.toString(screenHeight));
 //        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
 //        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
 //        music.setLooping(true);
@@ -258,17 +259,20 @@ public class GameRenderer {
         for (Tree tree : trees) {
             batcher.draw(AssetLoader.tree, tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
         }
-        for (PowerUps p : powerUpsList) {
-            if (p.shouldShow()) {
-                batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+        synchronized (powerUpsList) {
+            for (PowerUps p : powerUpsList) {
+                if (p.shouldShow()) {
+                    batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+                }
             }
         }
-        for (Food s : foodList) {
-            if (s.shouldShow()) {
-                batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+        synchronized(foodList) {
+            for (Food s : foodList) {
+                if (s.shouldShow()) {
+                    batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+                }
             }
         }
-
 
         switch (d) {
             case TOP:
@@ -329,9 +333,12 @@ public class GameRenderer {
         batcher.begin();
         batcher.enableBlending();
 
-        batcher.draw(myHead,40,65);
-        batcher.draw(food,40 + myHead.getRegionWidth() + 30,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(speed,40 + myHead.getRegionWidth() + 30,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+//        batcher.draw(myHead,40,65);
+        batcher.draw(myHead, 40, 45, 0, 0, myHead.getRegionWidth(), myHead.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
+//        batcher.draw(food,40 + myHead.getRegionWidth() + 30,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+        batcher.draw(food, 40 + 10 + myHead.getRegionWidth(), 45, 0, 0, food.getRegionWidth(), food.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
+//        batcher.draw(speed,40 + myHead.getRegionWidth() + 30,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+        batcher.draw(speed, 40 + 10 + myHead.getRegionWidth(), 65, 0, 0, speed.getRegionWidth(), speed.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
         // strength display
         AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(),100+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40-1);
         AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 100+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40);
@@ -340,8 +347,8 @@ public class GameRenderer {
         AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
 
         //time display
-        AssetLoader.font.draw(batcher, "" + (int)runTime/60 + ":" + (int)runTime%60, 150+myHead.getRegionWidth()*2, 55);
-        batcher.draw(clock.getKeyFrame(runTime),150+myHead.getRegionWidth()*2,105,myHead.getRegionWidth()/1.5f,myHead.getRegionWidth()/1.5f);
+        AssetLoader.font.draw(batcher, "" + (int)runTime/60 + ":" + (int)runTime%60, screenWidth/3, 45);
+        batcher.draw(clock.getKeyFrame(runTime), screenWidth/2, 105, 62, 63);
 
         //opponent information display
         batcher.draw(oppoHead,screenWidth-40-oppoHead.getRegionWidth(),65);

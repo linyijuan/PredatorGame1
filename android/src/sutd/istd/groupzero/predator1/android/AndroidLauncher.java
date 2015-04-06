@@ -680,13 +680,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             float x = Float.intBitsToFloat(xx);
             float y = Float.intBitsToFloat(yy);
             Food remove = null;
-            for (Food f:foodList){
-                if (f.getPosition().x == x && f.getPosition().y == y){
-                    remove = f;
-                    break;
+            synchronized (foodList) {
+                for (Food f : foodList) {
+                    if (f.getPosition().x == x && f.getPosition().y == y) {
+                        remove = f;
+                        break;
+                    }
                 }
+                boolean a = foodList.remove(remove);
             }
-            boolean a = foodList.remove(remove);
         }
         else if(buf[0] == 'd'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
@@ -699,18 +701,22 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             float x = Float.intBitsToFloat(xx);
             float y = Float.intBitsToFloat(yy);
             PowerUps remove = null;
-            for (PowerUps p :powerUpList){
-                if (p.getPosition().x == x && p.getPosition().y == y){
-                    remove = p;
-                    break;
+            synchronized (powerUpList) {
+                for (PowerUps p : powerUpList) {
+                    if (p.getPosition().x == x && p.getPosition().y == y) {
+                        remove = p;
+                        break;
+                    }
                 }
+                powerUpList.remove(remove);
             }
-            powerUpList.remove(remove);
         }
         else if(buf[0] == 'c'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
-            powerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
+            synchronized (powerUpList) {
+                powerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx), Float.intBitsToFloat(yy)), buf[9] + ""));
+            }
         }
         else if (buf[0] == 'a'){
             oppoTapCount++;
@@ -749,13 +755,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     //pass the map to opponent
     public synchronized void broadcastMyMap(){
         if (mMultiplayer){
+            synchronized (foodList){
             for (Food f:foodList){
                 byte[] buf = new byte[9];
                 buf[0] = 'f';
                 storeFloat(buf,f.getPosition().x,1);
                 storeFloat(buf,f.getPosition().y,5);
                 broadcastMsg(buf);
-            }
+            }}
+            synchronized (powerUpList){
             for (PowerUps p :powerUpList){
                 byte[] buf = new byte[10];
                 buf[0] = 'p';
@@ -763,7 +771,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 storeFloat(buf,p.getPosition().y,5);
                 buf[9] = (byte)(p.getKind().equals("s")?'s':'v');
                 broadcastMsg(buf);
-            }
+            }}
             for (Tree t:treeList){
                 byte[] buf = new byte[9];
                 buf[0] = 't';
@@ -782,44 +790,46 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             storeFloat(buf,f.getPosition().y,5);
             broadcastMsg(buf);
         }
-        foodList.remove(f);
+        synchronized (foodList) {
+            foodList.remove(f);
 
-        //food regeneration
-        boolean toPlace;
-        while (foodList.size() < 10) {
-            toPlace = true;
-            Vector2 v = new Vector2(cap(0, mapSizeX - 30), cap(0, mapSizeY - 21));
-            Food food = new Food(v);
-            if (!treeList.isEmpty()){
-                for (Tree t : treeList)
-                    if (Intersector.overlaps(t.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
-            if (toPlace && !powerUpList.isEmpty()){
-                for (PowerUps p : powerUpList)
-                    if (Intersector.overlaps(p.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
+            //food regeneration
+            boolean toPlace;
+            while (foodList.size() < 10) {
+                toPlace = true;
+                Vector2 v = new Vector2(cap(0, mapSizeX - 30), cap(0, mapSizeY - 21));
+                Food food = new Food(v);
+                if (!treeList.isEmpty()) {
+                    for (Tree t : treeList)
+                        if (Intersector.overlaps(t.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
+                if (toPlace && !powerUpList.isEmpty()) {
+                    for (PowerUps p : powerUpList)
+                        if (Intersector.overlaps(p.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
 
-            if (toPlace && !foodList.isEmpty()){
-                for (Food ff : foodList)
-                    if (Intersector.overlaps(ff.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
+                if (toPlace && !foodList.isEmpty()) {
+                    for (Food ff : foodList)
+                        if (Intersector.overlaps(ff.getBound(), food.getBound()) || Intersector.overlaps(food.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
 
-            if (toPlace) {
-                foodList.add(food);
-                byte[] buf1 = new byte[9];
-                buf1[0] = 'd';
-                storeFloat(buf1,food.getPosition().x,1);
-                storeFloat(buf1,food.getPosition().y,5);
-                broadcastMsg(buf1);
+                if (toPlace) {
+                    foodList.add(food);
+                    byte[] buf1 = new byte[9];
+                    buf1[0] = 'd';
+                    storeFloat(buf1, food.getPosition().x, 1);
+                    storeFloat(buf1, food.getPosition().y, 5);
+                    broadcastMsg(buf1);
+                }
             }
         }
 
@@ -833,45 +843,47 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             buf[9] = (byte)(p.getKind().equals("s")?'s':'v');
             broadcastMsg(buf);
         }
-        powerUpList.remove(p);
+        synchronized (powerUpList) {
+            powerUpList.remove(p);
 
-        //powerup regeneration
-        boolean toPlace;
-        while (powerUpList.size() < 10) {
-            toPlace = true;
-            Vector2 v = new Vector2(cap(0, mapSizeX - 22), cap(0, mapSizeY - 21));
-            PowerUps powerUp = new PowerUps(v, "s");
-            powerUp.setKind(p.getKind());
-            if (!treeList.isEmpty()){
-                for (Tree t : treeList)
-                    if (Intersector.overlaps(t.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
-            if (toPlace && !powerUpList.isEmpty()){
-                for (PowerUps pp : powerUpList)
-                    if (Intersector.overlaps(pp.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
+            //powerup regeneration
+            boolean toPlace;
+            while (powerUpList.size() < 10) {
+                toPlace = true;
+                Vector2 v = new Vector2(cap(0, mapSizeX - 22), cap(0, mapSizeY - 21));
+                PowerUps powerUp = new PowerUps(v, "s");
+                powerUp.setKind(p.getKind());
+                if (!treeList.isEmpty()) {
+                    for (Tree t : treeList)
+                        if (Intersector.overlaps(t.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
+                if (toPlace && !powerUpList.isEmpty()) {
+                    for (PowerUps pp : powerUpList)
+                        if (Intersector.overlaps(pp.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
 
-            if (toPlace && !foodList.isEmpty()){
-                for (Food f : foodList)
-                    if (Intersector.overlaps(f.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
-                        toPlace = false;
-                        break;
-                    }
-            }
-            if (toPlace) {
-                powerUpList.add(powerUp);
-                byte[] buf1 = new byte[10];
-                buf1[0] = 'c';
-                storeFloat(buf1,powerUp.getPosition().x,1);
-                storeFloat(buf1,powerUp.getPosition().y,5);
-                buf1[9] = (byte)(powerUp.getKind().equals("s")?'s':'v');
-                broadcastMsg(buf1);
+                if (toPlace && !foodList.isEmpty()) {
+                    for (Food f : foodList)
+                        if (Intersector.overlaps(f.getBound(), powerUp.getBound()) || Intersector.overlaps(powerUp.getBound(), myCurrentBound)) {
+                            toPlace = false;
+                            break;
+                        }
+                }
+                if (toPlace) {
+                    powerUpList.add(powerUp);
+                    byte[] buf1 = new byte[10];
+                    buf1[0] = 'c';
+                    storeFloat(buf1, powerUp.getPosition().x, 1);
+                    storeFloat(buf1, powerUp.getPosition().y, 5);
+                    buf1[9] = (byte) (powerUp.getKind().equals("s") ? 's' : 'v');
+                    broadcastMsg(buf1);
+                }
             }
         }
 
