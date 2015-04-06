@@ -2,7 +2,6 @@ package sutd.istd.groupzero.helpers;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -26,7 +24,6 @@ import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
-import sutd.istd.groupzero.gameworld.GameWorld;
 
 public class TouchPad {
 	private Stage stage;
@@ -40,20 +37,20 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
-    private GameWorld gameworld;
+//    private GameWorld gameworld;
     private Map map;
     private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
+
+//    private CopyOnWriteArrayList<Food> foodSynchroList;
+//    private CopyOnWriteArrayList<PowerUps> puSynchroList;
     private Sound movement;
-    private Sound eating;
-    private Sound boost;
-    private Sound visible;
 
 
     private Timer speedTimer;//WIN ___ Timer
 
-	public TouchPad(float x, float y, float width, float height, GameWorld gameWorld,ActionResolver actionResolver,Game game) {
+	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
 		touchpadSkin = new Skin();
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
@@ -65,22 +62,15 @@ public class TouchPad {
 		touchpadStyle.knob = touchKnob;
 
 		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
-        //Initializing all the sound effects
-        eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
-        boost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
-        visible = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
-
-
-
         touchpad.setBounds(x, y, width, height);
 
-		this.monster = gameWorld.getMap().getMonster();
-        this.gameworld = gameWorld;
-        this.map = gameWorld.getMap();
+		this.monster = map.getMonster();
+        this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
         this.game = game;
 
         movement = AssetLoader.movement;
+
 	}
 
 
@@ -102,8 +92,8 @@ public class TouchPad {
                         moveRight = new Vector2(monster.getSpeed() * 0.003f, 0);
 
                         while(touchUp == false){
-//                            ArrayList<Food> foodList = new ArrayList<Food>(actionResolver.requestFoods());
-//                            ArrayList<PowerUps> powerUpList = new ArrayList<PowerUps>(actionResolver.requestPUs());
+                            foodSynchroList = actionResolver.requestFoods();
+                            puSynchroList = actionResolver.requestPUs();
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
@@ -145,11 +135,11 @@ public class TouchPad {
                                     }
                                 }
                             }
-                            foodSynchroList = Collections.synchronizedList(actionResolver.requestFoods());
+
+
                             synchronized (foodSynchroList) {
                                 for (Food f : foodSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
-                                        eating.play(0.8f);
                                         actionResolver.eatFood(f);
                                         monster.obtainFood();
                                         actionResolver.broadcastMyStrength(monster.getStrength());
@@ -158,13 +148,11 @@ public class TouchPad {
                                 }
                             }
 
-                            puSynchroList = Collections.synchronizedList(actionResolver.requestPUs());
-                            synchronized (puSynchroList) {
-                                for (PowerUps p : puSynchroList) {
-                                    if (Intersector.overlaps(monster.getBound(), p.getBound())) {
 
+                            synchronized (puSynchroList) {
+                                for (PowerUps p : puSynchroList) {// concurrent exception
+                                    if (Intersector.overlaps(monster.getBound(), p.getBound())) {
                                         if (p.getKind().equals("s")) {
-                                            boost.play(0.8f);
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
@@ -178,7 +166,6 @@ public class TouchPad {
                                             }, 6);
 
                                         } else {
-                                            visible.play(0.8f);
                                             speedTimer = new Timer();
                                             monster.setVisibility(1.5f);
                                             speedTimer.scheduleTask(new Timer.Task() {
@@ -221,7 +208,6 @@ public class TouchPad {
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = true;
-
                 float xx = touchpad.getKnobX();
                 float yy = touchpad.getKnobY();
                 float angle = getAngle(xx, yy);
@@ -237,6 +223,7 @@ public class TouchPad {
 		temp = (float) (temp * 57.2957795);
 		return 	temp;
 	}
+
 
 }
 

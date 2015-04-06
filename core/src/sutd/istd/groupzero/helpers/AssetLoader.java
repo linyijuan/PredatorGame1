@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 public class AssetLoader {
-    public static TextureRegion vsScreenGreenBot, vsScreenRedBot;
+    public static TextureRegion vsScreenGreenBot, vsScreenRedBot,menuBg;
     public static TextureRegion[][] texture,oppoTexture;
     public static Texture source,oppoSource;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
@@ -46,13 +46,12 @@ public class AssetLoader {
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
         tree.flip(false,true);
-//        Gdx.app.log("tree",tree.getRegionWidth()+","+tree.getRegionHeight());
         steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak_copy.png")));
         steak.flip(false,true);
-//        Gdx.app.log("steak",steak.getRegionWidth()+","+steak.getRegionHeight());
         powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerup.png")));
         powerUp.flip(false,true);
-//        Gdx.app.log("powerup",powerUp.getRegionWidth()+","+powerUp.getRegionHeight());
+        menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
+        menuBg.flip(false,true);
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)

@@ -22,19 +22,16 @@ public class GameScreen implements Screen{
 	public GameScreen(Game game,ActionResolver actionResolver,Map map) {
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
-        world = new GameWorld(screenWidth, screenHeight,actionResolver,map);
-        renderer = new GameRenderer(world, screenWidth, screenHeight,actionResolver,game);
-
-        stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, world,actionResolver,game).createTouchPad();
-
+        world = new GameWorld(map);
+        stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver,game).createTouchPad();
         Gdx.input.setInputProcessor(stage);
+        renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,game,stage);
     }
 
 	@Override
     public void render(float delta) {
 		runTime += delta;
         renderer.render(runTime);
-        stage.draw();
     }
 
     @Override
@@ -48,32 +45,21 @@ public class GameScreen implements Screen{
 
     @Override
     public void hide() {
-        Gdx.app.log("GameScreen", "hide called");     
+
     }
 
     @Override
     public void pause() {
-        Gdx.app.log("GameScreen", "pause called");        
+
     }
 
     @Override
     public void resume() {
-        Gdx.app.log("GameScreen", "resume called");       
+
     }
 
     @Override
     public void dispose() {
-        // Leave blank
-    }
-
-
-    /////////// Getters/////////////
-    public float getScreenWidth() {
-        return screenWidth;
-    }
-
-    public float getScreenHeight() {
-        return screenHeight;
     }
 
 }
