@@ -194,7 +194,7 @@ public class GameRenderer {
             drawRound2Waiting(runTime);
         }
         else{
-            drawTugOfWar(runTime);
+            drawTugOfWar();
         }
 
     }
@@ -360,10 +360,13 @@ public class GameRenderer {
         }
     }
 
-    public void drawTugOfWar(float runTime){
+    public void drawTugOfWar(){
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        int diff = -actionResolver.requestMyTapCount() + actionResolver.requestOppoTapCount() + (opponentStrength - myStrength+1)/(opponentStrength + myStrength+1)*5;
+        int initial = 0;
+        if ((opponentStrength + myStrength) != 0)
+            initial = (int)((opponentStrength - myStrength)/(float)(opponentStrength + myStrength)*5);
+        int diff = -actionResolver.requestMyTapCount() + actionResolver.requestOppoTapCount() + initial;
         ratio = (diff+15f)/30f;
         batcher.begin();
         batcher.setProjectionMatrix(cam2.combined);
