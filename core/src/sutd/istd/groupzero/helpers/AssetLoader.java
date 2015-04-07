@@ -38,15 +38,19 @@ public class AssetLoader {
             oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
+            victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
             oppoSource = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
+            victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonsterred.png")));
+
         }
         myHead.flip(false,true);
         oppoHead.flip(false,true);
+        victorMonster.flip(false,true);
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
@@ -104,8 +108,7 @@ public class AssetLoader {
         victorybg2.flip(false,true);
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
         victoryAnimation.setPlayMode(PlayMode.LOOP);
-        victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
-        victorMonster.flip(false,true);
+
 
 
         TextureRegion[] clocks = new TextureRegion[8];
