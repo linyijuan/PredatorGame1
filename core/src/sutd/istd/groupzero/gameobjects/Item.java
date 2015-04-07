@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Item {
+
     private Vector2 position;
     private float boundWidth;
     private float boundHeight;

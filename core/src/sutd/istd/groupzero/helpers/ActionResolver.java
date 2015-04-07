@@ -26,5 +26,11 @@ public interface ActionResolver {
     public void broadcastMyStrength(int strength);
     public float requestOpponentSpeed();
     public void broadcastMySpeed(float speed);
+    public boolean haveWeMet();
+    public void weHaveMet();
+    public boolean haveYouWin();
+    public void iWin();
+    public boolean haveYouLose();
+    public void iLose();
 }
 

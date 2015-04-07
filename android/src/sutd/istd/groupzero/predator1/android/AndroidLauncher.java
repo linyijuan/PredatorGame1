@@ -97,6 +97,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private int oppoTapCount = 0;
     private float oppoSpeed = 1.0f;
     private int playerNum = 0;
+    private boolean met = false;
+    private boolean oppoWin = false;
+    private boolean oppoLose = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -730,6 +733,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             int s = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             oppoSpeed = Float.intBitsToFloat(s);
         }
+        else if(buf[0] == 'z'){
+            met = true;
+        }
+        else if(buf[0] == 'w'){
+            oppoWin = true;
+        }
+        else if(buf[0] == 'l'){
+            oppoLose = true;
+        }
         else{
             opponentDirectionKeycode = (buf[0] & 0xFF)| ((buf[1] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[3] & 0xFF) << 24);
             int xx = (buf[4] & 0xFF)| ((buf[5] & 0xFF) << 8)| ((buf[6] & 0xFF) << 16)| ((buf[7] & 0xFF) << 24);
@@ -890,6 +902,32 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
 
     }
+    public boolean haveWeMet(){
+        return met;
+    }
+    public void weHaveMet(){
+        byte[] b = new byte[1];
+        b[0] = 'z';
+        broadcastMsg(b);
+    }
+
+    public boolean haveYouWin(){
+        return oppoWin;
+    }
+    public void iWin(){
+        byte[] b = new byte[1];
+        b[0] = 'w';
+        broadcastMsg(b);
+    }
+    public boolean haveYouLose(){
+        return oppoLose;
+    }
+    public void iLose(){
+        byte[] b = new byte[1];
+        b[0] = 'l';
+        broadcastMsg(b);
+    }
+
     public Vector2 requestOpponentPosition(){
         return opponentPosition;
     }
