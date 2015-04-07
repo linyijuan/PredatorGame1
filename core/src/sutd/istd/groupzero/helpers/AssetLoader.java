@@ -16,7 +16,7 @@ public class AssetLoader {
     public static Texture source,oppoSource;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
-    public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation;
+    public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,victoryAnimation;
     public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo;
     public static TextureRegion tree,steak,powerUp;
     public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
@@ -27,6 +27,8 @@ public class AssetLoader {
     public static TextureRegion myHead,oppoHead;
     public static Animation clock;
     private  static float screenwidth, screenheight;
+    public static TextureRegion victorybg1,victorybg2,victorMonster;
+    public static TextureRegion losebg1,losebg2,loseMonster;
 
     public static void load(){
         screenwidth = Gdx.graphics.getWidth();
@@ -55,6 +57,7 @@ public class AssetLoader {
         powerUp.flip(false,true);
         menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         menuBg.flip(false,true);
+
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)
@@ -94,6 +97,16 @@ public class AssetLoader {
         downaAnimationoppo.setPlayMode(PlayMode.LOOP);
         leftaAnimationoppo.setPlayMode(PlayMode.LOOP);
         rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
+
+        victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
+        victorybg1.flip(false,true);
+        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
+        victorybg2.flip(false,true);
+        victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
+        victoryAnimation.setPlayMode(PlayMode.LOOP);
+        victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
+        victorMonster.flip(false,true);
+
 
         TextureRegion[] clocks = new TextureRegion[8];
         clocks[0] = new TextureRegion(new Texture(Gdx.files.internal("data/clock0.png")));

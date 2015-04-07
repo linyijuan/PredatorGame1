@@ -56,7 +56,7 @@ public class GameRenderer {
     public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight;
     public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet,animationSetoppo;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
     private ShapeRenderer shapeRenderer;
     private FrameBuffer fbo;
     private boolean lightOscillate = true;
@@ -159,6 +159,7 @@ public class GameRenderer {
         menuBg = AssetLoader.menuBg;
         font = AssetLoader.font;
         shadow = AssetLoader.shadow;
+        victorybg = AssetLoader.victoryAnimation;
 
         playerNum = actionResolver.requestMyPlayerNum();
         if (playerNum == 1){
@@ -194,7 +195,7 @@ public class GameRenderer {
             drawRound2Waiting(runTime);
         }
         else{
-            drawTugOfWar();
+            drawTugOfWar(runTime);
         }
 
     }
@@ -360,7 +361,7 @@ public class GameRenderer {
         }
     }
 
-    public void drawTugOfWar(){
+    public void drawTugOfWar(float runTime){
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
@@ -378,8 +379,11 @@ public class GameRenderer {
         }
         else if (actionResolver.haveYouLose() || ratio <=0){
             actionResolver.iWin();
-            AssetLoader.font.draw(batcher,"YOU WIN",screenWidth/2,screenHeight/2);
             handler.setMode(1);
+            batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
+            batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
+            shadow.draw(batcher,"YOU ARE WIN THU LATT!",screenWidth/2-shadow.getBounds("YOU ARE WIN THU LATT!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
+            font.draw(batcher,"YOU ARE WIN THU LATT!",screenWidth/2-font.getBounds("YOU ARE WIN THU LATT!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
         }
         else{
             batcher.enableBlending();
