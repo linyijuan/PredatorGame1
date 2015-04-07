@@ -693,7 +693,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         else if(buf[0] == 'd'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
-            foodList.add(new Food(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy))));
+            synchronized (foodList) {
+                foodList.add(new Food(new Vector2(Float.intBitsToFloat(xx), Float.intBitsToFloat(yy))));
+            }
         }
         else if(buf[0] == 'o'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
