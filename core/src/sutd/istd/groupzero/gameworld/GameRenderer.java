@@ -2,7 +2,6 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -77,6 +76,7 @@ public class GameRenderer {
     private ShaderProgram lightShader;
     private ShaderProgram finalShader;
     public float zAngle;
+    private int diff;
     //read our shader files
     final String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
     final String defaultPixelShader = (Gdx.files.internal("data/defaultPixelShader.glsl")).readString();
@@ -213,178 +213,168 @@ public class GameRenderer {
 
         actionResolver.broadcastMyStatus(myMonster.getMyPosition(), myMonster.getDirection());
         if (actionResolver.requestOpponentPosition() != null) {
-            if (Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))) {
+            if (actionResolver.haveWeMet() || Intersector.overlaps(myMonster.getBound(), new Rectangle(actionResolver.requestOpponentPosition().x, actionResolver.requestOpponentPosition().y, 27, 34))) {
+                actionResolver.weHaveMet();
                 actionResolver.broadcastMyStrength(myMonster.getStrength());
                 shouldStartRound2 = true;
                 round2Start = runTime;
             }
         }
+        if (!shouldStartRound2) {
+            final float dt = Gdx.graphics.getRawDeltaTime();
+            zAngle += dt * zSpeed;
+            while (zAngle > PI2)
+                zAngle -= PI2;
 
-        final float dt = Gdx.graphics.getRawDeltaTime();
-        zAngle += dt * zSpeed;
-        while (zAngle > PI2)
-            zAngle -= PI2;
+            fbo.begin();
+            batcher.setShader(finalShader);
+            batcher.setProjectionMatrix(cam.combined);
+            batcher.begin();
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            float visibility = myMonster.getVisibility();
+            float lightSize = (screenWidth / 3 + (float) Math.sin(zAngle)) * visibility;
+            float lightposx = (myMonster.getMyPosition().x + myMonster.getBound().width / 2 - lightSize * 0.5f);
+            float lightposy = (myMonster.getMyPosition().y + myMonster.getBound().height / 2 - lightSize * 0.5f);
+            batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
+            batcher.end();
+            fbo.end();
 
-        fbo.begin();
-        batcher.setShader(finalShader);
-        batcher.setProjectionMatrix(cam.combined);
-        batcher.begin();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float visibility = myMonster.getVisibility();
-        float lightSize = (screenWidth / 3 + 5f * (float) Math.sin(zAngle) + .2f * MathUtils.random()) *visibility;
-        if(visibility > 1f){
-            visibility = 1.05f;
-        }
-        float lightposx =  (myMonster.getMyPosition().x -(lightSize * 0.43f*visibility));
-        float lightposy =  (myMonster.getMyPosition().y - (lightSize * 0.42f*visibility));
-        batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
-        batcher.end();
-        fbo.end();
+            batcher.begin();
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            batcher.enableBlending();
+            Direction d = myMonster.getDirection();
+            fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
+            light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
+            //this is because our default and ambiant shader dont use multi texturing...
+            //youc can basically bind anything, it doesnt matter
 
-        batcher.begin();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batcher.enableBlending();
-        Direction d = myMonster.getDirection();
-        fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
-        light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
-        //this is because our default and ambiant shader dont use multi texturing...
-        //youc can basically bind anything, it doesnt matter
+            Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2, myMonster.getMyPosition().y + myMonster.getBoundHeight() / 2);
+            cam.position.set(camPost, 0);
+            cam.update();
+            batcher.setProjectionMatrix(cam.combined);
+            batcher.draw(gridBg, 0, 0);
 
-        Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2, myMonster.getMyPosition().y + myMonster.getBoundHeight() / 2);
-        cam.position.set(camPost, 0);
-        cam.update();
-        batcher.setProjectionMatrix(cam.combined);
-        batcher.draw(gridBg, 0, 0);
-
-        for (Tree tree : trees) {
-            batcher.draw(AssetLoader.tree, tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
-        }
-        synchronized (powerUpsList) {
-            for (PowerUps p : powerUpsList) {
-                if (p.shouldShow()) {
-                    batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+            for (Tree tree : trees) {
+                batcher.draw(AssetLoader.tree, tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
+            }
+            synchronized (powerUpsList) {
+                for (PowerUps p : powerUpsList) {
+                    if (p.shouldShow()) {
+                        batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+                    }
                 }
             }
-        }
-        synchronized(foodList) {
-            for (Food s : foodList) {
-                if (s.shouldShow()) {
-                    batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+            synchronized (foodList) {
+                for (Food s : foodList) {
+                    if (s.shouldShow()) {
+                        batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+                    }
                 }
             }
-        }
 
-        switch (d) {
-            case TOP:
+            switch (d) {
+                case TOP:
 
-                batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case LEFT:
-                batcher.draw(animationSet[0].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case RIGHT:
-                batcher.draw(animationSet[2].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            case BOTTOM:
-                batcher.draw(animationSet[3].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-            default:
-                batcher.draw(directionSet[myMonster.getDirection().getKeycode() % 4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
-                break;
-        }
-
-        // Drawing of arrow
-        if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
-            Vector2 oppo_pos = actionResolver.requestOpponentPosition();
-            int oppo_d = actionResolver.requestOpponentDirection();
-            switch (oppo_d) {
-                case 1:
-                    batcher.draw(animationSetoppo[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                    batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 0:
-                    batcher.draw(animationSetoppo[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case LEFT:
+                    batcher.draw(animationSet[0].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 2:
-                    batcher.draw(animationSetoppo[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case RIGHT:
+                    batcher.draw(animationSet[2].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
-                case 3:
-                    batcher.draw(animationSetoppo[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                case BOTTOM:
+                    batcher.draw(animationSet[3].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
                 default:
-                    batcher.draw(directionSetoppo[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                    batcher.draw(directionSet[myMonster.getDirection().getKeycode() % 4], myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
             }
 
-
-            directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
-            angle = directionVectorToTarget.angle() - 180;
-            arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
-            arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
-
             // Drawing of arrow
-            spriteArrow.setRotation(angle);
-            spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
-            spriteArrow.setOriginCenter();
-            spriteArrow.draw(batcher);
+            if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
+                Vector2 oppo_pos = actionResolver.requestOpponentPosition();
+                int oppo_d = actionResolver.requestOpponentDirection();
+                switch (oppo_d) {
+                    case 1:
+                        batcher.draw(animationSetoppo[1].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 0:
+                        batcher.draw(animationSetoppo[0].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 2:
+                        batcher.draw(animationSetoppo[2].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    case 3:
+                        batcher.draw(animationSetoppo[3].getKeyFrame(runTime), oppo_pos.x, oppo_pos.y);
+                        break;
+                    default:
+                        batcher.draw(directionSetoppo[oppo_d % 4], oppo_pos.x, oppo_pos.y);
+                        break;
+                }
+
+
+                directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
+                angle = directionVectorToTarget.angle() - 180;
+                arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
+                arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
+
+                // Drawing of arrow
+                spriteArrow.setRotation(angle);
+                spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
+                spriteArrow.setOriginCenter();
+                spriteArrow.draw(batcher);
+            }
+            batcher.end();
+
+            batcher.setProjectionMatrix(cam2.combined);
+            batcher.setShader(defaultShader);
+            batcher.begin();
+            batcher.enableBlending();
+
+            batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
+            batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
+            batcher.draw(speed, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920) + 80 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
+            // strength display
+
+            AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 40 * (screenWidth / 1080) + 20 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080) + 10 * (screenWidth / 1080) + (myHead.getRegionWidth() / 2) * (screenWidth / 1080), 40 * (screenHeight / 1920));
+            //speed display
+            AssetLoader.font.draw(batcher, "" + (float) (Math.round(myMonster.getSpeed() * 10)) / 10, 40 * (screenWidth / 1080) + 20 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080) + 10 * (screenWidth / 1080) + (myHead.getRegionWidth() / 2) * (screenWidth / 1080), 45 * (screenHeight / 1920) + 80 * (screenHeight / 1920));//y=125
+
+            //time display
+            float timeToDisplay = 180 - runTime;
+            AssetLoader.font.draw(batcher, "" + (int) timeToDisplay / 60 + ":" + (int) timeToDisplay % 60, screenWidth * (6f / 14f), 120f * screenHeight / 1920f);
+            batcher.draw(clock.getKeyFrame(runTime), screenWidth * (11f / 24f), 45f * screenHeight / 1920f, 62f * (screenWidth / 1080f), 63f * (screenHeight / 1920f));
+
+            //opponent information display
+            batcher.draw(oppoHead, screenWidth - 40 * (screenWidth / 1080) - oppoHead.getRegionWidth() * (screenWidth / 1080), 65 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
+
+            batcher.draw(food, screenWidth - 40 * (screenWidth / 1080) - oppoHead.getRegionWidth() * (screenWidth / 1080) - 10 * (screenWidth / 1080) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080), 50 * (screenHeight / 1920f), (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), (myHead.getRegionHeight() / 2) * (screenHeight / 1920f));
+            batcher.draw(speed, screenWidth - 40 * (screenWidth / 1080) - oppoHead.getRegionWidth() * (screenWidth / 1080) - 10 * (screenWidth / 1080) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080), 130 * (screenHeight / 1920f), (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), (myHead.getRegionHeight() / 2) * (screenHeight / 1920f));
+            // strength display
+            AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth - 139 * (screenWidth / 1080f) - myHead.getRegionWidth() * (screenWidth / 1080f) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), 40 * (screenHeight / 1920f));
+            //speed display
+            AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169 * (screenWidth / 1080f) - myHead.getRegionWidth() * (screenWidth / 1080f) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), 125 * (screenHeight / 1920f));
+            batcher.end();
+            stage.draw();
         }
-        batcher.end();
-
-        batcher.setProjectionMatrix(cam2.combined);
-        batcher.setShader(defaultShader);
-        batcher.begin();
-        batcher.enableBlending();
-
-//        batcher.draw(myHead,40,65);
-        batcher.draw(myHead, 40*(screenWidth/1080), 45*(screenHeight/1920), 0, 0, myHead.getRegionWidth()*(screenWidth/1080), myHead.getRegionHeight()*(screenHeight/1920), 1, 1, 0);
-//        batcher.draw(food,40 + myHead.getRegionWidth() + 30,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(food, 40*(screenWidth/1080) + 10*(screenWidth/1080) + myHead.getRegionWidth()*(screenWidth/1080), 45*(screenHeight/1920), 0, 0, (myHead.getRegionWidth()/2)*(screenWidth/1080), (myHead.getRegionHeight()/2)*(screenHeight/1920), 1, 1, 0);
-//        batcher.draw(speed,40 + myHead.getRegionWidth() + 30,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(speed, 40*(screenWidth/1080) + 10*(screenWidth/1080) + myHead.getRegionWidth() *(screenWidth/1080), 45*(screenHeight/1920)+80*(screenHeight/1920), 0, 0, (myHead.getRegionWidth()/2)*(screenWidth/1080), (myHead.getRegionHeight()/2)*(screenHeight/1920), 1, 1, 0);
-        // strength display
-
-        AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 40*(screenWidth/1080) + 20*(screenWidth/1080)+myHead.getRegionWidth()*(screenWidth/1080)+10*(screenWidth/1080)+(myHead.getRegionWidth()/2)*(screenWidth/1080), 40*(screenHeight/1920));
-        //speed display
-        AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 40*(screenWidth/1080) + 20*(screenWidth/1080)+myHead.getRegionWidth()*(screenWidth/1080)+10*(screenWidth/1080)+ (myHead.getRegionWidth()/2)*(screenWidth/1080), 45*(screenHeight/1920)+80*(screenHeight/1920));//y=125
-
-        //time display
-        float timeToDisplay = 180 - runTime;
-        AssetLoader.font.draw(batcher, "" + (int)timeToDisplay/60 + ":" + (int)timeToDisplay%60, screenWidth*(6f/14f), 120f*screenHeight/1920f );
-        batcher.draw(clock.getKeyFrame(runTime), screenWidth*(11f/24f),45f*screenHeight/1920f, 62f*(screenWidth/1080f), 63f*(screenHeight/1920f));
-
-        //opponent information display
-        batcher.draw(oppoHead, screenWidth - 40*(screenWidth/1080) - oppoHead.getRegionWidth()*(screenWidth/1080), 65*(screenHeight/1920), 0, 0, myHead.getRegionWidth()*(screenWidth/1080), myHead.getRegionHeight()*(screenHeight/1920), 1, 1, 0);
-
-//        batcher.draw(oppoHead,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080),65);
-        batcher.draw(food,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),50*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
-        batcher.draw(speed,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),130*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
-        // strength display
-        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139*(screenWidth/1080f)-myHead.getRegionWidth()*(screenWidth/1080f)-(myHead.getRegionWidth()/2)*(screenWidth/1080f), 40*(screenHeight/1920f));
-        //speed display
-        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169*(screenWidth/1080f)-myHead.getRegionWidth()*(screenWidth/1080f)-(myHead.getRegionWidth()/2)*(screenWidth/1080f), 125*(screenHeight/1920f));
-        batcher.end();
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(200-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*5f),10f);
-//
-//        shapeRenderer.end();
-        stage.draw();
     }
 
     public void drawTugOfWar(float runTime){
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        int diff = -actionResolver.requestMyTapCount()-myStrength + actionResolver.requestOppoTapCount()+opponentStrength;
-        ratio = (diff+10f)/20f;
+        int diff = -actionResolver.requestMyTapCount() + actionResolver.requestOppoTapCount() + (opponentStrength - myStrength+1)/(opponentStrength + myStrength+1)*5;
+        ratio = (diff+15f)/30f;
         batcher.begin();
         batcher.setProjectionMatrix(cam2.combined);
 
-        if (ratio >=1){
+        if (actionResolver.haveYouWin() || ratio >=1){
+            actionResolver.iLose();
             AssetLoader.font.draw(batcher,"YOU LOSE",screenWidth/2,screenHeight/2);
             handler.setMode(1);
         }
-        else if (ratio <=0){
+        else if (actionResolver.haveYouLose() || ratio <=0){
+            actionResolver.iWin();
             AssetLoader.font.draw(batcher,"YOU WIN",screenWidth/2,screenHeight/2);
             handler.setMode(1);
         }
@@ -415,11 +405,9 @@ public class GameRenderer {
     }
 
     public void drawRound2Waiting(float runTime){
-        actionResolver.broadcastMyStrength(myMonster.getStrength());
-        while(actionResolver.requestOpponentStrength()== -1){
-            opponentStrength =actionResolver.requestOpponentStrength();
-        }
         opponentStrength =actionResolver.requestOpponentStrength();
+        myStrength = myMonster.getStrength();
+
         Gdx.input.setInputProcessor(handler);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
@@ -428,7 +416,7 @@ public class GameRenderer {
         batcher.draw(menuBg,0,0,screenWidth,screenHeight);
         shadow.draw(batcher, "ROUND 2", screenWidth/2f-font.getBounds("ROUND 2").width/2-1, screenHeight/2.5f-1);
         font.draw(batcher, "ROUND 2", screenWidth /2f-font.getBounds("ROUND 2").width/2, screenHeight/2.5f);
-        if (runTime <=round2Start+1.5){
+        if (runTime <= round2Start+1.5){
             AssetLoader.shadow.draw(batcher, "" + (int)(4-(runTime-round2Start)*2), screenWidth/2f-font.getBounds("" + (int)(4-runTime)).width/2-1, screenHeight/2f-font.getBounds("" + (int)(4-runTime)).height/2-1);
             AssetLoader.font.draw(batcher, "" + (int)(4-(runTime-round2Start)*2), screenWidth/2f-font.getBounds("" + (int)(4-runTime)).width/2, screenHeight/2f-font.getBounds("" + (int)(4-runTime)).height/2);
         }
