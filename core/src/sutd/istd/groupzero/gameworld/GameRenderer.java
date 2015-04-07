@@ -355,8 +355,8 @@ public class GameRenderer {
         batcher.draw(oppoHead, screenWidth - 40*(screenWidth/1080) - oppoHead.getRegionWidth()*(screenWidth/1080), 65*(screenHeight/1920), 0, 0, myHead.getRegionWidth()*(screenWidth/1080), myHead.getRegionHeight()*(screenHeight/1920), 1, 1, 0);
 
 //        batcher.draw(oppoHead,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080),65);
-        batcher.draw(food,screenWidth-40-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),50*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
-        batcher.draw(speed,screenWidth-40-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),130*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
+        batcher.draw(food,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),50*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
+        batcher.draw(speed,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),130*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
         // strength display
         AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139*(screenWidth/1080f)-myHead.getRegionWidth()*(screenWidth/1080f)-(myHead.getRegionWidth()/2)*(screenWidth/1080f), 40*(screenHeight/1920f));
         //speed display

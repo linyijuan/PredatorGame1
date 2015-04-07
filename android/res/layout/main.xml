@@ -34,6 +34,7 @@
             android:background="@drawable/btn_quickgame" />
 
         <Button android:id="@+id/button_invite_players"
+
             style="@style/MainScreenButton"
             android:background="@drawable/btn_invite" />
 
