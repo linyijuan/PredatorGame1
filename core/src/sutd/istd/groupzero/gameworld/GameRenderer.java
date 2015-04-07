@@ -276,6 +276,7 @@ public class GameRenderer {
 
         switch (d) {
             case TOP:
+
                 batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                 break;
             case LEFT:
@@ -334,39 +335,39 @@ public class GameRenderer {
         batcher.enableBlending();
 
 //        batcher.draw(myHead,40,65);
-        batcher.draw(myHead, 40, 45, 0, 0, myHead.getRegionWidth(), myHead.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
+        batcher.draw(myHead, 40*(screenWidth/1080), 45*(screenHeight/1920), 0, 0, myHead.getRegionWidth()*(screenWidth/1080), myHead.getRegionHeight()*(screenHeight/1920), 1, 1, 0);
 //        batcher.draw(food,40 + myHead.getRegionWidth() + 30,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(food, 40 + 10 + myHead.getRegionWidth(), 45, 0, 0, food.getRegionWidth(), food.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
+        batcher.draw(food, 40*(screenWidth/1080) + 10*(screenWidth/1080) + myHead.getRegionWidth()*(screenWidth/1080), 45*(screenHeight/1920), 0, 0, (myHead.getRegionWidth()/2)*(screenWidth/1080), (myHead.getRegionHeight()/2)*(screenHeight/1920), 1, 1, 0);
 //        batcher.draw(speed,40 + myHead.getRegionWidth() + 30,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(speed, 40 + 10 + myHead.getRegionWidth(), 65, 0, 0, speed.getRegionWidth(), speed.getRegionHeight(), screenWidth/1080, screenHeight/1920, 0);
+        batcher.draw(speed, 40*(screenWidth/1080) + 10*(screenWidth/1080) + myHead.getRegionWidth() *(screenWidth/1080), 45*(screenHeight/1920)+80*(screenHeight/1920), 0, 0, (myHead.getRegionWidth()/2)*(screenWidth/1080), (myHead.getRegionHeight()/2)*(screenHeight/1920), 1, 1, 0);
         // strength display
-        AssetLoader.shadow.draw(batcher, "" + myMonster.getStrength(),100+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40-1);
-        AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 100+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 40);
+
+        AssetLoader.font.draw(batcher, "" + myMonster.getStrength(), 40*(screenWidth/1080) + 20*(screenWidth/1080)+myHead.getRegionWidth()*(screenWidth/1080)+10*(screenWidth/1080)+(myHead.getRegionWidth()/2)*(screenWidth/1080), 40*(screenHeight/1920));
         //speed display
-        AssetLoader.shadow.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125-1);
-        AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 90+1+myHead.getRegionWidth()+myHead.getRegionWidth()/2, 125);
+        AssetLoader.font.draw(batcher, "" + (float)(Math.round(myMonster.getSpeed()*10))/10, 40*(screenWidth/1080) + 20*(screenWidth/1080)+myHead.getRegionWidth()*(screenWidth/1080)+10*(screenWidth/1080)+ (myHead.getRegionWidth()/2)*(screenWidth/1080), 45*(screenHeight/1920)+80*(screenHeight/1920));//y=125
 
         //time display
-        AssetLoader.font.draw(batcher, "" + (int)runTime/60 + ":" + (int)runTime%60, screenWidth/3, 45);
-        batcher.draw(clock.getKeyFrame(runTime), screenWidth/2, 105, 62, 63);
+        float timeToDisplay = 180 - runTime;
+        AssetLoader.font.draw(batcher, "" + (int)timeToDisplay/60 + ":" + (int)timeToDisplay%60, screenWidth*(6f/14f), 120f*screenHeight/1920f );
+        batcher.draw(clock.getKeyFrame(runTime), screenWidth*(11f/24f),45f*screenHeight/1920f, 62f*(screenWidth/1080f), 63f*(screenHeight/1920f));
 
         //opponent information display
-        batcher.draw(oppoHead,screenWidth-40-oppoHead.getRegionWidth(),65);
-        batcher.draw(food,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,50,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
-        batcher.draw(speed,screenWidth-40-oppoHead.getRegionWidth()-30-myHead.getRegionWidth()/2,130,myHead.getRegionWidth()/2,myHead.getRegionHeight()/2);
+        batcher.draw(oppoHead, screenWidth - 40*(screenWidth/1080) - oppoHead.getRegionWidth()*(screenWidth/1080), 65*(screenHeight/1920), 0, 0, myHead.getRegionWidth()*(screenWidth/1080), myHead.getRegionHeight()*(screenHeight/1920), 1, 1, 0);
+
+//        batcher.draw(oppoHead,screenWidth-40*(screenWidth/1080)-oppoHead.getRegionWidth()*(screenWidth/1080),65);
+        batcher.draw(food,screenWidth-40-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),50*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
+        batcher.draw(speed,screenWidth-40-oppoHead.getRegionWidth()*(screenWidth/1080)-10*(screenWidth/1080)-(myHead.getRegionWidth()/2)*(screenWidth/1080),130*(screenHeight/1920f),(myHead.getRegionWidth()/2)*(screenWidth/1080f),(myHead.getRegionHeight()/2)*(screenHeight/1920f));
         // strength display
-        AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentStrength(),screenWidth-140-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40-1);
-        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 40);
+        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth-139*(screenWidth/1080f)-myHead.getRegionWidth()*(screenWidth/1080f)-(myHead.getRegionWidth()/2)*(screenWidth/1080f), 40*(screenHeight/1920f));
         //speed display
-        AssetLoader.shadow.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth-170-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125-1);
-        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169-myHead.getRegionWidth()-myHead.getRegionWidth()/2, 125);
+        AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169*(screenWidth/1080f)-myHead.getRegionWidth()*(screenWidth/1080f)-(myHead.getRegionWidth()/2)*(screenWidth/1080f), 125*(screenHeight/1920f));
         batcher.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(200-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*5f),10f);
-
-        shapeRenderer.end();
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(175+myHead.getRegionWidth()*3,105,(200-runTime)/180.0f*(screenWidth-340-myHead.getRegionWidth()*5f),10f);
+//
+//        shapeRenderer.end();
         stage.draw();
     }
 

@@ -26,8 +26,11 @@ public class AssetLoader {
     public static ActionResolver actionResolver;
     public static TextureRegion myHead,oppoHead;
     public static Animation clock;
+    private  static float screenwidth, screenheight;
 
     public static void load(){
+        screenwidth = Gdx.graphics.getWidth();
+        screenheight = Gdx.graphics.getHeight();
         if (actionResolver.requestMyPlayerNum() == 1){
             source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
             oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
@@ -109,9 +112,9 @@ public class AssetLoader {
 
 
         font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
-        font.setScale(1f, -1f);
+        font.setScale(screenwidth/1080,-screenheight/1920);
         shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
-        shadow.setScale(1f, -1f);
+        shadow.setScale(screenwidth/1080,-screenheight/1920);
 
         arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
         spriteArrow = new Sprite(arrow);
