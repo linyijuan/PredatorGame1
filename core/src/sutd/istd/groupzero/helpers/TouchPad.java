@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -138,20 +139,26 @@ public class TouchPad {
 
 
                             synchronized (foodSynchroList) {
+                                Food fcopy = null;
                                 for (Food f : foodSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
+                                        fcopy = f;
                                         actionResolver.eatFood(f);
                                         monster.obtainFood();
                                         actionResolver.broadcastMyStrength(monster.getStrength());
                                         break;
                                     }
                                 }
+                                if(fcopy != null)
+                                    actionResolver.eatFood(fcopy);
                             }
 
 
                             synchronized (puSynchroList) {
+                                PowerUps pcopy = null;
                                 for (PowerUps p : puSynchroList) {// concurrent exception
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
+                                        pcopy = p;
                                         if (p.getKind().equals("s")) {
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
@@ -176,10 +183,13 @@ public class TouchPad {
                                             }, 12);
                                             speedTimer.start();
                                         }
-                                        actionResolver.obtainPowerUp(p);
+
                                         break;
                                     }
                                 }
+                                if(pcopy != null)
+                                    actionResolver.obtainPowerUp(pcopy);
+
                             }
 
                         }
