@@ -113,6 +113,8 @@ public class AssetLoader {
 
         victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
         victorybg1.flip(false,true);
+        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
+        victorybg2.flip(false,true);
         losebg = new TextureRegion(new Texture(Gdx.files.internal("data/losebg.png")));
         losebg.flip(false,true);
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
