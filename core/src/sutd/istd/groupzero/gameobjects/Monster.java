@@ -35,8 +35,24 @@ public class Monster {
 
     private float speed = 1;
     private float visibility = 1;//max=5
+    private boolean sbool = false;
+    private boolean vbool = false;
 
 
+    public void setSpeedBool(boolean a){
+        sbool = a;
+    }
+
+    public void setVisibilityBool(boolean a){
+        vbool = a;
+    }
+
+    public boolean getSpeedBool(){
+        return sbool;
+    }
+    public boolean getVisibilityBool(){
+        return vbool;
+    }
 
     public float getSpeed()
     {

@@ -47,7 +47,8 @@ public class TouchPad {
 //    private CopyOnWriteArrayList<Food> foodSynchroList;
 //    private CopyOnWriteArrayList<PowerUps> puSynchroList;
     private Sound movement;
-
+    private boolean speed = false;
+    private boolean visibility = false;
 
     private Timer speedTimer;//WIN ___ Timer
 
@@ -160,6 +161,7 @@ public class TouchPad {
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
                                         pcopy = p;
                                         if (p.getKind().equals("s")) {
+                                            monster.setSpeedBool(true);
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
@@ -173,6 +175,8 @@ public class TouchPad {
                                             }, 6);
 
                                         } else {
+                                            monster.setVisibilityBool(true);
+                                            visibility = true;
                                             speedTimer = new Timer();
                                             monster.setVisibility(1.5f);
                                             speedTimer.scheduleTask(new Timer.Task() {
@@ -233,6 +237,7 @@ public class TouchPad {
 		temp = (float) (temp * 57.2957795);
 		return 	temp;
 	}
+
 
 
 }

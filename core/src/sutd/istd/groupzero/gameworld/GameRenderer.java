@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +57,7 @@ public class GameRenderer {
     public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight;
     public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet,animationSetoppo;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg,Spic,Vpic;
     private ShapeRenderer shapeRenderer;
     private FrameBuffer fbo;
     private boolean lightOscillate = true;
@@ -138,6 +139,9 @@ public class GameRenderer {
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
 
+
+        Spic = AssetLoader.Spowerup;
+        Vpic = AssetLoader.Vpowerup;
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
         monsterLeft = AssetLoader.monsterLeft;
@@ -160,6 +164,7 @@ public class GameRenderer {
         font = AssetLoader.font;
         shadow = AssetLoader.shadow;
         victorybg = AssetLoader.victoryAnimation;
+
 
         playerNum = actionResolver.requestMyPlayerNum();
         if (playerNum == 1){
@@ -333,6 +338,14 @@ public class GameRenderer {
             batcher.begin();
             batcher.enableBlending();
 
+            if(myMonster.getSpeedBool()){
+                myMonster.setSpeedBool(false);
+                batcher.draw(Spic.getKeyFrame(runTime),screenWidth/2,screenHeight/2+screenHeight/10,screenWidth/10,screenWidth/10);
+            }
+            if(myMonster.getVisibilityBool()){
+                myMonster.setVisibilityBool(false);
+                batcher.draw(Vpic.getKeyFrame(runTime),screenWidth/2,screenHeight/2+screenHeight/10,screenWidth/10,screenWidth/10);
+            }
             batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(speed, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920) + 80 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
