@@ -4,12 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
-import java.beans.Visibility;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class AssetLoader {
@@ -19,7 +17,7 @@ public class AssetLoader {
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,victoryAnimation;
-    public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo,Vpowerup,Spowerup;
+    public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo;
     public static TextureRegion tree,steak,powerUp;
     public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
     public static BitmapFont font, shadow;
@@ -87,9 +85,15 @@ public class AssetLoader {
         vsScreenRedBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen2.png")));
         vsScreenRedBot.flip(false,true);
 
-        Vpowerup = new Animation(1f,Spic);
-        Spowerup = new Animation(1f,Vpic);
+        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
+        Spic.flip(false, true);
+        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
+        Vpic.flip(false, true);
 
+//        Vpowerup = new Animation(5f,new TextureRegion[]{Vpic});
+//        Vpowerup.setPlayMode(PlayMode.NORMAL);
+//        Spowerup = new Animation(5f,new TextureRegion[]{Spic});
+//        Spowerup.setPlayMode(PlayMode.NORMAL);
 
         upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
         downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
@@ -116,8 +120,7 @@ public class AssetLoader {
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
         victoryAnimation.setPlayMode(PlayMode.LOOP);
 
-        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
-        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
+
 
 
         TextureRegion[] clocks = new TextureRegion[8];

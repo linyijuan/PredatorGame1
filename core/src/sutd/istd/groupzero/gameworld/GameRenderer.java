@@ -21,7 +21,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,10 +53,10 @@ public class GameRenderer {
     private SpriteBatch batcher;
     public static BitmapFont font, shadow;
     public  Texture gridBg,light;
-    public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight;
+    public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
     public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet,animationSetoppo;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg,Spic,Vpic;
+    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
     private ShapeRenderer shapeRenderer;
     private FrameBuffer fbo;
     private boolean lightOscillate = true;
@@ -140,8 +139,8 @@ public class GameRenderer {
         grid = new TextureRegion(gridBg, 600, 600);
 
 
-        Spic = AssetLoader.Spowerup;
-        Vpic = AssetLoader.Vpowerup;
+        Spic = AssetLoader.Spic;
+        Vpic = AssetLoader.Vpic;
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
         monsterLeft = AssetLoader.monsterLeft;
@@ -196,7 +195,7 @@ public class GameRenderer {
         else if(!shouldStartRound2 && runTime <= round2Start) {
             drawMapWar(runTime);
         }
-        else if (shouldStartRound2|| (runTime > round2Start & runTime < round2Start+2)){
+        else if (shouldStartRound2|| (runTime > round2Start && runTime < round2Start+2)){
             drawRound2Waiting(runTime);
         }
         else{
@@ -297,7 +296,6 @@ public class GameRenderer {
                     break;
             }
 
-            // Drawing of arrow
             if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
                 Vector2 oppo_pos = actionResolver.requestOpponentPosition();
                 int oppo_d = actionResolver.requestOpponentDirection();
@@ -319,12 +317,12 @@ public class GameRenderer {
                         break;
                 }
 
-
+                // Drawing of arrow
                 directionVectorToTarget = directionVectorToTarget.set(oppo_pos.x - myMonster.getMyPosition().x, oppo_pos.y - myMonster.getMyPosition().y);
                 angle = directionVectorToTarget.angle() - 180;
                 arrowPostX = myMonster.getMyPosition().x + (radius * MathUtils.cos(directionVectorToTarget.angleRad()));
                 arrowPostY = myMonster.getMyPosition().y + (radius * MathUtils.sin(directionVectorToTarget.angleRad()));
-
+                batcher.setShader(defaultShader);
                 // Drawing of arrow
                 spriteArrow.setRotation(angle);
                 spriteArrow.setBounds(arrowPostX, arrowPostY, myMonster.getBoundWidth(), myMonster.getBoundWidth());
@@ -334,17 +332,15 @@ public class GameRenderer {
             batcher.end();
 
             batcher.setProjectionMatrix(cam2.combined);
-            batcher.setShader(defaultShader);
+
             batcher.begin();
             batcher.enableBlending();
 
-            if(myMonster.getSpeedBool()){
-                myMonster.setSpeedBool(false);
-                batcher.draw(Spic.getKeyFrame(runTime),screenWidth/2,screenHeight/2+screenHeight/10,screenWidth/10,screenWidth/10);
+            if(myMonster.getSpeed()>1.0f){
+                batcher.draw(Spic,40 * (screenWidth / 1080) + screenWidth/10,45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
             }
-            if(myMonster.getVisibilityBool()){
-                myMonster.setVisibilityBool(false);
-                batcher.draw(Vpic.getKeyFrame(runTime),screenWidth/2,screenHeight/2+screenHeight/10,screenWidth/10,screenWidth/10);
+            if(myMonster.getVisibility()>1.0f){
+                batcher.draw(Vpic,40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
             }
             batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
