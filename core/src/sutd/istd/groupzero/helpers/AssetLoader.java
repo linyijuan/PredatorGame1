@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import java.beans.Visibility;
+
 
 
 public class AssetLoader {
@@ -29,8 +29,8 @@ public class AssetLoader {
     public static TextureRegion myHead,oppoHead;
     public static Animation clock;
     private  static float screenwidth, screenheight;
-    public static TextureRegion victorybg1,victorybg2,victorMonster;
-    public static TextureRegion losebg1,losebg2,loseMonster;
+    public static TextureRegion victorybg1,victorybg2,victorMonster,loseMonster,losebg;
+
     public static TextureRegion Spic,Vpic;
 
     public static void load(){
@@ -42,6 +42,7 @@ public class AssetLoader {
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
+            loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonster.png")));
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
@@ -49,11 +50,12 @@ public class AssetLoader {
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonsterred.png")));
-
+            loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonsterred.png")));
         }
         myHead.flip(false,true);
         oppoHead.flip(false,true);
         victorMonster.flip(false,true);
+        loseMonster.flip(false,true);
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
@@ -111,8 +113,8 @@ public class AssetLoader {
 
         victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
         victorybg1.flip(false,true);
-        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
-        victorybg2.flip(false,true);
+        losebg = new TextureRegion(new Texture(Gdx.files.internal("data/losebg.png")));
+        losebg.flip(false,true);
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
         victoryAnimation.setPlayMode(PlayMode.LOOP);
 
