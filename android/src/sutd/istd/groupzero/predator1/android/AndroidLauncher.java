@@ -476,7 +476,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             broadcastMyMap();
         }
         else{
-            mystartPos = startPos[0];
+            mystartPos = startPos[1];
             playerNum = 2;
         }
     }

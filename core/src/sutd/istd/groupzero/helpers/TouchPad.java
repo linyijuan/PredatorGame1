@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -44,16 +44,21 @@ public class TouchPad {
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
 
-//    private CopyOnWriteArrayList<Food> foodSynchroList;
-//    private CopyOnWriteArrayList<PowerUps> puSynchroList;
     private Sound movement;
     private boolean speed = false;
     private boolean visibility = false;
 
+    private Button skillButton;
+
     private Timer speedTimer;//WIN ___ Timer
 
+    private float screenWidth;
+    private float screenHeight;
+
 	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
-		touchpadSkin = new Skin();
+		screenHeight = Gdx.graphics.getHeight();
+        screenWidth = Gdx.graphics.getWidth();
+        touchpadSkin = new Skin();
 		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
         this.actionResolver = actionResolver;
@@ -73,12 +78,22 @@ public class TouchPad {
 
         movement = AssetLoader.movement;
 
+        skillButton = new Button(touchBackground, touchKnob);
+        skillButton.setBounds(40*(screenWidth/1080), /*screenHeight -*/ 100*(screenHeight/1920), width, height);
 	}
 
 
 	public Stage createTouchPad() {
 		stage = new Stage();
 		stage.addActor(touchpad);
+        stage.addActor(skillButton);
+        skillButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("Button", "Button pressed");
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
 		touchpad.addListener(new DragListener() {public void touchDragged(InputEvent event, float x, float y, int pointer) {}});
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
