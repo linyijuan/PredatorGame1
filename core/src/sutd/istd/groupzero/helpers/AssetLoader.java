@@ -29,8 +29,7 @@ public class AssetLoader {
     public static TextureRegion myHead,oppoHead;
     public static Animation clock;
     private  static float screenwidth, screenheight;
-    public static TextureRegion victorybg1,victorybg2,victorMonster;
-    public static TextureRegion losebg1,losebg2,loseMonster;
+    public static TextureRegion victorybg1,losebg,victorMonster,loseMonster;
     public static TextureRegion Spic,Vpic;
 
     public static void load(){
@@ -42,6 +41,8 @@ public class AssetLoader {
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
+            loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonster.png")));
+
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
@@ -49,8 +50,9 @@ public class AssetLoader {
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonsterred.png")));
-
+            loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonsterred.png")));
         }
+
         myHead.flip(false,true);
         oppoHead.flip(false,true);
         victorMonster.flip(false,true);
@@ -108,18 +110,12 @@ public class AssetLoader {
         downaAnimationoppo.setPlayMode(PlayMode.LOOP);
         leftaAnimationoppo.setPlayMode(PlayMode.LOOP);
         rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
-
-        victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
-        victorybg1.flip(false,true);
-        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
-        victorybg2.flip(false,true);
-        victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
-        victoryAnimation.setPlayMode(PlayMode.LOOP);
-
         Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
         Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
-
-
+        losebg =  new TextureRegion(new Texture(Gdx.files.internal("data/losebg.png")));
+        losebg.flip(false,true);
+        victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
+        victorybg1.flip(false,true);
         TextureRegion[] clocks = new TextureRegion[8];
         clocks[0] = new TextureRegion(new Texture(Gdx.files.internal("data/clock0.png")));
         clocks[1] = new TextureRegion(new Texture(Gdx.files.internal("data/clock1.png")));
