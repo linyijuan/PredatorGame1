@@ -42,10 +42,6 @@
             style="@style/MainScreenButton"
             android:background="@drawable/btn_viewinvites" />
 
-        <Button android:id="@+id/button_single_player_2"
-            style="@style/MainScreenButton"
-            android:text="@string/single_player" />
-
         <Button android:id="@+id/button_sign_out"
             style="@style/SignOutButton"
             android:text="@string/sign_out" />

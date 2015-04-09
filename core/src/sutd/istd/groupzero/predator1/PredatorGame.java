@@ -36,4 +36,5 @@ public class PredatorGame extends Game {
 	        super.render();
 	 }
 
+
 }
