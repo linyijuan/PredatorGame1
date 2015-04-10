@@ -86,7 +86,7 @@ public class TouchPad {
         vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
         eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
         skillButton = new Button(SkillBackground, SkillBackground);
-        skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/8, screenWidth/8);
+        skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);
 	}
 
 
@@ -119,11 +119,6 @@ public class TouchPad {
                         monster.addSpeed(-1.5f);
                         monster.setVisibility(1.0f);
                         monster.setStrength(monster.getStrength() - 5);
-                        if (monster.getStrength() < 5){
-                            skillButton.setDisabled(true);
-                        }else{
-                            skillButton.setDisabled(false);
-                        }
                         monster.setSaiyanMode(false);
                     }
                 }, 10f);
