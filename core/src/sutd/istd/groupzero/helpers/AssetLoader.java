@@ -64,9 +64,9 @@ public class AssetLoader {
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
         tree.flip(false,true);
-        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak_copy.png")));
+        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
         steak.flip(false,true);
-        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerup.png")));
+        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
         powerUp.flip(false,true);
         menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         menuBg.flip(false,true);
