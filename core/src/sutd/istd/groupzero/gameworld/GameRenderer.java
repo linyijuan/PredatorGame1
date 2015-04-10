@@ -279,7 +279,6 @@ public class GameRenderer {
 
             switch (d) {
                 case TOP:
-
                     batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
                 case LEFT:
