@@ -17,6 +17,7 @@ public class AssetLoader {
     public static TextureRegion[][] texture,oppoTexture;
     public static Texture source,oppoSource;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
+    public static TextureRegion vsOppo,vsOppo2,vsMe,vsMe2,vsBg;
     public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,victoryAnimation;
     public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo,Vpowerup,Spowerup;
@@ -45,6 +46,11 @@ public class AssetLoader {
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonster.png")));
             losebg = new TextureRegion(new Texture(Gdx.files.internal("data/greenlose.png")));
             losebg.flip(false,true);
+            vsOppo = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster.png")));
+            vsOppo2 = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster2.png")));
+            vsMe = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster.png")));
+            vsMe2 = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster2.png")));
+            vsBg = new TextureRegion(new Texture(Gdx.files.internal("data/vsbg.png")));
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
@@ -55,7 +61,15 @@ public class AssetLoader {
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonsterred.png")));
             losebg = new TextureRegion(new Texture(Gdx.files.internal("data/redlose.png")));
             losebg.flip(false,true);
+            vsOppo = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster.png")));
+            vsOppo2 = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster2.png")));
+            vsMe = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster.png")));
+            vsMe2 = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster2.png")));
+            vsBg = new TextureRegion(new Texture(Gdx.files.internal("data/vsbg2.png")));
         }
+        vsBg.flip(false,true);
+        vsMe.flip(false,true);
+        vsMe2.flip(false,true);
         myHead.flip(false,true);
         oppoHead.flip(false,true);
         victorMonster.flip(false,true);
@@ -70,7 +84,6 @@ public class AssetLoader {
         powerUp.flip(false,true);
         menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         menuBg.flip(false,true);
-
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)

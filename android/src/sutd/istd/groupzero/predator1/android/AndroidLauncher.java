@@ -678,13 +678,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         broadcastMsg(bytes);
     }
 
-    public void iStart(){
-            if (iStart != true){
-                iStart = true;
-                byte[] bytes = new byte[1];
-                bytes[0] = 'g';
-                broadcastMsg(bytes);
-            }
+    public boolean iStart(){
+        iStart = true;
+        byte[] bytes = new byte[1];
+        bytes[0] = 'g';
+        broadcastMsg(bytes);
+        return iStart;
 
     }
     public boolean didYouStart(){

@@ -47,6 +47,7 @@ public class GameRenderer {
     private float screenWidth,screenHeight;
     private Map myMap;
     private Game game;
+    private boolean left = false;
     private Monster myMonster;
     private Stage stage;
     private ActionResolver actionResolver;
@@ -55,7 +56,7 @@ public class GameRenderer {
     public static BitmapFont font, shadow;
     public  Texture gridBg, light, saiyan;
     public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
-    public  TextureRegion[] directionSet,directionSetoppo;
+    public  TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
     public  Animation[] animationSet,animationSetoppo;
     public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
     private ShapeRenderer shapeRenderer;
@@ -67,7 +68,7 @@ public class GameRenderer {
     private float round2Start = 180;
     private float radius = 35f;
     private boolean shouldStartRound2 = false;
-    private int playerNum, opponentStrength,myStrength;
+    private int opponentStrength,myStrength;
     private InputHandler handler;
     //out different shaders. currentShader is just a pointer to the 4 others
     private ShaderSelection	shaderSelection = ShaderSelection.Default;
@@ -169,15 +170,10 @@ public class GameRenderer {
         victorybg = AssetLoader.victoryAnimation;
 
         saiyan = new Texture(Gdx.files.internal("data/saiyan.png"));
+        pic = AssetLoader.vsBg;
+        vsMe = new TextureRegion[] {AssetLoader.vsMe,AssetLoader.vsMe2};
+        vsOppo = new TextureRegion[] {AssetLoader.vsOppo,AssetLoader.vsOppo2};
 
-
-        playerNum = actionResolver.requestMyPlayerNum();
-        if (playerNum == 1){
-            pic = AssetLoader.vsScreenGreenBot;
-        }
-        else{
-            pic = AssetLoader.vsScreenRedBot;
-        }
         handler = new InputHandler(actionResolver,0);
         this.stage = stage;
     }
@@ -391,13 +387,16 @@ public class GameRenderer {
     }
 
     public void drawTugOfWar(float runTime){
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
+
+        int myTapCount = actionResolver.requestMyTapCount();
+        int oppoTapCount = actionResolver.requestOppoTapCount();
+
         if ((opponentStrength + myStrength) != 0)
             initial = (int)((opponentStrength - myStrength)/(float)(opponentStrength + myStrength)*10);
-        int diff = -actionResolver.requestMyTapCount() + actionResolver.requestOppoTapCount() + initial;
+        int diff = -myTapCount + oppoTapCount + initial;
         ratio = (diff+20f)/40f;
         batcher.begin();
         batcher.setProjectionMatrix(cam2.combined);
@@ -405,7 +404,6 @@ public class GameRenderer {
         if (actionResolver.haveYouWin() || ratio >=1){
             actionResolver.iLose();
             batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
-            //batcher.draw(AssetLoader.loseMonster,screenWidth/2-AssetLoader.loseMonster.getRegionWidth()/3,screenHeight/2 - AssetLoader.loseMonster.getRegionHeight()/3);
             shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
             font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
             handler.setMode(1);
@@ -419,8 +417,14 @@ public class GameRenderer {
             font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
         }
         else{
+            TextureRegion me = vsMe[myTapCount%2];
+            TextureRegion op = vsOppo[oppoTapCount%2];
             batcher.enableBlending();
-            batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*1.5f)/2, screenWidth, screenHeight*1.5f);
+            batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*2f)/2, screenWidth, screenHeight*2f);
+            batcher.draw(op,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight-op.getRegionHeight()/op.getRegionWidth()*screenWidth*1.2f
+                    ,screenWidth,op.getRegionHeight()/op.getRegionWidth()*screenWidth);
+            batcher.draw(me,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight+me.getRegionHeight()/me.getRegionWidth()*screenWidth*.2f
+                    ,screenWidth,me.getRegionHeight()/me.getRegionWidth()*screenWidth);
         }
         batcher.end();
     }
@@ -448,7 +452,6 @@ public class GameRenderer {
         music.stop();
         opponentStrength =actionResolver.requestOpponentStrength();
         myStrength = myMonster.getStrength();
-
         Gdx.input.setInputProcessor(handler);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
