@@ -50,7 +50,7 @@ public class TouchPad {
     private Sound eating;
 
 
-    private Button skillButton;
+    public static Button skillButton;
 
     private Timer speedTimer;//WIN ___ Timer
 
@@ -69,7 +69,6 @@ public class TouchPad {
         this.actionResolver = actionResolver;
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
-        Texture skill = new Texture(Gdx.files.internal("data/saiyan.png"));
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
@@ -87,7 +86,7 @@ public class TouchPad {
         vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
         eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
         skillButton = new Button(SkillBackground, SkillBackground);
-        skillButton.setBounds(40*(screenWidth/1080), /*screenHeight -*/ 100*(screenHeight/1920), width, height);
+        skillButton.setBounds(40*(screenWidth/1080), 100*(screenHeight/1920), width, height);
 	}
 
 
@@ -100,29 +99,45 @@ public class TouchPad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("Button", "Button pressed");
-                monster.addSpeed(2.0f);
-                monster.setVisibility(2.0f);
-                predatorMode = new Timer();
-                predatorMode.scheduleTask(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        monster.addSpeed(-2.0f);
-                        monster.setVisibility(1.0f);
-                    }
-                }, 10f);
-                return true;
+                if (monster.getStrength() >= 5) {
+                    return true;
+                }else{
+                    Gdx.app.log("Predator mode", "Cannot activate");
+                    return false;
+                }
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
+                monster.addSpeed(1.5f);
+                monster.setSaiyanMode(true);
+                predatorMode = new Timer();
+                predatorMode.scheduleTask(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        monster.addSpeed(-1.5f);
+                        monster.setVisibility(1.0f);
+                        monster.setStrength(monster.getStrength() - 5);
+                        if (monster.getStrength() < 5){
+                            skillButton.setDisabled(true);
+                        }else{
+                            skillButton.setDisabled(false);
+                        }
+                        monster.setSaiyanMode(false);
+                    }
+                }, 10f);
                 predatorMode.start();
                 skillButton.setDisabled(true);
             }
 
 
+
         });
-		touchpad.addListener(new DragListener() {public void touchDragged(InputEvent event, float x, float y, int pointer) {}});
+		touchpad.addListener(new DragListener() {
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+
+            }});
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
@@ -137,6 +152,10 @@ public class TouchPad {
                         moveRight = new Vector2(monster.getSpeed() * 0.003f, 0);
 
                         while(touchUp == false){
+                            moveUp.set(0,-( monster.getSpeed() *0.003f));
+                            moveDown.set(0, monster.getSpeed() * 0.003f);
+                            moveLeft.set(-(monster.getSpeed() * 0.003f), 0);
+                            moveRight.set(monster.getSpeed() * 0.003f, 0);
                             foodSynchroList = actionResolver.requestFoods();
                             puSynchroList = actionResolver.requestPUs();
                             float x = touchpad.getKnobX();
@@ -201,12 +220,12 @@ public class TouchPad {
 
                             synchronized (puSynchroList) {
                                 PowerUps pcopy = null;
-                                for (PowerUps p : puSynchroList) {// concurrent exception
+                                for (PowerUps p : puSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
                                         pcopy = p;
                                         if (p.getKind().equals("s")) {
                                             sboost.play();
-                                            monster.setSpeedBool(true);
+//                                            monster.setSpeedBool(true);
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
@@ -220,17 +239,19 @@ public class TouchPad {
                                             }, 6);
 
                                         } else {
-                                            monster.setVisibilityBool(true);
+//                                            monster.setVisibilityBool(true);
                                             vboost.play();
-                                            speedTimer = new Timer();
-                                            monster.setVisibility(1.5f);
-                                            speedTimer.scheduleTask(new Timer.Task() {
-                                                @Override
-                                                public void run() {
-                                                    monster.setVisibility(1f);
-                                                }
-                                            }, 12);
-                                            speedTimer.start();
+                                            if (!monster.getSaiyanMode()) {
+                                                speedTimer = new Timer();
+                                                monster.setVisibility(1.5f);
+                                                speedTimer.scheduleTask(new Timer.Task() {
+                                                    @Override
+                                                    public void run() {
+                                                        monster.setVisibility(1f);
+                                                    }
+                                                }, 12);
+                                                speedTimer.start();
+                                            }
                                         }
 
                                         break;

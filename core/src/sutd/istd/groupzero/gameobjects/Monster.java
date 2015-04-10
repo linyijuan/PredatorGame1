@@ -38,6 +38,7 @@ public class Monster {
     private boolean sbool = false;
     private boolean vbool = false;
 
+    private boolean saiyanMode = false;
 
     public void setSpeedBool(boolean a){
         sbool = a;
@@ -129,11 +130,8 @@ public class Monster {
     public Monster(int playerNumber, Direction direction1)
     {
         this.direction = direction1;
-
         this.original = new Vector2(0,0);
-//        this.boundWidth = AssetLoader.monsterUp.getRegionWidth();
         this.boundWidth = 27;
-//        this.boundHeight = AssetLoader.monsterUp.getRegionHeight();
         this.boundHeight = 34;
 
         if (playerNumber == 1) {
@@ -145,14 +143,12 @@ public class Monster {
         this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
 
 
-        // This is not needed right?
+    }
 
-//        this.foodList = foodList;
-//        this.treeList = treeList;
-//        this.powerUpsList = powerUpsList;
-
-        // Arbitary target for now
-        target = new Vector2(270, 480);
+    public void update(){
+        if (saiyanMode == true){
+            this.setVisibility(2.0f);
+        }
     }
 
     public float getBoundWidth() {
@@ -198,5 +194,12 @@ public class Monster {
     public void obtainVisibility(){
         if (visibility <5)
             visibility++;
+    }
+    public void setSaiyanMode(boolean bool){
+        saiyanMode = bool;
+    }
+
+    public boolean getSaiyanMode(){
+        return saiyanMode;
     }
 }
