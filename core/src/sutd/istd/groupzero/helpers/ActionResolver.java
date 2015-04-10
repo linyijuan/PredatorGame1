@@ -32,5 +32,7 @@ public interface ActionResolver {
     public void iWin();
     public boolean haveYouLose();
     public void iLose();
+    public void iStart();
+    public boolean didYouStart();
 }
 

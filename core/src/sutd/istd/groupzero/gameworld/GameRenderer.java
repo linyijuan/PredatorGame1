@@ -377,9 +377,9 @@ public class GameRenderer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
         if ((opponentStrength + myStrength) != 0)
-            initial = (int)((opponentStrength - myStrength)/(float)(opponentStrength + myStrength)*5);
+            initial = (int)((opponentStrength - myStrength)/(float)(opponentStrength + myStrength)*10);
         int diff = -actionResolver.requestMyTapCount() + actionResolver.requestOppoTapCount() + initial;
-        ratio = (diff+15f)/30f;
+        ratio = (diff+20f)/40f;
         batcher.begin();
         batcher.setProjectionMatrix(cam2.combined);
 

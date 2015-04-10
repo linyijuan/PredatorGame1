@@ -114,6 +114,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private boolean met = false;
     private boolean oppoWin = false;
     private boolean oppoLose = false;
+    private boolean iStart = false;
+    private Object startlock = new Object();
+    private boolean oppoStart = false;
     private LinearLayout linearLayout;
 
     @Override
@@ -674,6 +677,19 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         broadcastMsg(bytes);
     }
 
+    public void iStart(){
+            if (iStart != true){
+                iStart = true;
+                byte[] bytes = new byte[1];
+                bytes[0] = 'g';
+                broadcastMsg(bytes);
+            }
+
+    }
+    public boolean didYouStart(){
+        return oppoStart;
+    }
+
     @Override
     public void onRealTimeMessageReceived(RealTimeMessage rtm) {
         byte[] buf = rtm.getMessageData();
@@ -690,7 +706,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         else if(buf[0] == 'p'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
-            oppopowerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),buf[9]+""));
+            oppopowerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx),Float.intBitsToFloat(yy)),(char)buf[9]+""));
         }
         else if(buf[0] == 'e'){
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
@@ -735,7 +751,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             int xx = (buf[1] & 0xFF)| ((buf[2] & 0xFF) << 8)| ((buf[3] & 0xFF) << 16)| ((buf[4] & 0xFF) << 24);
             int yy = (buf[5] & 0xFF)| ((buf[6] & 0xFF) << 8)| ((buf[7] & 0xFF) << 16)| ((buf[8] & 0xFF) << 24);
             synchronized (powerUpList) {
-                powerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx), Float.intBitsToFloat(yy)), buf[9] + ""));
+                powerUpList.add(new PowerUps(new Vector2(Float.intBitsToFloat(xx), Float.intBitsToFloat(yy)), (char)buf[9] + ""));
             }
         }
         else if (buf[0] == 'a'){
@@ -756,6 +772,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         else if(buf[0] == 'l'){
             oppoLose = true;
+        }
+        else if(buf[0] == 'g'){
+            oppoStart = true;
         }
         else{
             opponentDirectionKeycode = (buf[0] & 0xFF)| ((buf[1] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[3] & 0xFF) << 24);
