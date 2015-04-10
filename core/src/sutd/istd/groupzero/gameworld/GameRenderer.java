@@ -387,7 +387,7 @@ public class GameRenderer {
         if (actionResolver.haveYouWin() || ratio >=1){
             actionResolver.iLose();
             batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
-            //batcher.draw(AssetLoader.loseMonster,screenWidth/2-AssetLoader.loseMonster.getRegionWidth()/3,screenHeight/2 - AssetLoader.loseMonster.getRegionHeight()/3);
+            batcher.draw(AssetLoader.loseMonster,screenWidth/2-AssetLoader.loseMonster.getRegionWidth()/3,screenHeight/2 - AssetLoader.loseMonster.getRegionHeight()/3);
             shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
             font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
             handler.setMode(1);
