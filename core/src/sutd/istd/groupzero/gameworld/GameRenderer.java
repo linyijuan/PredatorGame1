@@ -84,6 +84,7 @@ public class GameRenderer {
     final String ambientPixelShader = (Gdx.files.internal("data/ambientPixelShader.glsl")).readString();
     final String lightPixelShader =  (Gdx.files.internal("data/lightPixelShader.glsl")).readString();
     final String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
+    public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
     public enum ShaderSelection{
         Default,
         Ambiant,
@@ -101,7 +102,7 @@ public class GameRenderer {
         this.screenHeight = screenHeight;
         Gdx.app.log("GAME RENDERER WIDTH", Float.toString(screenWidth));
         Gdx.app.log("GAME RENDERER HEIGHT", Float.toString(screenHeight));
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
+
         music.setVolume(0.5f);                 // sets the volume to half the maximum volume
         music.setLooping(true);
         music.play();
@@ -374,6 +375,7 @@ public class GameRenderer {
     }
 
     public void drawTugOfWar(float runTime){
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
@@ -427,6 +429,7 @@ public class GameRenderer {
     }
 
     public void drawRound2Waiting(float runTime){
+        music.stop();
         opponentStrength =actionResolver.requestOpponentStrength();
         myStrength = myMonster.getStrength();
 
