@@ -77,6 +77,8 @@ public class GameRenderer {
     private ShaderProgram lightShader;
     private ShaderProgram finalShader;
     public float zAngle;
+    private Vector2 oppo_pos;
+    private float shake = 5f;
     private int diff;
     //read our shader files
     final String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
@@ -296,8 +298,10 @@ public class GameRenderer {
                     break;
             }
 
+
+
             if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
-                Vector2 oppo_pos = actionResolver.requestOpponentPosition();
+                oppo_pos = actionResolver.requestOpponentPosition();
                 int oppo_d = actionResolver.requestOpponentDirection();
                 switch (oppo_d) {
                     case 1:
@@ -368,6 +372,13 @@ public class GameRenderer {
             AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentStrength(), screenWidth - 139 * (screenWidth / 1080f) - myHead.getRegionWidth() * (screenWidth / 1080f) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), 40 * (screenHeight / 1920f));
             //speed display
             AssetLoader.font.draw(batcher, "" + actionResolver.requestOpponentSpeed(), screenWidth - 169 * (screenWidth / 1080f) - myHead.getRegionWidth() * (screenWidth / 1080f) - (myHead.getRegionWidth() / 2) * (screenWidth / 1080f), 125 * (screenHeight / 1920f));
+            if (oppo_pos.dst(myMonster.getMyPosition()) <= 150){
+                shadow.draw(batcher,"Enemy approaching!", screenWidth/2f-shadow.getBounds("Enemy approaching!").width/2f -1+shake
+                        , screenHeight/2f-shadow.getBounds("Enemy approaching!").height/2f - 200-1);
+                font.draw(batcher,"Enemy approaching!", screenWidth/2f-font.getBounds("Enemy approaching!").width/2f+shake
+                        , screenHeight/2f-font.getBounds("Enemy approaching!").height/2f - 200);
+                shake = (shake >=0.2f)?shake*0.5f:5f;
+            }
             batcher.end();
             stage.draw();
         }

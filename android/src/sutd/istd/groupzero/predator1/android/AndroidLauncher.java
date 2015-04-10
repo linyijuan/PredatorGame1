@@ -79,6 +79,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         oppoLose = false;
         oppoTapCount = 0;
         met = false;
+        iStart = false;
+        oppoStart = false;
     }
     boolean mMultiplayer = false;
     ArrayList<Participant> mParticipants = null;
@@ -115,7 +117,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private boolean oppoWin = false;
     private boolean oppoLose = false;
     private boolean iStart = false;
-    private Object startlock = new Object();
     private boolean oppoStart = false;
     private LinearLayout linearLayout;
 
