@@ -13,7 +13,7 @@ public class PowerUps extends Item{
     public PowerUps(Vector2 _position,String kind){
         super(_position);
 //        super.setBound(AssetLoader.powerUp.getRegionWidth(),AssetLoader.powerUp.getRegionHeight());
-        super.setBound(22,21);
+        super.setBound(30,29);
         if (kind.equals("v"))
             this.kind = "v";
         else
