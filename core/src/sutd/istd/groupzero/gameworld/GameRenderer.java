@@ -2,6 +2,7 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -100,10 +101,10 @@ public class GameRenderer {
         this.screenHeight = screenHeight;
         Gdx.app.log("GAME RENDERER WIDTH", Float.toString(screenWidth));
         Gdx.app.log("GAME RENDERER HEIGHT", Float.toString(screenHeight));
-//        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/LavenderTown.mp3"));
-//        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
-//        music.setLooping(true);
-//        music.play();
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
+        music.setVolume(0.5f);                 // sets the volume to half the maximum volume
+        music.setLooping(true);
+        music.play();
 
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
@@ -386,7 +387,7 @@ public class GameRenderer {
         if (actionResolver.haveYouWin() || ratio >=1){
             actionResolver.iLose();
             batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
-            batcher.draw(AssetLoader.loseMonster,screenWidth/2-AssetLoader.loseMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.loseMonster.getRegionHeight()/2);
+            //batcher.draw(AssetLoader.loseMonster,screenWidth/2-AssetLoader.loseMonster.getRegionWidth()/3,screenHeight/2 - AssetLoader.loseMonster.getRegionHeight()/3);
             shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
             font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
             handler.setMode(1);
@@ -395,7 +396,7 @@ public class GameRenderer {
             actionResolver.iWin();
             handler.setMode(1);
             batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
-            batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
+            //batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
             shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
             font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
         }

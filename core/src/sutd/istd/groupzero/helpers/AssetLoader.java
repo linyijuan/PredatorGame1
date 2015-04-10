@@ -43,6 +43,8 @@ public class AssetLoader {
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonster.png")));
+            losebg = new TextureRegion(new Texture(Gdx.files.internal("data/greenlose.png")));
+            losebg.flip(false,true);
         }
         else{
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
@@ -51,6 +53,8 @@ public class AssetLoader {
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonsterred.png")));
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonsterred.png")));
+            losebg = new TextureRegion(new Texture(Gdx.files.internal("data/redlose.png")));
+            losebg.flip(false,true);
         }
         myHead.flip(false,true);
         oppoHead.flip(false,true);
@@ -115,8 +119,8 @@ public class AssetLoader {
         victorybg1.flip(false,true);
         victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
         victorybg2.flip(false,true);
-        losebg = new TextureRegion(new Texture(Gdx.files.internal("data/losebg.png")));
-        losebg.flip(false,true);
+
+
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
         victoryAnimation.setPlayMode(PlayMode.LOOP);
 
