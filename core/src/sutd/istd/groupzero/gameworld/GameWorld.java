@@ -12,8 +12,10 @@ public class GameWorld {
 	}
 	
 	public Map getMap(){
-		return map;
+        return map;
 	}
 	
-
+    public void update(){
+        monster.update();
+    }
 }

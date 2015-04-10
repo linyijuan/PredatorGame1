@@ -6,5 +6,5 @@ public class Food extends Item{
     public Food(Vector2 _position){
         super(_position);
 //        super.setBound(AssetLoader.steak.getRegionWidth(),AssetLoader.steak.getRegionHeight());
-        super.setBound(17,15);    }
+        super.setBound(38,29);    }
 }
