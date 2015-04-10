@@ -93,7 +93,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private int mapSizeY = 960;
     private int opponentStrength = 0;
     private Rectangle myCurrentBound = null;
-    private boolean firstGame = true;
 
     // Current state of the game:
     ArrayList<Food> foodList = new ArrayList<Food>();
@@ -206,12 +205,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-//        if (firstGame){
-//            firstGame = false;
-//        }
-//        else{
-//            resetGameVars();
-//        }
 
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
