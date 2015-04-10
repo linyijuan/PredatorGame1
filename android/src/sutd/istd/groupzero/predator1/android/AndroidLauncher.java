@@ -60,6 +60,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     String mRoomId = null;
     // Reset game variables in preparation for a new game.
     void resetGameVars() {
+        log("resetGameVars()", "called");
         gameMap = new Map(this);
         foodList = gameMap.getFoodList();
         powerUpList = gameMap.getPowerUpsList();
@@ -93,7 +94,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private int mapSizeY = 960;
     private int opponentStrength = 0;
     private Rectangle myCurrentBound = null;
-    private boolean firstGame = true;
 
     // Current state of the game:
     ArrayList<Food> foodList = new ArrayList<Food>();
@@ -206,13 +206,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-//        if (firstGame){
-//            firstGame = false;
-//        }
-//        else{
-//            resetGameVars();
-//        }
-
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -296,12 +289,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-//        if (firstGame){
-//            firstGame = false;
-//        }
-//        else{
-//            resetGameVars();
-//        }
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -473,16 +460,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         Collections.sort(ids);
         mMyId = room.getParticipantId(Games.Players.getCurrentPlayerId(mGoogleApiClient));
         mMultiplayer = true;
-
         if (mMyId.equals(ids.get(0))){
-            mystartPos = startPos[0];
-            gameMap.getMonster().setMyPosition(mystartPos);
+            Log.d(TAG, "onConnectedToRoom.");
+            mystartPos = new Vector2(startPos[0].x,startPos[0].y);
             playerNum = 1;
             broadcastMyMap();
         }
         else{
-            mystartPos = startPos[1];
-            gameMap.getMonster().setMyPosition(mystartPos);
+            Log.d(TAG, "onConnectedToRoom.");
+            mystartPos = new Vector2(startPos[1].x,startPos[1].y);
             playerNum = 2;
         }
     }
@@ -653,11 +639,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Start the gameplay phase of the game.
     void startGame(boolean multiplayer) {
         log("startGame","called");
-        mMultiplayer = multiplayer;
-        if(multiplayer){
-            gameMap.getMonster().setMyPosition(mystartPos);
-            broadcastMyStatus(gameMap.getMonster().getMyPosition(),gameMap.getMonster().getDirection());
-        }
+        log("mystartPos",mystartPos.x+","+mystartPos.y);
+        gameMap.getMonster().setMyPosition(mystartPos);
+        log("mystartPos",gameMap.getMonster().getMyPosition().x+","+gameMap.getMonster().getMyPosition().y);
+        broadcastMyStatus(gameMap.getMonster().getMyPosition(), gameMap.getMonster().getDirection());
         switchToScreen(R.id.screen_game);
     }
 

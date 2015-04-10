@@ -64,7 +64,7 @@ public class GameRenderer {
     private Sprite spriteArrow;
     private Vector2 directionVectorToTarget = new Vector2();
     private float angle,arrowPostX,arrowPostY,ratio;
-    private float round2Start = 200;
+    private float round2Start = 180;
     private float radius = 35f;
     private boolean shouldStartRound2 = false;
     private int playerNum, opponentStrength,myStrength;
@@ -280,7 +280,6 @@ public class GameRenderer {
 
             switch (d) {
                 case TOP:
-
                     batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
                     break;
                 case LEFT:
@@ -354,7 +353,10 @@ public class GameRenderer {
 
             //time display
             float timeToDisplay = 180 - runTime;
-            AssetLoader.font.draw(batcher, "" + (int) timeToDisplay / 60 + ":" + (int) timeToDisplay % 60, screenWidth * (6f / 14f), 120f * screenHeight / 1920f);
+            int min = (int) (timeToDisplay / 60);
+            int sec = (int) (timeToDisplay % 60);
+            String format = "%02d:%02d";
+            AssetLoader.font.draw(batcher, String.format(format,min,sec)  , screenWidth * (6f / 14f), 120f * screenHeight / 1920f);
             batcher.draw(clock.getKeyFrame(runTime), screenWidth * (11f / 24f), 45f * screenHeight / 1920f, 62f * (screenWidth / 1080f), 63f * (screenHeight / 1920f));
 
             //opponent information display

@@ -64,7 +64,7 @@ public class TouchPad {
 		SkillButton = new Skin();
         touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
-        SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png"));
+        SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png")));
         SkillBackground = SkillButton.getDrawable("skillButton");
         this.actionResolver = actionResolver;
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
