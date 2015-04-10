@@ -53,7 +53,7 @@ public class GameRenderer {
     private OrthographicCamera cam,cam2;
     private SpriteBatch batcher;
     public static BitmapFont font, shadow;
-    public  Texture gridBg,light;
+    public  Texture gridBg, light, saiyan;
     public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
     public  TextureRegion[] directionSet,directionSetoppo;
     public  Animation[] animationSet,animationSetoppo;
@@ -164,6 +164,8 @@ public class GameRenderer {
         font = AssetLoader.font;
         shadow = AssetLoader.shadow;
         victorybg = AssetLoader.victoryAnimation;
+
+        saiyan = new Texture(Gdx.files.internal("data/saiyan.png"));
 
 
         playerNum = actionResolver.requestMyPlayerNum();
@@ -336,11 +338,14 @@ public class GameRenderer {
             batcher.begin();
             batcher.enableBlending();
 
-            if(myMonster.getSpeed()>1.0f){
-                batcher.draw(Spic,40 * (screenWidth / 1080) + screenWidth/10,45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
+            if(myMonster.getSpeed()>1.0f && !myMonster.getSaiyanMode()){
+                batcher.draw(Spic, 40 * (screenWidth / 1080) + screenWidth/10,45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
             }
-            if(myMonster.getVisibility()>1.0f){
-                batcher.draw(Vpic,40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
+            if(myMonster.getVisibility()>1.0f && !myMonster.getSaiyanMode()){
+                batcher.draw(Vpic, 40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
+            }
+            if(myMonster.getSaiyanMode()){
+                batcher.draw(saiyan, 40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
             }
             batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);

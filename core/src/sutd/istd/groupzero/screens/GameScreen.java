@@ -56,6 +56,7 @@ public class GameScreen implements Screen{
         else{
             runTime += delta;
             renderer.render(runTime);
+            world.update();
         }
         actionResolver.iStart();
     }

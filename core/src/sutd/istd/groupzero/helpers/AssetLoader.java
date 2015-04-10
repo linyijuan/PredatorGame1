@@ -93,6 +93,10 @@ public class AssetLoader {
         vsScreenRedBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen2.png")));
         vsScreenRedBot.flip(false,true);
 
+        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
+        Spic.flip(false, true);
+        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
+        Vpic.flip(false, true);
         Vpowerup = new Animation(1f,Spic);
         Spowerup = new Animation(1f,Vpic);
 
@@ -124,8 +128,7 @@ public class AssetLoader {
         victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
         victoryAnimation.setPlayMode(PlayMode.LOOP);
 
-        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
-        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
+
 
 
         TextureRegion[] clocks = new TextureRegion[8];
