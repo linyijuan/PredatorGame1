@@ -30,9 +30,9 @@ public class TouchPad {
 	private Stage stage;
 	private com.badlogic.gdx.scenes.scene2d.ui.Touchpad touchpad;
 	public com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle touchpadStyle;
-	private Drawable touchBackground;
+	private Drawable touchBackground,SkillBackground;
 	private Drawable touchKnob;
-	public Skin touchpadSkin;
+	public Skin touchpadSkin,SkillButton;
     private ActionResolver actionResolver;
     private Vector2 touchpadcenter;
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
@@ -45,8 +45,10 @@ public class TouchPad {
     private List<PowerUps> puSynchroList;
 
     private Sound movement;
-    private boolean speed = false;
-    private boolean visibility = false;
+    private Sound sboost;
+    private Sound vboost;
+    private Sound eating;
+
 
     private Button skillButton;
 
@@ -59,11 +61,15 @@ public class TouchPad {
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         touchpadSkin = new Skin();
-		touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
+		SkillButton = new Skin();
+        touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
 		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
+        SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png"));
+        SkillBackground = SkillButton.getDrawable("skillButton");
         this.actionResolver = actionResolver;
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
+        Texture skill = new Texture(Gdx.files.internal("data/saiyan.png"));
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
@@ -77,8 +83,10 @@ public class TouchPad {
         this.game = game;
 
         movement = AssetLoader.movement;
-
-        skillButton = new Button(touchBackground, touchKnob);
+        sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
+        vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
+        eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
+        skillButton = new Button(SkillBackground, SkillBackground);
         skillButton.setBounds(40*(screenWidth/1080), /*screenHeight -*/ 100*(screenHeight/1920), width, height);
 	}
 
@@ -88,11 +96,31 @@ public class TouchPad {
 		stage.addActor(touchpad);
         stage.addActor(skillButton);
         skillButton.addListener(new InputListener(){
+            Timer predatorMode;
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("Button", "Button pressed");
-                return super.touchDown(event, x, y, pointer, button);
+                monster.addSpeed(2.0f);
+                monster.setVisibility(2.0f);
+                predatorMode = new Timer();
+                predatorMode.scheduleTask(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        monster.addSpeed(-2.0f);
+                        monster.setVisibility(1.0f);
+                    }
+                }, 10f);
+                return true;
             }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                predatorMode.start();
+                skillButton.setDisabled(true);
+            }
+
+
         });
 		touchpad.addListener(new DragListener() {public void touchDragged(InputEvent event, float x, float y, int pointer) {}});
 		touchpad.addListener(new InputListener(){
@@ -158,6 +186,7 @@ public class TouchPad {
                                 Food fcopy = null;
                                 for (Food f : foodSynchroList) {
                                     if (Intersector.overlaps(monster.getBound(), f.getBound())) {
+                                        eating.play();
                                         fcopy = f;
                                         actionResolver.eatFood(f);
                                         monster.obtainFood();
@@ -176,6 +205,7 @@ public class TouchPad {
                                     if (Intersector.overlaps(monster.getBound(), p.getBound())) {
                                         pcopy = p;
                                         if (p.getKind().equals("s")) {
+                                            sboost.play();
                                             monster.setSpeedBool(true);
                                             //WIN ___ Timer
                                             speedTimer = new Timer();
@@ -191,7 +221,7 @@ public class TouchPad {
 
                                         } else {
                                             monster.setVisibilityBool(true);
-                                            visibility = true;
+                                            vboost.play();
                                             speedTimer = new Timer();
                                             monster.setVisibility(1.5f);
                                             speedTimer.scheduleTask(new Timer.Task() {
