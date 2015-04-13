@@ -266,16 +266,12 @@ public class GameRenderer {
             }
             synchronized (powerUpsList) {
                 for (PowerUps p : powerUpsList) {
-                    if (p.shouldShow()) {
                         batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
-                    }
                 }
             }
             synchronized (foodList) {
                 for (Food s : foodList) {
-                    if (s.shouldShow()) {
                         batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
-                    }
                 }
             }
 
