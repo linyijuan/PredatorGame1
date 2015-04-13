@@ -151,6 +151,7 @@ public class TouchPad {
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
 
             }});
+        //TouchPad listener to handle monster movement.
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
