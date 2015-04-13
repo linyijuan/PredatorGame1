@@ -147,16 +147,13 @@ public class TouchPad {
 
 
         });
-		touchpad.addListener(new DragListener() {
-            public void touchDragged(InputEvent event, float x, float y, int pointer) {
-
-            }});
         //TouchPad listener to handle monster movement.
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
                 Executor executor = Executors.newSingleThreadExecutor();
                 //a thread to handle TouchKnob dragging
+                //a new thread is created due to the limitations of touchpad ui object.
                 executor.execute(new Runnable() {
 
                     @Override
@@ -171,8 +168,8 @@ public class TouchPad {
                             moveDown.set(0, monster.getSpeed() * 0.003f);
                             moveLeft.set(-(monster.getSpeed() * 0.003f), 0);
                             moveRight.set(monster.getSpeed() * 0.003f, 0);
-                            foodSynchroList = actionResolver.requestFoods();
-                            puSynchroList = actionResolver.requestPUs();
+                            foodSynchroList = actionResolver.requestFoods();//foodList from the action resolver.
+                            puSynchroList = actionResolver.requestPUs();//powerUpList from the action resolver.
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
@@ -233,7 +230,6 @@ public class TouchPad {
                             }
 
                             //powerUpList synchronziation for concurrent modification
-
                             synchronized (puSynchroList) {
                                 PowerUps pcopy = null;
                                 for (PowerUps p : puSynchroList) {
