@@ -14,7 +14,8 @@ public class GameWorld {
 	public Map getMap(){
         return map;
 	}
-	
+
+    // update method being called at every render
     public void update(){
         monster.update();
     }

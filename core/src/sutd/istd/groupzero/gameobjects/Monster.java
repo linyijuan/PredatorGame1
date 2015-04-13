@@ -5,88 +5,55 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-
 public class Monster {
-    private int mapSizeX = 540;  // Not too sure of this value yet
-    private int mapSizeY = 960; // Same as for X
-    private ArrayList<Tree> treeList;
-    private ArrayList<Food> foodList;
-    private ArrayList<PowerUps> powerUpsList;
+    private int mapSizeX = 540;
+    private int mapSizeY = 960;
+
     private Direction direction;
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
+
     private Rectangle bound;
     private float boundWidth;
     private float boundHeight;
-    public Rectangle getBound(){return bound;}
-    public Direction getDirection() {
-        return direction;
-    }
+
     private Vector2 myPosition;
-    private Vector2 original;
-    private Vector2 directionVectorToTarget = new Vector2();
-    private Vector2 target;
-    private float angle;
-    private float arrowPostX;
-    private float arrowPostY;
+
     private int strength = 0;
 
     private float speed = 1;
-    private float visibility = 1;//max=5
-    private boolean sbool = false;
-    private boolean vbool = false;
+    private float visibility = 1;
 
+    // Saiyan mode (aka Predator mode) becomes true when the player presses the skill button
     private boolean saiyanMode = false;
 
-    public void setSpeedBool(boolean a){
-        sbool = a;
-    }
+    // radius of the arrow's orbit around the player
 
-    public void setVisibilityBool(boolean a){
-        vbool = a;
-    }
-
-    public boolean getSpeedBool(){
-        return sbool;
-    }
-    public boolean getVisibilityBool(){
-        return vbool;
-    }
-
-    public float getSpeed()
+    public Monster(Direction direction1)
     {
-        return this.speed;
+        this.direction = direction1;
+        this.boundWidth = 27;
+        this.boundHeight = 34;
+        this.myPosition = new Vector2(MathUtils.random(0, mapSizeX / 5), MathUtils.random(0, mapSizeY - this.boundHeight));
+        this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
     }
 
-    public void setSpeed(float newSpeed)
-    {
-        this.speed = newSpeed;
+    public void update(){
+        if (saiyanMode == true){
+            this.setVisibility(2.0f);
+        }
     }
 
+    // Method is called when monster eats food
+    public void obtainFood(){
+        strength++;
+    }
+
+    // Method called when monster obtain speed power up
     public void addSpeed(float speedIncrement)
     {
         this.speed += speedIncrement;
     }
 
-    // radius of the arrow's orbit around the player
-    private float radius = 35f;
-
-    public Vector2 getMyPosition(){return  myPosition;}
-
-    public void setMyPosition(Vector2 myPosition){
-        this.myPosition = myPosition;
-        this.bound = new Rectangle(this.myPosition.x,this.myPosition.y,boundWidth,boundHeight);
-
-        if (myPosition.x < 0){this.myPosition.x = 0;}
-        if (myPosition.x > mapSizeX - boundWidth){this.myPosition.x = mapSizeX - boundWidth;}
-        if (myPosition.y < 0){this.myPosition.y = 0;}
-        if (myPosition.y > mapSizeY - boundHeight){this.myPosition.y = mapSizeY- boundHeight;}
-
-
-    }
-
+    // enum type of the direction the monster is facing
     public enum Direction{
         TOP, RIGHT, LEFT, BOTTOM, STATIONARY_TOP, STATIONARY_LEFT,STATIONARY_RIGHT,STATIONARY_BOTTOM;
         public int getKeycode() {
@@ -126,29 +93,53 @@ public class Monster {
         }
     }
 
-    // Can help see if this is still needed?
-    public Monster(int playerNumber, Direction direction1)
-    {
-        this.direction = direction1;
-        this.original = new Vector2(0,0);
-        this.boundWidth = 27;
-        this.boundHeight = 34;
 
-        if (playerNumber == 1) {
-            this.myPosition = new Vector2(MathUtils.random(0, mapSizeX / 5), MathUtils.random(0, mapSizeY - this.boundHeight));
-        }else{
-            this.myPosition = new Vector2(MathUtils.random((4*mapSizeX)/5, mapSizeX - this.boundWidth), MathUtils.random(0, mapSizeY - this.boundHeight));
-        }
-
-        this.bound = new Rectangle(myPosition.x,myPosition.y,boundWidth,boundHeight);
-
-
+    // Getters and setters for the variables in monster
+    public void setStrength(int s){
+        strength = s;
     }
 
-    public void update(){
-        if (saiyanMode == true){
-            this.setVisibility(2.0f);
-        }
+    public void setVisibility(float v){
+        visibility = v;
+    }
+
+    public void setSaiyanMode(boolean bool){
+        saiyanMode = bool;
+    }
+
+    public void setMyPosition(Vector2 myPosition){
+        this.myPosition = myPosition;
+
+        // Sets the cap to prevent monster from moving out of the play area
+        if (myPosition.x < 0){this.myPosition.x = 0;}
+        if (myPosition.x > mapSizeX - boundWidth){this.myPosition.x = mapSizeX - boundWidth;}
+        if (myPosition.y < 0){this.myPosition.y = 0;}
+        if (myPosition.y > mapSizeY - boundHeight){this.myPosition.y = mapSizeY- boundHeight;}
+
+        this.bound = new Rectangle(this.myPosition.x,this.myPosition.y,boundWidth,boundHeight);
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Rectangle getBound(){return bound;}
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public float getSpeed()
+    {
+        return this.speed;
+    }
+
+    public int getStrength(){
+        return strength;
+    }
+
+    public float getVisibility(){
+        return visibility;
     }
 
     public float getBoundWidth() {
@@ -159,47 +150,9 @@ public class Monster {
         return boundHeight;
     }
 
-    public Vector2 getDirectionVectorToTarget() {
-        return directionVectorToTarget;
-    }
-
-    public float getAngle() {
-        return angle;
-    }
-
-    public float getArrowPostY() {
-        return arrowPostY;
-    }
-
-    public float getArrowPostX() {
-        return arrowPostX;
-    }
-
-    public void setStrength(int s){
-        strength = s;
-    }
-    public void obtainFood(){
-        strength++;
-    }
-    public int getStrength(){
-        return strength;
-    }
-
-    public float getVisibility(){
-        return visibility;
-    }
-    public void setVisibility(float v){
-        visibility = v;
-    }
-    public void obtainVisibility(){
-        if (visibility <5)
-            visibility++;
-    }
-    public void setSaiyanMode(boolean bool){
-        saiyanMode = bool;
-    }
-
     public boolean getSaiyanMode(){
         return saiyanMode;
     }
+
+    public Vector2 getMyPosition(){return  myPosition;}
 }

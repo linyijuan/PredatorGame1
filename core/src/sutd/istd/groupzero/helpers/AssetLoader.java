@@ -67,6 +67,10 @@ public class AssetLoader {
             vsMe2 = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster2.png")));
             vsBg = new TextureRegion(new Texture(Gdx.files.internal("data/vsbg2.png")));
         }
+        tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
+        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
+        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
+        menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         vsBg.flip(false,true);
         vsMe.flip(false,true);
         vsMe2.flip(false,true);
@@ -74,16 +78,12 @@ public class AssetLoader {
         oppoHead.flip(false,true);
         victorMonster.flip(false,true);
         loseMonster.flip(false,true);
+        tree.flip(false,true);
+        steak.flip(false,true);
+        powerUp.flip(false,true);
+        menuBg.flip(false,true);
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
-        tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
-        tree.flip(false,true);
-        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
-        steak.flip(false,true);
-        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
-        powerUp.flip(false,true);
-        menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
-        menuBg.flip(false,true);
 
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)
