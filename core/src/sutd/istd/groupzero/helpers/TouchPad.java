@@ -297,7 +297,13 @@ public class TouchPad {
 		return stage;
 	}
 
-	
+    /**
+     * helper method for touchKnob
+     * calculates the angle based on the center of the touchpad
+     * @param x current touchknob x position
+     * @param y current touchknob y position
+     * @return
+     */
 	public float getAngle(float x, float y){
 		float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x);
 		temp = (float) (temp * 57.2957795);
