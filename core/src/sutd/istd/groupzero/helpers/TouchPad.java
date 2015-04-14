@@ -120,7 +120,6 @@ public class TouchPad {
              * Predator mode activated. Temporary speed and visibility increase at the cost of 5 strength.
              */
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-//                super.touchUp(event, x, y, pointer, button);
                 monster.addSpeed(1.5f);
                 monster.setSaiyanMode(true);
                 predatorMode = new Timer();
