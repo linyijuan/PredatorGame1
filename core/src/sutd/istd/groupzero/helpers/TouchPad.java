@@ -1,6 +1,5 @@
 package sutd.istd.groupzero.helpers;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,17 +36,12 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
-//    private GameWorld gameworld;
     private Map map;
-    private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
-
     private Sound sboost;
     private Sound vboost;
     private Sound eating;
-
-
     public static Button skillButton;
 
     private Timer speedTimer;//WIN ___ Timer
@@ -63,9 +57,8 @@ public class TouchPad {
      * @param height height of the TouchPad
      * @param map  map object associated with the game
      * @param actionResolver handles google play services
-     * @param game game object
      */
-	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
+	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         touchpadSkin = new Skin();
@@ -87,7 +80,6 @@ public class TouchPad {
 		this.monster = map.getMonster();
         this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
-        this.game = game;
 
         sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
         vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));

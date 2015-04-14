@@ -2,9 +2,11 @@ package sutd.istd.groupzero.gameobjects;
 
 import com.badlogic.gdx.math.Vector2;
 
+/* PowerUps Class to store the position and bound of powerups*/
 public class PowerUps extends Item{
 
     private String kind;
+
 
     public PowerUps(Vector2 _position,String kind){
         super(_position);
