@@ -24,30 +24,23 @@ import sutd.istd.groupzero.gameobjects.Monster.Direction;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 
+/* Input controller for map war */
 public class TouchPad {
+    private float screenWidth,screenHeight;
 	private Stage stage;
 	private com.badlogic.gdx.scenes.scene2d.ui.Touchpad touchpad;
 	public com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle touchpadStyle;
-	private Drawable touchBackground,SkillBackground;
-	private Drawable touchKnob;
+	private Drawable touchBackground,SkillBackground,touchKnob;
 	public Skin touchpadSkin,SkillButton;
     private ActionResolver actionResolver;
-    private Vector2 touchpadcenter;
-	private Vector2 moveUp, moveRight, moveLeft, moveDown;
+	private Vector2 moveUp, moveRight, moveLeft, moveDown,touchpadcenter;
 	private boolean touchUp = false;
 	private Monster monster;
-    private Map map;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
-    private Sound sboost;
-    private Sound vboost;
-    private Sound eating;
+    private Sound sboost,vboost,eating;
     public static Button skillButton;
-
-    private Timer speedTimer;//WIN ___ Timer
-
-    private float screenWidth;
-    private float screenHeight;
+    private Timer speedTimer;
 
     /**
      * TouchPad constructor
@@ -59,37 +52,42 @@ public class TouchPad {
      * @param actionResolver handles google play services
      */
 	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
+        // obtain screen dimensions
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
-        touchpadSkin = new Skin();
-		SkillButton = new Skin();
-        touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
-		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
+
+        this.actionResolver = actionResolver;
+        this.monster = map.getMonster();
+
+        // get sound effect from Assetloader
+        sboost = AssetLoader.sboost;
+        vboost = AssetLoader.vboost;
+        eating = AssetLoader.eating;
+
+        // Button for activate Predator Mode
         SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png")));
         SkillBackground = SkillButton.getDrawable("skillButton");
-        this.actionResolver = actionResolver;
+        SkillButton = new Skin();
+        skillButton = new Button(SkillBackground, SkillBackground);
+        skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);
+
+        // define the skin of the movement controller - touchpad
+        touchpadSkin = new Skin();
+        touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));
+		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png")));
 		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle();
 		touchBackground = touchpadSkin.getDrawable("touchBackground");
 		touchKnob = touchpadSkin.getDrawable("touchKnob");
 		touchpadStyle.background = touchBackground;
 		touchpadStyle.knob = touchKnob;
 
+        // create touchpad with the defined style
 		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
         touchpad.setBounds(x, y, width, height);
-
-		this.monster = map.getMonster();
-        this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
-
-        sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
-        vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
-        eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
-        skillButton = new Button(SkillBackground, SkillBackground);
-        skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);
 	}
 
     /**
-     *
      * @return Stage object
      */
 	public Stage createTouchPad() {
