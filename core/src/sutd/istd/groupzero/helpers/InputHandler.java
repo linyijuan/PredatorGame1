@@ -51,7 +51,6 @@ public class InputHandler implements InputProcessor{
         else if (mode == 1){
 
         }
-
         return false;
 	}
 

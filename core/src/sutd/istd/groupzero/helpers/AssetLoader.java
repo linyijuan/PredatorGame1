@@ -186,6 +186,7 @@ public class AssetLoader {
         eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
     }
 
+    // when dispose the game, dispose all the resource as well
     public static void dispose(){
         source.dispose();
         oppoSource.dispose();
