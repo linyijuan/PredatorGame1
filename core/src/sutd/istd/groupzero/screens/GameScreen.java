@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import sutd.istd.groupzero.gameobjects.Map;
+import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameworld.GameRenderer;
-import sutd.istd.groupzero.gameworld.GameWorld;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
 import sutd.istd.groupzero.helpers.TouchPad;
@@ -18,19 +18,19 @@ import sutd.istd.groupzero.helpers.TouchPad;
 public class GameScreen implements Screen{
     float screenWidth;
     float screenHeight;
-	private GameWorld world;
 	private GameRenderer renderer;
 	private float runTime = 0;
 	private Stage stage;
     private ActionResolver actionResolver;
     private OrthographicCamera cam2;
     private SpriteBatch batcher;
+    private Monster monster;
 	
 	public GameScreen(Game game,ActionResolver actionResolver,Map map) {
         this.actionResolver = actionResolver;
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
-        world = new GameWorld(map);
+        monster = map.getMonster();
         stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver).createTouchPad();
         Gdx.input.setInputProcessor(stage);
         renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,game,stage);
@@ -38,7 +38,6 @@ public class GameScreen implements Screen{
         cam2.setToOrtho(true, screenWidth, screenHeight);
         batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam2.combined);
-
     }
 
 	@Override
@@ -57,7 +56,7 @@ public class GameScreen implements Screen{
         else{
             runTime += delta;
             renderer.render(runTime);
-            world.update();
+            monster.update();
         }
         actionResolver.iStart();
     }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Food extends Item{
     /**
      * Food constructor
-     * @param _position postion of
+     * @param _position vector2 coordinate
      */
     public Food(Vector2 _position){
         super(_position);
