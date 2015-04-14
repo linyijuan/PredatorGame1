@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
@@ -112,11 +111,15 @@ public class TouchPad {
             Timer predatorMode;
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.log("Button", "Button pressed");
                 if (monster.getStrength() >= 5) {
+                    // If the player can pay the cost of 5 food to activate skill,
+                    if (monster.getSaiyanMode() == true){
+                        // Do not return true if monster is in predator mode
+                        return false;
+                    }
                     return true;
                 }else{
-                    Gdx.app.log("Predator mode", "Cannot activate");
+                    // else
                     return false;
                 }
             }
@@ -127,10 +130,12 @@ public class TouchPad {
              * Predator mode activated. Temporary speed and visibility increase at the cost of 5 strength.
              */
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
+//                super.touchUp(event, x, y, pointer, button);
                 monster.addSpeed(1.5f);
                 monster.setSaiyanMode(true);
                 predatorMode = new Timer();
+                // return the monster status back to normal after skill ends and reduce strength count by 5
+                // skill lasts for 10 sec
                 predatorMode.scheduleTask(new Timer.Task() {
                     @Override
                     public void run() {
@@ -140,8 +145,9 @@ public class TouchPad {
                         monster.setSaiyanMode(false);
                     }
                 }, 10f);
+                // Start the countdown
                 predatorMode.start();
-                skillButton.setDisabled(true);
+
             }
 
 

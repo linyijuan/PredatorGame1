@@ -54,7 +54,8 @@ public class GameRenderer {
     private OrthographicCamera cam,cam2;
     private SpriteBatch batcher;
     public static BitmapFont font, shadow;
-    public  Texture gridBg, light, saiyan;
+    public  Texture gridBg, light;
+    public TextureRegion saiyan;
     public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
     public  TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
     public  Animation[] animationSet,animationSetoppo;
@@ -182,7 +183,8 @@ public class GameRenderer {
         victorybg = AssetLoader.victoryAnimation;
 
         // Sprite for skill button
-        saiyan = new Texture(Gdx.files.internal("data/saiyan.png"));
+        saiyan = new TextureRegion(new Texture(Gdx.files.internal("data/saiyan.png")));
+        saiyan.flip(false, true);
         pic = AssetLoader.vsBg;
         vsMe = new TextureRegion[] {AssetLoader.vsMe,AssetLoader.vsMe2};
         vsOppo = new TextureRegion[] {AssetLoader.vsOppo,AssetLoader.vsOppo2};
@@ -283,17 +285,12 @@ public class GameRenderer {
             }
             synchronized (powerUpsList) {
                 for (PowerUps p : powerUpsList) {
-
                         batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
-
                 }
             }
             synchronized (foodList) {
                 for (Food s : foodList) {
-
                     batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
-
-
                 }
             }
 
