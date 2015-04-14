@@ -9,11 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-
-/**
- * loads textures, sound and fonts necessary for the game.
- */
-
 public class AssetLoader {
     public static TextureRegion vsScreenGreenBot, vsScreenRedBot,menuBg;
     public static TextureRegion[][] texture,oppoTexture;
