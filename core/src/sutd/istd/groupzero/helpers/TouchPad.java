@@ -1,5 +1,6 @@
 package sutd.istd.groupzero.helpers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,7 +37,9 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
+//    private GameWorld gameworld;
     private Map map;
+    private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
 
@@ -48,6 +51,7 @@ public class TouchPad {
     public static Button skillButton;
 
     private Timer speedTimer;//WIN ___ Timer
+
     private float screenWidth;
     private float screenHeight;
 
@@ -58,9 +62,10 @@ public class TouchPad {
      * @param width width of the TouchPad
      * @param height height of the TouchPad
      * @param map  map object associated with the game
-     * @param actionResolver handles communication between gps and core project
+     * @param actionResolver handles google play services
+     * @param game game object
      */
-	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
+	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         touchpadSkin = new Skin();
@@ -82,10 +87,11 @@ public class TouchPad {
 		this.monster = map.getMonster();
         this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
+        this.game = game;
 
-        sboost = AssetLoader.sboost;
-        vboost = AssetLoader.vboost;
-        eating = AssetLoader.eating;
+        sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
+        vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
+        eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
         skillButton = new Button(SkillBackground, SkillBackground);
         skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);
 	}
@@ -104,8 +110,14 @@ public class TouchPad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (monster.getStrength() >= 5) {
+                    // If the player can pay the cost of 5 food to activate skill,
+                    if (monster.getSaiyanMode() == true){
+                        // Do not return true if monster is in predator mode
+                        return false;
+                    }
                     return true;
                 }else{
+                    // else
                     return false;
                 }
             }
@@ -116,10 +128,12 @@ public class TouchPad {
              * Predator mode activated. Temporary speed and visibility increase at the cost of 5 strength.
              */
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
+//                super.touchUp(event, x, y, pointer, button);
                 monster.addSpeed(1.5f);
                 monster.setSaiyanMode(true);
                 predatorMode = new Timer();
+                // return the monster status back to normal after skill ends and reduce strength count by 5
+                // skill lasts for 10 sec
                 predatorMode.scheduleTask(new Timer.Task() {
                     @Override
                     public void run() {
@@ -129,8 +143,9 @@ public class TouchPad {
                         monster.setSaiyanMode(false);
                     }
                 }, 10f);
+                // Start the countdown
                 predatorMode.start();
-                skillButton.setDisabled(true);
+
             }
 
 
