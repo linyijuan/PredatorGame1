@@ -1,6 +1,5 @@
 package sutd.istd.groupzero.helpers;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 
@@ -38,9 +36,7 @@ public class TouchPad {
 	private Vector2 moveUp, moveRight, moveLeft, moveDown;
 	private boolean touchUp = false;
 	private Monster monster;
-//    private GameWorld gameworld;
     private Map map;
-    private Game game;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
 
@@ -53,7 +49,6 @@ public class TouchPad {
     public static Button skillButton;
 
     private Timer speedTimer;//WIN ___ Timer
-
     private float screenWidth;
     private float screenHeight;
 
@@ -65,9 +60,8 @@ public class TouchPad {
      * @param height height of the TouchPad
      * @param map  map object associated with the game
      * @param actionResolver handles google play services
-     * @param game game object
      */
-	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
+	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         touchpadSkin = new Skin();
@@ -89,7 +83,6 @@ public class TouchPad {
 		this.monster = map.getMonster();
         this.map = map;
         touchpadcenter = new Vector2(width/2, height/2);
-        this.game = game;
 
         movement = AssetLoader.movement;
         sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
@@ -112,11 +105,9 @@ public class TouchPad {
             Timer predatorMode;
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.log("Button", "Button pressed");
                 if (monster.getStrength() >= 5) {
                     return true;
                 }else{
-                    Gdx.app.log("Predator mode", "Cannot activate");
                     return false;
                 }
             }

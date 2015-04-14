@@ -31,7 +31,7 @@ public class GameScreen implements Screen{
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
         world = new GameWorld(map);
-        stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver,game).createTouchPad();
+        stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver).createTouchPad();
         Gdx.input.setInputProcessor(stage);
         renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,game,stage);
         cam2 = new OrthographicCamera();
