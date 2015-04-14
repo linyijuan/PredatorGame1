@@ -84,9 +84,6 @@ public class GameRenderer {
     private int diff;
     //read our shader files
     final String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
-    final String defaultPixelShader = (Gdx.files.internal("data/defaultPixelShader.glsl")).readString();
-    final String ambientPixelShader = (Gdx.files.internal("data/ambientPixelShader.glsl")).readString();
-    final String lightPixelShader =  (Gdx.files.internal("data/lightPixelShader.glsl")).readString();
     final String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
     public enum ShaderSelection{
@@ -95,7 +92,15 @@ public class GameRenderer {
         Light,
         Final
     };
-
+    /**
+     * Initialization of variables within GameRenderer Class
+     * @param map map object that contains positions of visual objects to be rendered
+     * @param screenHeight Height of phone screen
+     * @param screenWidth Width of phone screen
+     * @param actionResolver
+     * @param game
+     * @param stage
+     */
 
     public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Game game,Stage stage){
         this.game = game;
@@ -110,11 +115,10 @@ public class GameRenderer {
         music.setLooping(true);
         music.play();
 
+        // initialization of light image
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
-        defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
-        ambientShader = new ShaderProgram(vertexShader, ambientPixelShader);
-        lightShader = new ShaderProgram(vertexShader, lightPixelShader);
+        // Construction of ShaderProgram to attach to batch
         finalShader = new ShaderProgram(vertexShader, finalPixelShader);
 
         // FrameBuffer for the shader
@@ -129,7 +133,7 @@ public class GameRenderer {
         finalShader.setUniformf("ambientColor", ambientColor.x, ambientColor.y,ambientColor.z, ambientIntensity);
         finalShader.end();
 
-        lightOscillate = !lightOscillate;
+
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
@@ -192,6 +196,12 @@ public class GameRenderer {
         handler = new InputHandler(actionResolver,0);
         this.stage = stage;
     }
+
+    /**
+     * Resizing of framebuffer, calling in game screen
+     * @param width width of the phone screen
+     * @param height height of the phone screen
+     */
     public void resize(final int width, final int height) {
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
 
@@ -224,7 +234,10 @@ public class GameRenderer {
         }
 
     }
-
+    /**
+     * Drawing of normal map and visual objects
+     * @param runTime duration for which the game has since begun
+     */
     public void drawMapWar(float runTime){
         // To prevent traversing through the arraylist while it is being modified
         List<Food> foods = Collections.synchronizedList(actionResolver.requestFoods());
@@ -248,6 +261,8 @@ public class GameRenderer {
         }
         if (!shouldStartRound2) {
             final float dt = Gdx.graphics.getRawDeltaTime();
+
+            //Calculation of angle for resizing of light
             zAngle += dt * zSpeed;
             while (zAngle > PI2)
                 zAngle -= PI2;
@@ -258,9 +273,12 @@ public class GameRenderer {
             batcher.begin();
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             float visibility = myMonster.getVisibility();
-            float lightSize = (screenWidth / 3 + (float) Math.sin(zAngle)) * visibility;
+
+            //Calculation of light size using sine function.
+            float lightSize = (screenWidth / 3 + (float)(1.5*Math.sin(zAngle))) * visibility;
             float lightposx = (myMonster.getMyPosition().x + myMonster.getBound().width / 2 - lightSize * 0.5f);
             float lightposy = (myMonster.getMyPosition().y + myMonster.getBound().height / 2 - lightSize * 0.5f);
+            // Drawing of light
             batcher.draw(light, lightposx, lightposy, lightSize, lightSize);
             batcher.end();
             fbo.end();
@@ -269,10 +287,12 @@ public class GameRenderer {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batcher.enableBlending();
             Direction d = myMonster.getDirection();
-            fbo.getColorBufferTexture().bind(1); //this is important! bind the FBO to the 2nd texture unit
-            light.bind(0); //we force the binding of a texture on first texture unit to avoid artefacts
-            //this is because our default and ambiant shader dont use multi texturing...
-            //youc can basically bind anything, it doesnt matter
+
+            //binding the FBO to the 2nd texture unit to achieve transparent effect
+            fbo.getColorBufferTexture().bind(1);
+            // force the binding of a texture on first texture unit to avoid artefacts, noise on the texture
+            light.bind(0);
+
 
             Vector2 camPost = new Vector2(myMonster.getMyPosition().x + myMonster.getBoundWidth() / 2, myMonster.getMyPosition().y + myMonster.getBoundHeight() / 2);
             cam.position.set(camPost, 0);
@@ -280,20 +300,24 @@ public class GameRenderer {
             batcher.setProjectionMatrix(cam.combined);
             batcher.draw(gridBg, 0, 0);
 
+            // Drawing of all visual objects in game
             for (Tree tree : trees) {
                 batcher.draw(AssetLoader.tree, tree.getPosition().x, tree.getPosition().y, 0, 0, AssetLoader.tree.getRegionWidth(), AssetLoader.tree.getRegionHeight(), 1f, 1f, 0f);
             }
+
+            //Synchronized to prevent concurrentModificationException
             synchronized (powerUpsList) {
                 for (PowerUps p : powerUpsList) {
                         batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
                 }
             }
+            //Synchronized to prevent concurrentModificationException
             synchronized (foodList) {
                 for (Food s : foodList) {
                     batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
                 }
             }
-
+            // Drawing of player's own sprite
             switch (d) {
                 case TOP:
                     batcher.draw(animationSet[1].getKeyFrame(runTime), myMonster.getMyPosition().x, myMonster.getMyPosition().y);
@@ -313,7 +337,7 @@ public class GameRenderer {
             }
 
 
-
+            //Drawing of opponent's sprite with information from actionResolver
             if (actionResolver.requestOpponentDirection() != -100 && actionResolver.requestOpponentPosition() != null) {
                 oppo_pos = actionResolver.requestOpponentPosition();
                 int oppo_d = actionResolver.requestOpponentDirection();
@@ -400,15 +424,20 @@ public class GameRenderer {
             stage.draw();
         }
     }
-
+    /**
+     * Drawing of the tug of war screen
+     * @param runTime duration for which the game has since begun
+     */
     public void drawTugOfWar(float runTime){
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
 
+        // Obtaining tap counts from actionResolver
         int myTapCount = actionResolver.requestMyTapCount();
         int oppoTapCount = actionResolver.requestOppoTapCount();
 
+        //Calculation of screen ratio using tap counts and monster's strength
         if ((opponentStrength + myStrength) != 0)
             initial = (int)((opponentStrength - myStrength)/(float)(opponentStrength + myStrength)*10);
         int diff = -myTapCount + oppoTapCount + initial;
@@ -416,6 +445,7 @@ public class GameRenderer {
         batcher.begin();
         batcher.setProjectionMatrix(cam2.combined);
 
+        //Rendering of game over losing scene
         if (actionResolver.haveYouWin() || ratio >=1){
             actionResolver.iLose();
             batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
@@ -423,6 +453,7 @@ public class GameRenderer {
             font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
             handler.setMode(1);
         }
+        //Rendering of game over winning scene
         else if (actionResolver.haveYouLose() || ratio <=0){
             actionResolver.iWin();
             handler.setMode(1);
@@ -431,6 +462,7 @@ public class GameRenderer {
             shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
             font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
         }
+        //Rendering of tug of war competing scene
         else{
             TextureRegion me = vsMe[myTapCount%2];
             TextureRegion op = vsOppo[oppoTapCount%2];
@@ -443,7 +475,10 @@ public class GameRenderer {
         }
         batcher.end();
     }
-
+    /**
+     * Drawing of the countdown screen before first part of game
+     * @param runTime duration for which the game has since begun
+     */
     public void drawRound1Waiting(float runTime){
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
@@ -462,7 +497,10 @@ public class GameRenderer {
         }
         batcher.end();
     }
-
+    /**
+     * Drawing of countdown scene before tug of war begins
+     * @param runTime duration for which the game has since begun
+     */
     public void drawRound2Waiting(float runTime){
         music.stop();
         opponentStrength =actionResolver.requestOpponentStrength();

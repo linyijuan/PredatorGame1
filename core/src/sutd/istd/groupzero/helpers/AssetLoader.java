@@ -9,45 +9,55 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-
-/**
- * loads textures, sound and fonts necessary for the game.
- */
-
+/* Class to prepare text, picture and sound display*/
 public class AssetLoader {
-    public static TextureRegion vsScreenGreenBot, vsScreenRedBot,menuBg;
-    public static TextureRegion[][] texture,oppoTexture;
-    public static Texture source,oppoSource;
+    private  static float screenwidth, screenheight;
+
+    public static Texture arrow,source,oppoSource;
+    public static TextureRegion menuBg,myHead,oppoHead;
+    public static TextureRegion tree,steak,powerUp;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static TextureRegion vsOppo,vsOppo2,vsMe,vsMe2,vsBg;
+    public static TextureRegion victorybg1,victorybg2,victorMonster,loseMonster,losebg;
     public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
+    public static TextureRegion Spic,Vpic;
+    public static TextureRegion[][] texture,oppoTexture;
+
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,victoryAnimation;
     public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo,Vpowerup,Spowerup;
-    public static TextureRegion tree,steak,powerUp;
-    public static Sound movement, collision, getFood, getPowerUp, foundFriend, winGame, loseGame, fight;
+    public static Animation clock;
+
+    public static Sound sboost,vboost,eating;
     public static BitmapFont font, shadow;
-    public static Texture arrow;
     public static Sprite spriteArrow;
     public static ActionResolver actionResolver;
-    public static TextureRegion myHead,oppoHead;
-    public static Animation clock;
-    private  static float screenwidth, screenheight;
-    public static TextureRegion victorybg1,victorybg2,victorMonster,loseMonster,losebg;
-
-    public static TextureRegion Spic,Vpic;
 
     public static void load(){
+        // obtain screen width and height
         screenwidth = Gdx.graphics.getWidth();
         screenheight = Gdx.graphics.getHeight();
+        // load text display and set size
+        font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
+        font.setScale(screenwidth/1080,-screenheight/1920);
+        shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
+        shadow.setScale(screenwidth/1080,-screenheight/1920);
+
+        /* Set according to different roles*/
         if (actionResolver.requestMyPlayerNum() == 1){
+            // monster and opponent monster image source
             source = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
             oppoSource = new Texture(Gdx.files.internal("data/spritesheetred.png"));
+
+            // status bar profile picture
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
+
+            // ending scene
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonster.png")));
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonster.png")));
             losebg = new TextureRegion(new Texture(Gdx.files.internal("data/greenlose.png")));
-            losebg.flip(false,true);
+
+            // tug of war monster monster and background
             vsOppo = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster.png")));
             vsOppo2 = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster2.png")));
             vsMe = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster.png")));
@@ -55,24 +65,27 @@ public class AssetLoader {
             vsBg = new TextureRegion(new Texture(Gdx.files.internal("data/vsbg.png")));
         }
         else{
+            // monster and opponent monster image source
             source = new Texture(Gdx.files.internal("data/spritesheetred.png"));
             oppoSource = new Texture(Gdx.files.internal("data/SpriteSmall.png"));
+
+            // status bar profile picture
             myHead = new TextureRegion(new Texture(Gdx.files.internal("data/redhead.png")));
             oppoHead = new TextureRegion(new Texture(Gdx.files.internal("data/greenhead.png")));
+
+            // ending scene
             victorMonster = new TextureRegion(new Texture(Gdx.files.internal("data/vmonsterred.png")));
             loseMonster = new TextureRegion(new Texture(Gdx.files.internal("data/lmonsterred.png")));
             losebg = new TextureRegion(new Texture(Gdx.files.internal("data/redlose.png")));
-            losebg.flip(false,true);
+
+            // tug of war monster and background
             vsOppo = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster.png")));
             vsOppo2 = new TextureRegion(new Texture(Gdx.files.internal("data/greenvsmonster2.png")));
             vsMe = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster.png")));
             vsMe2 = new TextureRegion(new Texture(Gdx.files.internal("data/redvsmonster2.png")));
             vsBg = new TextureRegion(new Texture(Gdx.files.internal("data/vsbg2.png")));
         }
-        tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
-        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
-        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
-        menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
+        // set the original direction due to libgdx default setting
         vsBg.flip(false,true);
         vsMe.flip(false,true);
         vsMe2.flip(false,true);
@@ -80,13 +93,43 @@ public class AssetLoader {
         oppoHead.flip(false,true);
         victorMonster.flip(false,true);
         loseMonster.flip(false,true);
-        tree.flip(false,true);
-        steak.flip(false,true);
-        powerUp.flip(false,true);
+        losebg.flip(false,true);
+
+        /* Set common pictures*/
+        menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         menuBg.flip(false,true);
+
+        // items on map
+        tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));
+        tree.flip(false,true);
+        steak = new TextureRegion(new Texture(Gdx.files.internal("data/steak.png")));
+        steak.flip(false,true);
+        powerUp = new TextureRegion(new Texture(Gdx.files.internal("data/powerupsmall.png")));
+        powerUp.flip(false,true);
+
+        // power up icon
+        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
+        Spic.flip(false, true);
+        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
+        Vpic.flip(false, true);
+        Vpowerup = new Animation(1f,Spic);
+        Spowerup = new Animation(1f,Vpic);
+
+        // arrow to hint opponent position
+        arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
+        spriteArrow = new Sprite(arrow);
+
+        // victory ending scene
+        victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
+        victorybg1.flip(false,true);
+        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
+        victorybg2.flip(false,true);
+        victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
+        victoryAnimation.setPlayMode(PlayMode.LOOP);
+
+        // monster and opponent monster walking animation
         texture = TextureRegion.split(source, source.getWidth()/3, source.getHeight()/4);
         oppoTexture = TextureRegion.split(oppoSource, oppoSource.getWidth()/3, oppoSource.getHeight()/4);
-
         for (TextureRegion[] t:texture)
             for (TextureRegion tt: t)
                 tt.flip(false, true);
@@ -102,19 +145,6 @@ public class AssetLoader {
         oppoDown = oppoTexture[0][0];
         oppoLeft = oppoTexture[2][0];
         oppoRight = oppoTexture[1][0];
-
-        vsScreenGreenBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen.png")));
-        vsScreenGreenBot.flip(false,true);
-        vsScreenRedBot = new TextureRegion(new Texture(Gdx.files.internal("data/vsscreen2.png")));
-        vsScreenRedBot.flip(false,true);
-
-        Spic = new TextureRegion(new Texture(Gdx.files.internal("data/speed.png")));
-        Spic.flip(false, true);
-        Vpic = new TextureRegion(new Texture(Gdx.files.internal("data/visibility.png")));
-        Vpic.flip(false, true);
-        Vpowerup = new Animation(1f,Spic);
-        Spowerup = new Animation(1f,Vpic);
-
 
         upAnimation = new Animation(0.15f,new TextureRegion[] {monsterUp,texture[3][1],monsterUp,texture[3][2]});
         downaAnimation = new Animation(0.15f,new TextureRegion[] {monsterDown,texture[0][1],monsterDown,texture[0][2]});
@@ -134,18 +164,7 @@ public class AssetLoader {
         leftaAnimationoppo.setPlayMode(PlayMode.LOOP);
         rightaAnimationoppo.setPlayMode(PlayMode.LOOP);
 
-        victorybg1 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg.png")));
-        victorybg1.flip(false,true);
-        victorybg2 = new TextureRegion(new Texture(Gdx.files.internal("data/victorybg2.png")));
-        victorybg2.flip(false,true);
-
-
-        victoryAnimation = new Animation(0.2f,new TextureRegion[] {victorybg1,victorybg2});
-        victoryAnimation.setPlayMode(PlayMode.LOOP);
-
-
-
-
+        // status bar timer clock animation
         TextureRegion[] clocks = new TextureRegion[8];
         clocks[0] = new TextureRegion(new Texture(Gdx.files.internal("data/clock0.png")));
         clocks[1] = new TextureRegion(new Texture(Gdx.files.internal("data/clock1.png")));
@@ -161,21 +180,20 @@ public class AssetLoader {
         clock = new Animation(.5f,clocks);
         clock.setPlayMode(PlayMode.LOOP);
 
-
-        font = new BitmapFont(Gdx.files.internal("font/text.fnt"));
-        font.setScale(screenwidth/1080,-screenheight/1920);
-        shadow = new BitmapFont(Gdx.files.internal("font/shadow.fnt"));
-        shadow.setScale(screenwidth/1080,-screenheight/1920);
-
-        arrow = new Texture(Gdx.files.internal("data/tango-left-arrow-red.png"));
-        spriteArrow = new Sprite(arrow);
-
-        movement = Gdx.audio.newSound(Gdx.files.internal("data/walking_in_grass.wav"));
+        // sound effect
+        sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
+        vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
+        eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
     }
+
     public static void dispose(){
         source.dispose();
+        oppoSource.dispose();
         font.dispose();
         shadow.dispose();
+        sboost.dispose();
+        vboost.dispose();
+        eating.dispose();
     }
 
 }
