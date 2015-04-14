@@ -57,6 +57,16 @@ public class TouchPad {
     private float screenWidth;
     private float screenHeight;
 
+    /**
+     * TouchPad constructor
+     * @param x x position
+     * @param y y position
+     * @param width width of the TouchPad
+     * @param height height of the TouchPad
+     * @param map  map object associated with the game
+     * @param actionResolver handles google play services
+     * @param game game object
+     */
 	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver,Game game) {
 		screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
@@ -89,11 +99,15 @@ public class TouchPad {
         skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);
 	}
 
-
+    /**
+     *
+     * @return Stage object
+     */
 	public Stage createTouchPad() {
 		stage = new Stage();
 		stage.addActor(touchpad);
         stage.addActor(skillButton);
+        //Predator mode activate button listener.
         skillButton.addListener(new InputListener(){
             Timer predatorMode;
             @Override
@@ -108,6 +122,10 @@ public class TouchPad {
             }
 
             @Override
+            /**
+             * called only if touchdown is true.
+             * Predator mode activated. Temporary speed and visibility increase at the cost of 5 strength.
+             */
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
                 monster.addSpeed(1.5f);
@@ -129,14 +147,13 @@ public class TouchPad {
 
 
         });
-		touchpad.addListener(new DragListener() {
-            public void touchDragged(InputEvent event, float x, float y, int pointer) {
-
-            }});
+        //TouchPad listener to handle monster movement.
 		touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
                 Executor executor = Executors.newSingleThreadExecutor();
+                //a thread to handle TouchKnob dragging
+                //a new thread is created due to the limitations of touchpad ui object.
                 executor.execute(new Runnable() {
 
                     @Override
@@ -151,8 +168,8 @@ public class TouchPad {
                             moveDown.set(0, monster.getSpeed() * 0.003f);
                             moveLeft.set(-(monster.getSpeed() * 0.003f), 0);
                             moveRight.set(monster.getSpeed() * 0.003f, 0);
-                            foodSynchroList = actionResolver.requestFoods();
-                            puSynchroList = actionResolver.requestPUs();
+                            foodSynchroList = actionResolver.requestFoods();//foodList from the action resolver.
+                            puSynchroList = actionResolver.requestPUs();//powerUpList from the action resolver.
                             float x = touchpad.getKnobX();
                             float y = touchpad.getKnobY();
                             float angle = getAngle(x, y);
@@ -195,7 +212,7 @@ public class TouchPad {
                                 }
                             }
 
-
+                            //foodList synchronziation for concurrent modification
                             synchronized (foodSynchroList) {
                                 Food fcopy = null;
                                 for (Food f : foodSynchroList) {
@@ -212,7 +229,7 @@ public class TouchPad {
                                     actionResolver.eatFood(fcopy);
                             }
 
-
+                            //powerUpList synchronziation for concurrent modification
                             synchronized (puSynchroList) {
                                 PowerUps pcopy = null;
                                 for (PowerUps p : puSynchroList) {
@@ -220,7 +237,7 @@ public class TouchPad {
                                         pcopy = p;
                                         if (p.getKind().equals("s")) {
                                             sboost.play();
-                                            //WIN ___ Timer
+
                                             speedTimer = new Timer();
                                             monster.addSpeed(0.2f);
                                             actionResolver.broadcastMySpeed((float)(Math.round(monster.getSpeed()*10))/10);
@@ -256,7 +273,7 @@ public class TouchPad {
                             }
 
                         }
-
+                        //get the monster direction.
                         Direction d = monster.getDirection();
                         switch (d) {
                             case TOP:
@@ -281,9 +298,6 @@ public class TouchPad {
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = true;
-                float xx = touchpad.getKnobX();
-                float yy = touchpad.getKnobY();
-                float angle = getAngle(xx, yy);
                 }
         });
 

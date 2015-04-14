@@ -103,9 +103,8 @@ public class GameRenderer {
         this.actionResolver = actionResolver;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        Gdx.app.log("GAME RENDERER WIDTH", Float.toString(screenWidth));
-        Gdx.app.log("GAME RENDERER HEIGHT", Float.toString(screenHeight));
 
+        // music variable is the background music
         music.setVolume(0.5f);                 // sets the volume to half the maximum volume
         music.setLooping(true);
         music.play();
@@ -117,6 +116,7 @@ public class GameRenderer {
         lightShader = new ShaderProgram(vertexShader, lightPixelShader);
         finalShader = new ShaderProgram(vertexShader, finalPixelShader);
 
+        // FrameBuffer for the shader
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 540, 960, false);
 
         lightShader.begin();
@@ -144,23 +144,35 @@ public class GameRenderer {
         grid = new TextureRegion(gridBg, 600, 600);
 
 
-        Spic = AssetLoader.Spic;
-        Vpic = AssetLoader.Vpic;
+        Spic = AssetLoader.Spic;    // Speed power up sprite
+        Vpic = AssetLoader.Vpic;    // Visibility power up sprite
+        // Sprites for monster direction
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
         monsterLeft = AssetLoader.monsterLeft;
         monsterRight = AssetLoader.monsterRight;
+        //////////////////
+
+        // Animation for monster movement
         upAnimation = AssetLoader.upAnimation;
         downaAnimation = AssetLoader.downaAnimation;
         leftaAnimation = AssetLoader.leftaAnimation;
         rightaAnimation = AssetLoader.rightaAnimation;
+        //////////////////
+
+        // Clock sprite
         clock = AssetLoader.clock;
         directionSet = new TextureRegion[] {monsterLeft,monsterUp,monsterRight,monsterDown};
         directionSetoppo = new TextureRegion[] {AssetLoader.oppoLeft,AssetLoader.oppoUp,AssetLoader.oppoRight,AssetLoader.oppoDown};
+        // Animation for player
         animationSet = new Animation[] {leftaAnimation,upAnimation,rightaAnimation,downaAnimation};
+        // Animation for opponent
         animationSetoppo = new Animation[]{AssetLoader.leftaAnimationoppo,AssetLoader.upAnimationoppo,AssetLoader.rightaAnimationoppo,AssetLoader.downaAnimationoppo};
+        // Icons at the top right and left corners of game screen
         myHead = AssetLoader.myHead;
         oppoHead = AssetLoader.oppoHead;
+        //////////////////
+        //
         food = AssetLoader.steak;
         speed = AssetLoader.powerUp;
         spriteArrow = AssetLoader.spriteArrow;
@@ -169,6 +181,7 @@ public class GameRenderer {
         shadow = AssetLoader.shadow;
         victorybg = AssetLoader.victoryAnimation;
 
+        // Sprite for skill button
         saiyan = new Texture(Gdx.files.internal("data/saiyan.png"));
         pic = AssetLoader.vsBg;
         vsMe = new TextureRegion[] {AssetLoader.vsMe,AssetLoader.vsMe2};
@@ -192,15 +205,19 @@ public class GameRenderer {
 
     public void render(float runTime) {
         if (runTime < 2){
+            // Loading screen before round start
             drawRound1Waiting(runTime);
         }
         else if(!shouldStartRound2 && runTime <= round2Start) {
+            // Render main map
             drawMapWar(runTime);
         }
         else if (shouldStartRound2|| (runTime > round2Start && runTime < round2Start+2)){
+            // Upon monsters collide, loading screen to prepare players for final battle
             drawRound2Waiting(runTime);
         }
         else{
+            // Load final battle
             drawTugOfWar(runTime);
         }
 
@@ -266,12 +283,17 @@ public class GameRenderer {
             }
             synchronized (powerUpsList) {
                 for (PowerUps p : powerUpsList) {
+
                         batcher.draw(AssetLoader.powerUp, p.getPosition().x, p.getPosition().y, 0, 0, AssetLoader.powerUp.getRegionWidth(), AssetLoader.powerUp.getRegionHeight(), 1f, 1f, 0f);
+
                 }
             }
             synchronized (foodList) {
                 for (Food s : foodList) {
-                        batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+
+                    batcher.draw(AssetLoader.steak, s.getPosition().x, s.getPosition().y, 0, 0, AssetLoader.steak.getRegionWidth(), AssetLoader.steak.getRegionHeight(), 1f, 1f, 0f);
+
+
                 }
             }
 
@@ -467,6 +489,7 @@ public class GameRenderer {
         }
         batcher.end();
     }
+
 
 
 }
