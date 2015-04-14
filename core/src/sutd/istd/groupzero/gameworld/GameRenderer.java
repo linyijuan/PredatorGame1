@@ -96,7 +96,7 @@ public class GameRenderer {
      * @param map map object that contains positions of visual objects to be rendered
      * @param screenHeight Height of phone screen
      * @param screenWidth Width of phone screen
-     * @param actionResolver
+     * @param actionResolver handles communication between gps and core project
      * @param game
      * @param stage
      */

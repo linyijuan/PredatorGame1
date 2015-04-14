@@ -58,7 +58,7 @@ public class TouchPad {
      * @param width width of the TouchPad
      * @param height height of the TouchPad
      * @param map  map object associated with the game
-     * @param actionResolver handles google play services
+     * @param actionResolver handles communication between gps and core project
      */
 	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
 		screenHeight = Gdx.graphics.getHeight();

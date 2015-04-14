@@ -2,9 +2,16 @@ package sutd.istd.groupzero.helpers;
 
 import com.badlogic.gdx.InputProcessor;
 
+/* Screen interaction handler during tug of war */
 public class InputHandler implements InputProcessor{
    private ActionResolver actionResolver;
     private int mode;
+
+    /**
+     * Initialization of variables within GameRenderer Class
+     * @param actionResolver handles communication between gps and core project
+     * @param mode different game status during tug of war
+     */
 	public InputHandler(ActionResolver actionResolver,int mode){
 		this.actionResolver = actionResolver;
         this.mode = mode;
@@ -33,15 +40,15 @@ public class InputHandler implements InputProcessor{
         return false;
 	}
 
+    // when user touch up from screen after touch down
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // when still in competing mode of tug of war
         if (mode == 0){
             actionResolver.broadcastMyTapping();
         }
+        // when tug of war ends
         else if (mode == 1){
-
-        }
-        else if (mode == 2){
 
         }
 
