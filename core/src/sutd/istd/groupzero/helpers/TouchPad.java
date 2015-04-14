@@ -43,7 +43,6 @@ public class TouchPad {
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
 
-    private Sound movement;
     private Sound sboost;
     private Sound vboost;
     private Sound eating;
@@ -90,7 +89,6 @@ public class TouchPad {
         touchpadcenter = new Vector2(width/2, height/2);
         this.game = game;
 
-        movement = AssetLoader.movement;
         sboost = Gdx.audio.newSound(Gdx.files.internal("data/boost.wav"));
         vboost = Gdx.audio.newSound(Gdx.files.internal("data/visible.wav"));
         eating = Gdx.audio.newSound(Gdx.files.internal("data/eating.mp3"));
