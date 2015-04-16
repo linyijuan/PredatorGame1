@@ -307,7 +307,7 @@ public class TouchPad {
      * @param y current touchknob y position
      * @return
      */
-	public float getAngle(float x, float y){
+	private float getAngle(float x, float y){
 		float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x); //calculates the angle in radian
 		temp = (float) (temp * 57.2957795);//converts the radian to degree
 		return 	temp;//returns the angle in degree

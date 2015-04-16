@@ -39,11 +39,11 @@ import sutd.istd.groupzero.helpers.InputHandler;
 
 public class GameRenderer {
     //values passed to the shader
-    public static final float ambientIntensity = 0.1f;
-    public static final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
+    private final float ambientIntensity = 0.1f;
+    private final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
     //used to make the light flicker
-    public static final float zSpeed = 15.0f;
-    public static final float PI2 = 3.1415926535897932384626433832795f * 2.0f;
+    private final float zSpeed = 15.0f;
+    private final float PI2 = 3.1415926535897932384626433832795f * 2.0f;
     private float screenWidth,screenHeight;
     private Map myMap;
     private Game game;
@@ -53,13 +53,13 @@ public class GameRenderer {
     private ActionResolver actionResolver;
     private OrthographicCamera cam,cam2;
     private SpriteBatch batcher;
-    public static BitmapFont font, shadow;
-    public  Texture gridBg, light;
-    public TextureRegion saiyan;
-    public  TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
-    public  TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
-    public  Animation[] animationSet,animationSetoppo;
-    public  Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
+    private static BitmapFont font, shadow;
+    private Texture gridBg, light;
+    private TextureRegion saiyan;
+    private TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
+    private TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
+    private Animation[] animationSet,animationSetoppo;
+    private Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
     private ShapeRenderer shapeRenderer;
     private FrameBuffer fbo;
     private boolean lightOscillate = true;
@@ -78,15 +78,15 @@ public class GameRenderer {
     private ShaderProgram ambientShader;
     private ShaderProgram lightShader;
     private ShaderProgram finalShader;
-    public float zAngle;
+    private float zAngle;
     private Vector2 oppo_pos;
     private float shake = 5f;
     private int diff;
     //read our shader files
     final String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
     final String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
-    public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
-    public enum ShaderSelection{
+    private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
+    private enum ShaderSelection{
         Default,
         Ambiant,
         Light,
@@ -238,7 +238,7 @@ public class GameRenderer {
      * Drawing of normal map and visual objects
      * @param runTime duration for which the game has since begun
      */
-    public void drawMapWar(float runTime){
+    private void drawMapWar(float runTime){
         // To prevent traversing through the arraylist while it is being modified
         List<Food> foods = Collections.synchronizedList(actionResolver.requestFoods());
         List<PowerUps> pus = Collections.synchronizedList(actionResolver.requestPUs());
@@ -428,7 +428,7 @@ public class GameRenderer {
      * Drawing of the tug of war screen
      * @param runTime duration for which the game has since begun
      */
-    public void drawTugOfWar(float runTime){
+    private void drawTugOfWar(float runTime){
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
@@ -479,7 +479,7 @@ public class GameRenderer {
      * Drawing of the countdown screen before first part of game
      * @param runTime duration for which the game has since begun
      */
-    public void drawRound1Waiting(float runTime){
+    private void drawRound1Waiting(float runTime){
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
         batcher.enableBlending();
@@ -501,7 +501,7 @@ public class GameRenderer {
      * Drawing of countdown scene before tug of war begins
      * @param runTime duration for which the game has since begun
      */
-    public void drawRound2Waiting(float runTime){
+    private void drawRound2Waiting(float runTime){
         music.stop();
         opponentStrength =actionResolver.requestOpponentStrength();
         myStrength = myMonster.getStrength();
