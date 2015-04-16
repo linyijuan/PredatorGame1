@@ -39,11 +39,11 @@ import sutd.istd.groupzero.helpers.InputHandler;
 
 public class GameRenderer {
     //values passed to the shader
-    private final float ambientIntensity = 0.1f;
-    private final Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
+    private float ambientIntensity = 0.1f;
+    private Vector3 ambientColor = new Vector3(0.7f, 0.7f, 0.7f);
     //used to make the light flicker
-    private final float zSpeed = 15.0f;
-    private final float PI2 = 3.1415926535897932384626433832795f * 2.0f;
+    private float zSpeed = 15.0f;
+    private float PI2 = 3.1415926535897932384626433832795f * 2.0f;
     private float screenWidth,screenHeight;
     private Map myMap;
     private Game game;
