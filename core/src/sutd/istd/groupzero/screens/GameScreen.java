@@ -33,7 +33,7 @@ public class GameScreen implements Screen{
         monster = map.getMonster();
         stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver).createTouchPad();
         Gdx.input.setInputProcessor(stage);
-        renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,game,stage);
+        renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,stage);
         cam2 = new OrthographicCamera();
         cam2.setToOrtho(true, screenWidth, screenHeight);
         batcher = new SpriteBatch();

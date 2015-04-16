@@ -1,6 +1,5 @@
 package sutd.istd.groupzero.gameworld;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,8 +45,6 @@ public class GameRenderer {
     private float PI2 = 3.1415926535897932384626433832795f * 2.0f;
     private float screenWidth,screenHeight;
     private Map myMap;
-    private Game game;
-    private boolean left = false;
     private Monster myMonster;
     private Stage stage;
     private ActionResolver actionResolver;
@@ -98,12 +95,10 @@ public class GameRenderer {
      * @param screenHeight Height of phone screen
      * @param screenWidth Width of phone screen
      * @param actionResolver handles communication between gps and core project
-     * @param game
      * @param stage
      */
 
-    public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Game game,Stage stage){
-        this.game = game;
+    public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Stage stage){
         myMap = map;
         myMonster = myMap.getMonster();
         this.actionResolver = actionResolver;
