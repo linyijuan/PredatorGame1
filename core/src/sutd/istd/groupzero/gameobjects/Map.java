@@ -45,7 +45,7 @@ public class Map{
     }
 
     // To prevent items from spawning out of the play area
-    public int cap(int min, int max){
+    private int cap(int min, int max){
         int  x = r.nextInt();
         while(x > max || x < min){
             x = r.nextInt(max);
