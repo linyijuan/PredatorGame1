@@ -2,7 +2,6 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -73,7 +72,7 @@ public class GameRenderer {
     private Vector2 oppo_pos;
     private float shake = 5f;
     //read our shader files
-    final String lightPixelShader =  new FileHandle("data/lightPixelShader.glsl").readString();
+    final String lightPixelShader =  Gdx.files.internal("data/lightPixelShader.glsl").readString();
     private String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
     private String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
@@ -86,7 +85,6 @@ public class GameRenderer {
      * @param actionResolver handles communication between gps and core project
      * @param stage
      */
-
     public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Stage stage){
         myMap = map;
         myMonster = myMap.getMonster();
@@ -176,7 +174,6 @@ public class GameRenderer {
         handler = new InputHandler(actionResolver,0);
         this.stage = stage;
     }
-
     /**
      * Resizing of framebuffer, calling in game screen
      * @param width width of the phone screen
