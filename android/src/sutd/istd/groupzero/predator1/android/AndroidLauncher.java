@@ -46,7 +46,7 @@ import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.ActionResolver;
-import sutd.istd.groupzero.predator1.PredatorGame;
+import sutd.istd.groupzero.gameworld.PredatorGame;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
@@ -54,7 +54,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_INVITATION_INBOX = 10001;
     final static int RC_WAITING_ROOM = 10002;
-    private static final int RC_SIGN_IN = 9001;
+    final static int RC_SIGN_IN = 9001;
     private int mapSizeX = 540;
     private int mapSizeY = 960;
     private GoogleApiClient mGoogleApiClient;
@@ -100,7 +100,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     };
 
     // Reset game variables in preparation for a new game.
-    void resetGameVars() {
+    private void resetGameVars() {
         gameMap = new Map(this);
         foodList = gameMap.getFoodList();
         powerUpList = gameMap.getPowerUpsList();
@@ -231,7 +231,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 if (responseCode == RESULT_OK)
                     mGoogleApiClient.connect();
                 else
-                    showActivityResultError(this,requestCode,responseCode, R.string.signin_other_error);
+                    showActivityResultError(this, requestCode, responseCode, R.string.signin_other_error);
                 break;
         }
         super.onActivityResult(requestCode, responseCode, intent);
@@ -553,7 +553,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mRoomId = null;
             switchToScreen(R.id.screen_wait);
             switchToMainScreen();
-            makeSimpleDialog(this,"Game Notification","Your opponent has quit the game.").show();
+            makeSimpleDialog(this, "Game Notification", "Your opponent has quit the game.").show();
         }
     }
 
@@ -1136,44 +1136,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             }
             return false;
         }
-    }
-
-    /**
-     * For use in sample code only. Checks if the sample was set up correctly,
-     * including changing the package name to a non-Google package name and
-     * replacing the placeholder IDs. Shows alert dialogs to notify about problems.
-     * DO NOT call this method from a production app, it's meant only for samples!
-     * @param resIds the resource IDs to check for placeholders
-     * @return true if sample is set up correctly; false otherwise.
-     */
-    public static boolean verifySampleSetup(Activity activity, int... resIds) {
-        StringBuilder problems = new StringBuilder();
-        boolean problemFound = false;
-        problems.append("The following set up problems were found:\n\n");
-
-        // Did the developer forget to change the package name?
-        if (activity.getPackageName().startsWith("com.google.example.games")) {
-            problemFound = true;
-            problems.append("- Package name cannot be com.google.*. You need to change the "
-                    + "sample's package name to your own package.").append("\n");
-        }
-
-        for (int i : resIds) {
-            if (activity.getString(i).toLowerCase().contains("replaceme")) {
-                problemFound = true;
-                problems.append("- You must replace all " +
-                        "placeholder IDs in the ids.xml file by your project's IDs.").append("\n");
-                break;
-            }
-        }
-
-        if (problemFound) {
-            problems.append("\n\nThese problems may prevent the app from working properly.");
-            showAlert(activity, problems.toString());
-            return false;
-        }
-
-        return true;
     }
 
     /**

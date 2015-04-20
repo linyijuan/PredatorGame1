@@ -5,7 +5,7 @@ import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import sutd.istd.groupzero.predator1.PredatorGame;
+import sutd.istd.groupzero.gameworld.PredatorGame;
 
 public class IOSLauncher extends IOSApplication.Delegate {
     @Override

@@ -1,4 +1,4 @@
-package sutd.istd.groupzero.screens;
+package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
-import sutd.istd.groupzero.gameworld.GameRenderer;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
 import sutd.istd.groupzero.helpers.TouchPad;

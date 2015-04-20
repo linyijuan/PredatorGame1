@@ -1,11 +1,10 @@
-package sutd.istd.groupzero.predator1;
+package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
-import sutd.istd.groupzero.screens.GameScreen;
 
 /* LIBGDX Game Class for game initialization*/
 public class PredatorGame extends Game {

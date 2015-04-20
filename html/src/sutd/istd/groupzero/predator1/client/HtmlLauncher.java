@@ -3,7 +3,7 @@ package sutd.istd.groupzero.predator1.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import sutd.istd.groupzero.predator1.PredatorGame;
+import sutd.istd.groupzero.gameworld.PredatorGame;
 
 public class HtmlLauncher extends GwtApplication {
 

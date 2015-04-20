@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -57,9 +56,7 @@ public class GameRenderer {
     private TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
     private Animation[] animationSet,animationSetoppo;
     private Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
-    private ShapeRenderer shapeRenderer;
     private FrameBuffer fbo;
-    private boolean lightOscillate = true;
     private Sprite spriteArrow;
     private Vector2 directionVectorToTarget = new Vector2();
     private float angle,arrowPostX,arrowPostY,ratio;
@@ -68,27 +65,17 @@ public class GameRenderer {
     private boolean shouldStartRound2 = false;
     private int opponentStrength,myStrength;
     private InputHandler handler;
-    //out different shaders. currentShader is just a pointer to the 4 others
-    private ShaderSelection	shaderSelection = ShaderSelection.Default;
-    private ShaderProgram currentShader;
     private ShaderProgram defaultShader;
-    private ShaderProgram ambientShader;
     private ShaderProgram lightShader;
     private ShaderProgram finalShader;
     private float zAngle;
     private Vector2 oppo_pos;
     private float shake = 5f;
-    private int diff;
     //read our shader files
-    final String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
-    final String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
+    private String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
+    private String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
-    private enum ShaderSelection{
-        Default,
-        Ambiant,
-        Light,
-        Final
-    };
+
     /**
      * Initialization of variables within GameRenderer Class
      * @param map map object that contains positions of visual objects to be rendered
@@ -128,17 +115,12 @@ public class GameRenderer {
         finalShader.setUniformf("ambientColor", ambientColor.x, ambientColor.y,ambientColor.z, ambientIntensity);
         finalShader.end();
 
-
-
         cam = new OrthographicCamera();
         cam.setToOrtho(true, 180, 360);
         cam2 = new OrthographicCamera();
         cam2.setToOrtho(true, screenWidth, screenHeight);
         batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
-
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam2.combined);
 
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
@@ -202,7 +184,6 @@ public class GameRenderer {
 
         lightShader.begin();
         lightShader.setUniformf("resolution", width, height);
-
         lightShader.end();
 
         finalShader.begin();
