@@ -2,6 +2,7 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -72,6 +73,7 @@ public class GameRenderer {
     private Vector2 oppo_pos;
     private float shake = 5f;
     //read our shader files
+    final String lightPixelShader =  new FileHandle("data/lightPixelShader.glsl").readString();
     private String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
     private String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
@@ -101,6 +103,7 @@ public class GameRenderer {
         light = new Texture("data/light.png");
         ShaderProgram.pedantic = false;
         // Construction of ShaderProgram to attach to batch
+        lightShader = new ShaderProgram(vertexShader, lightPixelShader);
         finalShader = new ShaderProgram(vertexShader, finalPixelShader);
 
         // FrameBuffer for the shader
