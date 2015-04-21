@@ -12,12 +12,16 @@ import sutd.istd.groupzero.gameobjects.Tree;
 /* Interface for communication between core and android project */
 public interface ActionResolver {
     /* GAME RULE AND PREPARATION*/
-    // called to broadcast my start
-    public boolean iStart();
-    // called to know whether my opponent starts
-    public boolean didYouStart();
     // called to get my player role
     public int requestMyPlayerNum();
+    // send invitation
+    public void sendInvitation();
+    // view invitations
+    public void seeInvitations();
+    // start quick game
+    public void startQuickGame();
+    // get display screen
+    public int showScreen();
 
     /*MAP WAR*/
     // called when monster eat a food on map

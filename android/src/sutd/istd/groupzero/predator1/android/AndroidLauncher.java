@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -50,8 +49,7 @@ import sutd.istd.groupzero.gameworld.PredatorGame;
 import sutd.istd.groupzero.helpers.ActionResolver;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener, RealTimeMessageReceivedListener,
-        RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener,ActionResolver{
+        RealTimeMessageReceivedListener,RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener,ActionResolver{
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_INVITATION_INBOX = 10001;
     final static int RC_WAITING_ROOM = 10002;
@@ -86,19 +84,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private Vector2 mystartPos = null;
     private int myTapCount,oppoTapCount,playerNum,opponentStrength;
     private float oppoSpeed = 1.0f;
-    private boolean met,oppoWin,oppoLose,iStart,oppoStart  = false;
-    private LinearLayout linearLayout;
+    private boolean met,oppoWin,oppoLose  = false;
+    int showScreen = 0;
 
-    // This array lists all the individual screens our game has.
-    final static int[] SCREENS = {R.id.screen_game, R.id.screen_main, R.id.screen_sign_in,R.id.screen_wait};
-    int mCurScreen = -1;
-
-    // This array lists everything that's clickable, so we can install click event handlers.
-    final static int[] CLICKABLES = {
-            R.id.button_accept_popup_invitation, R.id.button_invite_players,
-            R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
-            R.id.button_sign_out
-    };
 
     // Reset game variables in preparation for a new game.
     private void resetGameVars() {
@@ -110,9 +98,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         oppopowerUpList = new ArrayList<PowerUps>();
         oppotreeList = new ArrayList<Tree>();
         opponentPosition = null;
-        linearLayout.removeViewAt(0);
-        gameView = initializeForView(new PredatorGame(this,gameMap),config);
-        linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+        initialize(new PredatorGame(this,gameMap),config);
         opponentStrength = 0;
         oppoSpeed = 1.0f;
         myTapCount = 0;
@@ -120,23 +106,16 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         oppoLose = false;
         oppoTapCount = 0;
         met = false;
-        iStart = false;
-        oppoStart = false;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
         // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this)
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
 
-        // set up a click listener defined below for different types of buttons on the menu main screen
-        for (int id : CLICKABLES) {
-            findViewById(id).setOnClickListener(this);
-        }
 
         // when start the game for the first time:
         // 1. configure the libgdx setting for Android platform
@@ -147,56 +126,20 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         powerUpList = gameMap.getPowerUpsList();
         treeList = gameMap.getTreeList();
         // 3. attach libgdx game view in Android layout
-        gameView = initializeForView(new PredatorGame(this,gameMap),config);
-        linearLayout = (LinearLayout) findViewById(R.id.screen_game);
-        linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
-
-
+        initialize(new PredatorGame(this,gameMap),config);
     }
 
     //onClickListener for all the buttons visible and hidden in main menu screen
-    @Override
-    public void onClick(View v) {
-        Intent intent;
-        switch (v.getId()) {
-            case R.id.button_sign_in:
-                // start the sign-in flow.
-                mSignInClicked = true;
-                mGoogleApiClient.connect();
-                break;
-            case R.id.button_sign_out:
-                // sign out and switch back to sign in screen.
-                mSignInClicked = false;
-                Games.signOut(mGoogleApiClient);
-                mGoogleApiClient.disconnect();
-                switchToScreen(R.id.screen_sign_in);
-                break;
-            case R.id.button_invite_players:
-                // show list of invitable players.
-                intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1);
-//                switchToScreen(R.id.screen_wait);
-                // once player select opponents, start new game.
-                log("invite players","clicked");
-                startActivityForResult(intent, RC_SELECT_PLAYERS);
-                break;
-            case R.id.button_see_invitations:
-                // show list of pending invitations
-                intent = Games.Invitations.getInvitationInboxIntent(mGoogleApiClient);
-//                switchToScreen(R.id.screen_wait);
-                startActivityForResult(intent, RC_INVITATION_INBOX);
-                break;
-            case R.id.button_accept_popup_invitation:
-                // when user wants to accept the invitation shown on the invitation popup
-                acceptInviteToRoom(mIncomingInvitationId);
-                mIncomingInvitationId = null;
-                break;
-            case R.id.button_quick_game:
-                // when user wants to play against a random opponent right now
-                startQuickGame();
-                break;
-        }
+    public void sendInvitation(){
+        startActivityForResult(Games.RealTimeMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1), RC_SELECT_PLAYERS);
+    }
+    public void seeInvitations() {
+        startActivityForResult(Games.Invitations.getInvitationInboxIntent(mGoogleApiClient), RC_INVITATION_INBOX);
     }
 
+    public int showScreen(){
+        return  showScreen;
+    }
     /*
      * COMMUNICATIONS SECTION. Methods that implement the game's network
      * protocol.
@@ -210,6 +153,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             case RC_SELECT_PLAYERS:
                 // got the result from the "select players" UI -- ready to create the room
                 handleSelectPlayersResult(responseCode, intent);
+                showScreen = 1;
                 break;
             case RC_INVITATION_INBOX:
                 // got the result from the "select invitation" UI (invitation inbox)and ready to accept the selected invitation:
@@ -245,7 +189,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // React by creating a room with those players.
     private void handleSelectPlayersResult(int response, Intent data) {
         if (response != Activity.RESULT_OK) {
-            switchToMainScreen();
+//            switchToMainScreen();
             return;
         }
         log("handleSelectPlayersResult1","clicked");
@@ -264,7 +208,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setRoomStatusUpdateListener(this);
         if (autoMatchCriteria != null)
             rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
-        switchToScreen(R.id.screen_wait);
+//        switchToScreen(R.id.screen_wait);
         keepScreenOn();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         //Room created, waiting for it to be ready...
@@ -275,7 +219,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private void handleInvitationInboxResult(int response, Intent data) {
         log("handleInvitationInboxResult",""+(response==Activity.RESULT_OK));
         if (response != Activity.RESULT_OK) {
-            switchToMainScreen();
+//            switchToMainScreen();
+//            enterGameScreen = false;
+            showScreen = 0;
             return;
         }
 
@@ -292,7 +238,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         log("invId",invId);
         RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(this);
         roomConfigBuilder.setInvitationIdToAccept(invId).setMessageReceivedListener(this).setRoomStatusUpdateListener(this);
-        switchToScreen(R.id.screen_wait);
+        showScreen = 1;
         keepScreenOn();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
@@ -302,10 +248,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onStop() {
         // if we're in a room, leave it.
         leaveRoom();
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
-            switchToScreen(R.id.screen_sign_in);
-        else
-            switchToScreen(R.id.screen_wait);
+        showScreen = 1;
+
         super.onStop();
     }
 
@@ -313,7 +257,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Switch to the wait screen because we will now go through the sign-in flow
     @Override
     public void onStart() {
-        switchToScreen(R.id.screen_wait);
+//        switchToScreen(R.id.screen_wait);
         //connect GoogleApiClient if haven't
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
         } else {
@@ -333,11 +277,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
 //        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen != R.id.screen_main) {
             leaveRoom();
-        if (mCurScreen == R.id.screen_main)
-            super.onKeyDown(keyCode, e);
-        else
-            switchToMainScreen();
-        return true;
+//        if (mCurScreen == R.id.screen_main)
+//            super.onKeyDown(keyCode, e);
+//        else
+//            switchToMainScreen();
+        showScreen = 1;
+        return false;
 //        }
 //        return super.onKeyDown(keyCode, e);
     }
@@ -384,8 +329,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onInvitationRemoved(String invitationId) {
         if (mIncomingInvitationId.equals(invitationId)) {
             mIncomingInvitationId = null;
-            // This will hide the invitation popup
-//            switchToScreen(mCurScreen);
         }
     }
 
@@ -410,7 +353,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 return;
             }
         }
-        switchToMainScreen();
+//        switchToMainScreen();
+        showScreen = 0;
     }
 
     // Called when connection is still suspended -> trying to reconnect
@@ -433,7 +377,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mResolvingConnectionFailure = resolveConnectionFailure(this, mGoogleApiClient,
                     connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
         }
-        switchToScreen(R.id.screen_sign_in);
+//        switchToScreen(R.id.screen_sign_in);
+        showScreen = 0;
     }
 
     // Called when we are connected to the room but not ready to play yet.
@@ -459,6 +404,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mystartPos = new Vector2(startPos[1].x,startPos[1].y);
             playerNum = 2;
         }
+        log("player number",playerNum+"");
     }
 
     // Leave the room.
@@ -466,7 +412,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (mRoomId != null) {
             // Google API for disconnecting from the room
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
-            switchToScreen(R.id.screen_wait);
+//            switchToScreen(R.id.screen_wait);
+            showScreen = 0;
         }
     }
     // Called when we've successfully left the room as a result of calling leaveRoom().
@@ -476,7 +423,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // see the leaving is because whether I or my opponent leave
         if (mRoomId !=null) {
             // we have left the room; return to main screen.
-            switchToMainScreen();
+//            switchToMainScreen();
+            showScreen = 0;
             // alert dialog show "You have quit the game." if I volunteer to leave the game
             makeSimpleDialog(this, "Game Notification", "You have quit the game.").show();
         }
@@ -496,7 +444,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Show error message about game being cancelled and return to main screen.
     void showGameError() {
         makeSimpleDialog(this, getString(R.string.game_problem));
-        switchToMainScreen();
+//        switchToMainScreen();
+        showScreen = 0;
     }
 
     // Called when room has been created
@@ -574,8 +523,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             mRoomId = null;
         }
         // go back to main screen
-        switchToScreen(R.id.screen_wait);
-        switchToMainScreen();
+//        switchToScreen(R.id.screen_wait);
+//        switchToMainScreen();
+        showScreen = 0;
         //notify that opponet leave the game
         makeSimpleDialog(this, "Game Notification", "Your opponent has quit the game.").show();
     }
@@ -604,8 +554,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (mRoomId != null){
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
             mRoomId = null;
-            switchToScreen(R.id.screen_wait);
-            switchToMainScreen();
+//            switchToScreen(R.id.screen_wait);
+//            switchToMainScreen();
+            showScreen = 0;
             makeSimpleDialog(this, "Game Notification", "Your opponent has quit the game.").show();
         }
     }
@@ -642,17 +593,19 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Start the gameplay phase of the game.
     void startGame() {
         // show waiting screen when initializing the game
-        switchToScreen(R.id.screen_wait);
+        showScreen = 1;
         // set the starting position of the monster
+        log("startGame()","called");
         gameMap.getMonster().setMyPosition(mystartPos);
         // tell opponent my position information
         broadcastMyStatus(gameMap.getMonster().getMyPosition(), gameMap.getMonster().getDirection());
         // show game play screen
-        switchToScreen(R.id.screen_game);
+//        switchToScreen(R.id.screen_game);
+        showScreen = 2;
     }
 
     // quick-start a game with 1 randomly selected opponent
-    void startQuickGame() {
+    public void startQuickGame() {
         // requirement of the number of players in one round
         final int MIN_OPPONENTS = 1, MAX_OPPONENTS = 1;
         Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(MIN_OPPONENTS, MAX_OPPONENTS, 0);
@@ -660,7 +613,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setMessageReceivedListener(this);
         rtmConfigBuilder.setRoomStatusUpdateListener(this);
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
-        switchToScreen(R.id.screen_wait);
+        showScreen = 1;
         keepScreenOn();
         //create game room for randomly paired players
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
@@ -763,10 +716,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         else if(buf[0] == 'l'){
             oppoLose = true;
         }
-        // Received start signal from iStart():
-        else if(buf[0] == 'g'){
-            oppoStart = true;
-        }
         // Received position and direction from broadcastMyStatus():
         else{
             opponentDirectionKeycode = (buf[0] & 0xFF)| ((buf[1] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[3] & 0xFF) << 24);
@@ -777,21 +726,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
 
     // methods implemented in interface ActionResolver for communication between Android and Core Porjects
-    /* Start of Game: broadcast my start and receive my opponent's start*/
-    public boolean iStart(){
-        if(iStart == false){
-            iStart = true;
-            byte[] bytes = new byte[1];
-            bytes[0] = 'g';
-            broadcastMsg(bytes);
-        }
-        return iStart;
-
-    }
-    public boolean didYouStart(){
-        return oppoStart;
-    }
-
     // Player 1 broadcast the map, so player 2 can use player 1's map
     public synchronized void broadcastMyMap(){
         // send food position
@@ -1104,39 +1038,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // return my role in the game decided in onConnectedToRoom()
     public int requestMyPlayerNum(){
         return playerNum;
-    }
-
-    /*
-     * UI SECTION. Methods that implement the game's UI.
-     */
-    // screen switching
-    void switchToScreen(int screenId) {
-        // make the requested screen visible; hide all others.
-        for (int id : SCREENS) {
-            findViewById(id).setVisibility(screenId == id ? View.VISIBLE : View.GONE);
-            gameView.setVisibility(screenId == R.id.screen_game? View.VISIBLE: View.GONE);
-        }
-        mCurScreen = screenId;
-
-        // should we show the invitation popup?
-        boolean showInvPopup;
-        if (mIncomingInvitationId == null) {
-            // no invitation, so no popup
-            showInvPopup = false;
-        } else {
-            // only show invitation on main screen
-            showInvPopup = (mCurScreen == R.id.screen_main);
-        }
-        findViewById(R.id.invitation_popup).setVisibility(showInvPopup ? View.VISIBLE : View.GONE);
-    }
-    // switch screen to main
-    void switchToMainScreen() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            switchToScreen(R.id.screen_main);
-        }
-        else {
-            switchToScreen(R.id.screen_sign_in);
-        }
     }
 
     /*

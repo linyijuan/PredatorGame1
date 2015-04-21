@@ -14,7 +14,7 @@ public class AssetLoader {
     private  static float screenwidth, screenheight;
 
     public static Texture arrow,source,oppoSource;
-    public static TextureRegion menuBg,myHead,oppoHead;
+    public static TextureRegion menuBg,logo,myHead,oppoHead;
     public static TextureRegion tree,steak,powerUp;
     public static TextureRegion monsterUp,monsterDown, monsterLeft,monsterRight;
     public static TextureRegion vsOppo,vsOppo2,vsMe,vsMe2,vsBg;
@@ -22,6 +22,7 @@ public class AssetLoader {
     public static TextureRegion oppoUp,oppoDown, oppoLeft, oppoRight;
     public static TextureRegion Spic,Vpic;
     public static TextureRegion[][] texture,oppoTexture;
+    public static TextureRegion quickgame,invite,viewInvitation,quickgamed,invited,viewInvitationd,signOut;
 
     public static Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,victoryAnimation;
     public static Animation upAnimationoppo,downaAnimationoppo, leftaAnimationoppo,rightaAnimationoppo,Vpowerup,Spowerup;
@@ -98,6 +99,14 @@ public class AssetLoader {
         /* Set common pictures*/
         menuBg = new TextureRegion(new Texture(Gdx.files.internal("data/menubg.png")));
         menuBg.flip(false,true);
+        logo = new TextureRegion(new Texture(Gdx.files.internal("data/logo.png")));
+        logo.flip(false,true);
+        quickgame = new TextureRegion(new Texture(Gdx.files.internal("data/quickgame.png")));
+        quickgamed = new TextureRegion(new Texture(Gdx.files.internal("data/quickgamed.png")));
+        invite = new TextureRegion(new Texture(Gdx.files.internal("data/inviteplayers.png")));
+        invited = new TextureRegion(new Texture(Gdx.files.internal("data/inviteplayersd.png")));
+        viewInvitation = new TextureRegion(new Texture(Gdx.files.internal("data/viewinvites.png")));
+        viewInvitationd = new TextureRegion(new Texture(Gdx.files.internal("data/viewinvitesd.png")));
 
         // items on map
         tree = new TextureRegion(new Texture(Gdx.files.internal("data/cooltree.png")));

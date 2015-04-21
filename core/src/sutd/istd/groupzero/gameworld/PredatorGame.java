@@ -25,8 +25,7 @@ public class PredatorGame extends Game {
 	@Override
 	public void create() {
         AssetLoader.actionResolver = actionResolver;
-        // called load() to prepare the game picture, font and sound source
-		AssetLoader.load();
+        AssetLoader.load();
         // set game screen to allow drawing
 		setScreen(new GameScreen(this,actionResolver,map));
 	}

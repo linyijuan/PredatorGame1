@@ -135,6 +135,7 @@ public class GameRenderer {
 
         Spic = AssetLoader.Spic;    // Speed power up sprite
         Vpic = AssetLoader.Vpic;    // Visibility power up sprite
+
         // Sprites for monster direction
         monsterDown = AssetLoader.monsterDown;
         monsterUp = AssetLoader.monsterUp;
@@ -427,6 +428,7 @@ public class GameRenderer {
      * @param runTime duration for which the game has since begun
      */
     private void drawTugOfWar(float runTime){
+        Gdx.input.setInputProcessor(handler);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int initial = 0;
