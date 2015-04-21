@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -136,6 +137,13 @@ public class TouchPad {
                         monster.setVisibility(1.0f);//sets the monster's visiblity at the end of predator mode.
                         monster.setStrength(monster.getStrength() - 5);//decrease the monster's strength by 5 as cost for predator mode activation
                         monster.setSaiyanMode(false); // deactivation of predator mode.
+                        new Timer().scheduleTask(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                skillButton.setChecked(false);
+                                skillButton.setTouchable(Touchable.enabled);
+                            }
+                        }, 5f);
                     }
                 }, 10f);// the task / predator mode is scheduled for 10 secs duration.
                 // Start the countdown
