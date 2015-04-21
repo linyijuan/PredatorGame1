@@ -30,9 +30,10 @@ public class GameScreen implements Screen{
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
         monster = map.getMonster();
-        stage = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver).createTouchPad();
+        TouchPad touchPad = new TouchPad(screenWidth/2-screenWidth/8, 15f, screenWidth/4, screenWidth/4, map,actionResolver);
+        stage = touchPad.createTouchPad();
         Gdx.input.setInputProcessor(stage);
-        renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,stage);
+        renderer = new GameRenderer(map, screenWidth, screenHeight,actionResolver,stage, touchPad);
         cam2 = new OrthographicCamera();
         cam2.setToOrtho(true, screenWidth, screenHeight);
         batcher = new SpriteBatch();
@@ -86,7 +87,7 @@ public class GameScreen implements Screen{
 
     @Override
     public void dispose() {
-
+        renderer.dispose();
 
     }
 
