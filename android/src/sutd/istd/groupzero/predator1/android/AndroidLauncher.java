@@ -3,6 +3,7 @@ package sutd.istd.groupzero.predator1.android;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -333,8 +333,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
 //        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen != R.id.screen_main) {
             leaveRoom();
+        if (mCurScreen == R.id.screen_main)
+            super.onKeyDown(keyCode, e);
+        else
             switchToMainScreen();
-            return true;
+        return true;
 //        }
 //        return super.onKeyDown(keyCode, e);
     }
@@ -342,19 +345,38 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Show the waiting room UI to track the progress of other players as they enter the room and get connected.
     void showWaitingRoom(Room room) {
         // Since we require everyone to join the game before we start it, minimum number of players required for our game
-        final int MIN_PLAYERS = 2;
+        final int MIN_PLAYERS = Integer.MAX_VALUE;
         // show waiting room UI
         startActivityForResult(Games.RealTimeMultiplayer.getWaitingRoomIntent(mGoogleApiClient, room, MIN_PLAYERS), RC_WAITING_ROOM);
     }
 
     // Called when we get an invitation to play a game. React by showing that to the user.
     @Override
-    public void onInvitationReceived(Invitation invitation) {
-        // got invitation to play a game -> Store it in mIncomingInvitationId and show the popup on the screen.
+    public void onInvitationReceived(final Invitation invitation) {
+//        // got invitation to play a game -> Store it in mIncomingInvitationId and show the popup on the screen.
+//        mIncomingInvitationId = invitation.getInvitationId();
+//        ((TextView) findViewById(R.id.incoming_invitation_text)).setText(invitation.getInviter().getDisplayName() + " " +getString(R.string.is_inviting_you));
+//        // This will show the invitation popup
+//        switchToScreen(mCurScreen);
+
         mIncomingInvitationId = invitation.getInvitationId();
-        ((TextView) findViewById(R.id.incoming_invitation_text)).setText(invitation.getInviter().getDisplayName() + " " +getString(R.string.is_inviting_you));
-        // This will show the invitation popup
-        switchToScreen(mCurScreen);
+        // accept invitation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Game Invitation").setIcon(R.drawable.ic_launcher)
+                .setMessage(invitation.getInviter().getDisplayName() + ": inviting you ...")
+                .setPositiveButton("Accept",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        acceptInviteToRoom(invitation.getInvitationId());
+                    }
+                })
+                .setNegativeButton("Decline",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // cancel dialog
+                    }
+                });
+        builder.show();
     }
 
     //Called when invitation is removed
@@ -363,7 +385,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (mIncomingInvitationId.equals(invitationId)) {
             mIncomingInvitationId = null;
             // This will hide the invitation popup
-            switchToScreen(mCurScreen);
+//            switchToScreen(mCurScreen);
         }
     }
 
@@ -482,6 +504,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onRoomCreated(int statusCode, Room room) {
         log("onRoomCreated","called");
         log("roomID",""+room.getRoomId());
+        log("roomstatus",""+ GamesStatusCodes.getStatusString(room.getStatus()));
         // give player a hint why the matching failed
         if (statusCode != GamesStatusCodes.STATUS_OK) {
             showGameError();
@@ -505,10 +528,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when player join the room after room is created
     @Override
     public void onJoinedRoom(int statusCode, Room room) {
-        log("onJoinedRoom","called");
-        log("creatorID",""+room.getCreatorId());
-        log("roomID",""+room.getRoomId());
-        log("roomStatus",""+GamesStatusCodes.getStatusString(room.getStatus()));
+        log("onJoinedRoom", "called");
+        log("onJoinedRoom",statusCode+"");
         if (statusCode != GamesStatusCodes.STATUS_OK) {
             log("onJoinedRoom","gameerror");
             showGameError();
@@ -547,6 +568,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     @Override
     public void onPeerLeft(Room room, List<String> peersWhoLeft) {
         // playe leave the room due to leaving of peer
+        updateRoom(room);
         if (mRoomId != null) {
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
             mRoomId = null;
@@ -578,6 +600,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onPeersDisconnected(Room room, List<String> peers) {
         // peer left will be called before this method,
         // so this is just to handle the situation when onPeerLeft() has not been called successfully
+        updateRoom(room);
         if (mRoomId != null){
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
             mRoomId = null;
@@ -589,20 +612,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // check the room status and leave the room when any peer leave the game
     void updateRoom(Room room) {
-        log("updateRoom","called");
+//        log("updateRoom","called");
+//        if (room != null) {
+//            mParticipants = room.getParticipants();
+//        }
+//        if (mParticipants != null) {
+//            if (mRoomId != null) {
+//                for (Participant p : mParticipants) {
+//                    String pid = p.getParticipantId();
+//                    if (pid.equals(mMyId))
+//                        continue;
+//                    if (p.getStatus() != Participant.STATUS_JOINED) {
+//                        leaveRoom();
+//                        break;
+//    }}}}
         if (room != null) {
             mParticipants = room.getParticipants();
         }
         if (mParticipants != null) {
-            if (mRoomId != null) {
-                for (Participant p : mParticipants) {
-                    String pid = p.getParticipantId();
-                    if (pid.equals(mMyId))
-                        continue;
-                    if (p.getStatus() != Participant.STATUS_JOINED) {
-                        leaveRoom();
-                        break;
-    }}}}}
+            //   updatePeerScoresDisplay();
+        }
+    }
 
 
     /*
@@ -1218,7 +1248,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
      * @return an instance of {@link android.app.AlertDialog}
      */
     public static Dialog makeSimpleDialog(Activity activity, String text) {
-        return (new AlertDialog.Builder(activity)).setMessage(text)
+        return (new AlertDialog.Builder(activity)).setMessage(text).setIcon(R.drawable.ic_launcher)
                 .setNeutralButton(android.R.string.ok, null).create();
     }
 
@@ -1233,6 +1263,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public static Dialog makeSimpleDialog(Activity activity, String title, String text) {
         return (new AlertDialog.Builder(activity))
                 .setTitle(title)
+                .setIcon(R.drawable.ic_launcher)
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null)
                 .create();
