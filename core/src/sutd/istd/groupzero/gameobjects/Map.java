@@ -32,11 +32,9 @@ public class Map{
 
     private Random r = new Random();
 
-    public Map(ActionResolver actionResolver){
+    public Map(){
         // Starts the game with the monster facing bottom
         monster = new Monster(Monster.Direction.BOTTOM);
-        // Making a reference to AndroidLauncher by using interface
-        this.actionResolver = actionResolver;
         // Generates all the required game items
         genObstacles();
         genFood();

@@ -107,9 +107,11 @@ public class TouchPad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // checks if the player can pay the cost of 5 food to activate skill,
                 if (monster.getStrength() >= 5) {
+
                     //checks if the player is already in supersaiyan/ predator mode.
                     if (monster.getSaiyanMode() == true){
                         // Do not return true if monster is in predator mode
+
                         return false;
                     }
                     return true;
@@ -228,6 +230,11 @@ public class TouchPad {
                                         actionResolver.eatFood(f);//inform the other player that food "f" is taken by this monster
                                         monster.obtainFood();//adds strength to monster
                                         actionResolver.broadcastMyStrength(monster.getStrength());//informs the other player of this monster's strength increase
+                                        if(monster.getStrength() >= 5)
+                                        {
+                                            skillButton.setChecked(false);
+                                            skillButton.setTouchable(Touchable.enabled);
+                                        }
                                         break;
                                     }
                                 }

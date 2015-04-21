@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -45,8 +46,8 @@ import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
-import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.gameworld.PredatorGame;
+import sutd.istd.groupzero.helpers.ActionResolver;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
@@ -101,7 +102,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // Reset game variables in preparation for a new game.
     private void resetGameVars() {
-        gameMap = new Map(this);
+        gameMap = new Map();
         foodList = gameMap.getFoodList();
         powerUpList = gameMap.getPowerUpsList();
         treeList = gameMap.getTreeList();
@@ -141,7 +142,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // 1. configure the libgdx setting for Android platform
         config = new AndroidApplicationConfiguration();
         // 2. initialize the concurrent and common map with related variables
-        gameMap = new Map(this);
+        gameMap = new Map();
         foodList = gameMap.getFoodList();
         powerUpList = gameMap.getPowerUpsList();
         treeList = gameMap.getTreeList();
@@ -149,6 +150,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         gameView = initializeForView(new PredatorGame(this,gameMap),config);
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+
+
     }
 
     //onClickListener for all the buttons visible and hidden in main menu screen
@@ -171,14 +174,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             case R.id.button_invite_players:
                 // show list of invitable players.
                 intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1);
-                switchToScreen(R.id.screen_wait);
+//                switchToScreen(R.id.screen_wait);
                 // once player select opponents, start new game.
+                log("invite players","clicked");
                 startActivityForResult(intent, RC_SELECT_PLAYERS);
                 break;
             case R.id.button_see_invitations:
                 // show list of pending invitations
                 intent = Games.Invitations.getInvitationInboxIntent(mGoogleApiClient);
-                switchToScreen(R.id.screen_wait);
+//                switchToScreen(R.id.screen_wait);
                 startActivityForResult(intent, RC_INVITATION_INBOX);
                 break;
             case R.id.button_accept_popup_invitation:
@@ -244,6 +248,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             switchToMainScreen();
             return;
         }
+        log("handleSelectPlayersResult1","clicked");
         // get the invitee list
         final ArrayList<String> invitees = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
         // get the automatch criteria
@@ -268,10 +273,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Handle the result of the invitation inbox UI, where the player can pick an invitation to accept.
     // React by accepting the selected invitation, if any.
     private void handleInvitationInboxResult(int response, Intent data) {
+        log("handleInvitationInboxResult",""+(response==Activity.RESULT_OK));
         if (response != Activity.RESULT_OK) {
             switchToMainScreen();
             return;
         }
+
         //Invitation inbox UI succeeded.
         Invitation inv = data.getExtras().getParcelable(Multiplayer.EXTRA_INVITATION);
         // accept invitation
@@ -281,6 +288,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Accept the given invitation.
     void acceptInviteToRoom(String invId) {
         // accept the invitation and join the game room before start the game
+        log("acceptInviteToRoom","called");
+        log("invId",invId);
         RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(this);
         roomConfigBuilder.setInvitationIdToAccept(invId).setMessageReceivedListener(this).setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
@@ -317,17 +326,23 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent e) {
         // if user in game and press back key, we treat as leave room signal
-        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen == R.id.screen_game) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen == R.id.screen_game) {
+//            leaveRoom();
+//            return true;
+//        }
+
+//        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen != R.id.screen_main) {
             leaveRoom();
+            switchToMainScreen();
             return true;
-        }
-        return super.onKeyDown(keyCode, e);
+//        }
+//        return super.onKeyDown(keyCode, e);
     }
 
     // Show the waiting room UI to track the progress of other players as they enter the room and get connected.
     void showWaitingRoom(Room room) {
         // Since we require everyone to join the game before we start it, minimum number of players required for our game
-        final int MIN_PLAYERS = Integer.MAX_VALUE;
+        final int MIN_PLAYERS = 2;
         // show waiting room UI
         startActivityForResult(Games.RealTimeMultiplayer.getWaitingRoomIntent(mGoogleApiClient, room, MIN_PLAYERS), RC_WAITING_ROOM);
     }
@@ -359,6 +374,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when sign in succeeded
     @Override
     public void onConnected(Bundle connectionHint) {
+        Log.d("tag", "onConnected() called. Sign in successful!");
+
+        Log.d("tag", "Sign-in succeeded.");
         // register listener so we are notified if we receive an invitation to play while we are in the game
         Games.Invitations.registerInvitationListener(mGoogleApiClient, this);
         if (connectionHint != null) {
@@ -382,6 +400,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when connection failed
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+
         if (mResolvingConnectionFailure) {
             //onConnectionFailed() ignoring connection failure; already resolving.
             return;
@@ -398,6 +417,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when we are connected to the room but not ready to play yet.
     @Override
     public void onConnectedToRoom(Room room) {
+        log("onConnectedToRoom","called");
         // get room ID, participants and my ID:
         mRoomId = room.getRoomId();
         mParticipants = room.getParticipants();
@@ -460,6 +480,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when room has been created
     @Override
     public void onRoomCreated(int statusCode, Room room) {
+        log("onRoomCreated","called");
+        log("roomID",""+room.getRoomId());
         // give player a hint why the matching failed
         if (statusCode != GamesStatusCodes.STATUS_OK) {
             showGameError();
@@ -472,6 +494,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when room is fully connected.
     @Override
     public void onRoomConnected(int statusCode, Room room) {
+        log("onRoomConnected","called");
         if (statusCode != GamesStatusCodes.STATUS_OK) {
             showGameError();
             return;
@@ -482,7 +505,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Called when player join the room after room is created
     @Override
     public void onJoinedRoom(int statusCode, Room room) {
+        log("onJoinedRoom","called");
+        log("creatorID",""+room.getCreatorId());
+        log("roomID",""+room.getRoomId());
+        log("roomStatus",""+GamesStatusCodes.getStatusString(room.getStatus()));
         if (statusCode != GamesStatusCodes.STATUS_OK) {
+            log("onJoinedRoom","gameerror");
             showGameError();
             return;
         }
@@ -506,7 +534,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public void onP2PDisconnected(String participant) {}
 
     @Override
-    public void onP2PConnected(String participant) {}
+    public void onP2PConnected(String participant) {
+
+    }
 
     @Override
     public void onPeerJoined(Room room, List<String> arg1) {
@@ -559,6 +589,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // check the room status and leave the room when any peer leave the game
     void updateRoom(Room room) {
+        log("updateRoom","called");
         if (room != null) {
             mParticipants = room.getParticipants();
         }

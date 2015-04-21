@@ -455,21 +455,48 @@ public class GameRenderer {
         else if (actionResolver.haveYouLose() || ratio <=0){
             actionResolver.iWin();
             handler.setMode(1);
-            batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
-            batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
-            shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
-            font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
+
+            if (myStrength*1.5f >= opponentStrength){
+                batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
+                batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
+                shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
+                font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
+            }
+            else{
+                TextureRegion me = vsMe[myTapCount%2];
+                TextureRegion op = vsOppo[oppoTapCount%2];
+                batcher.enableBlending();
+                batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*2f)/2, screenWidth, screenHeight*2f);
+                batcher.draw(op,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight-op.getRegionHeight()/op.getRegionWidth()*screenWidth*1.2f
+                        ,screenWidth,op.getRegionHeight()/op.getRegionWidth()*screenWidth);
+                batcher.draw(me,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight+me.getRegionHeight()/me.getRegionWidth()*screenWidth*.2f
+                        ,screenWidth,me.getRegionHeight()/me.getRegionWidth()*screenWidth);
+            }
+            String s = "My Score: "+ myStrength*1.5f + "  Opponent: "+opponentStrength;
+            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight/10f-1);
+            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight/10f);
         }
         //Rendering of tug of war competing scene
         else{
-            TextureRegion me = vsMe[myTapCount%2];
-            TextureRegion op = vsOppo[oppoTapCount%2];
-            batcher.enableBlending();
-            batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*2f)/2, screenWidth, screenHeight*2f);
-            batcher.draw(op,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight-op.getRegionHeight()/op.getRegionWidth()*screenWidth*1.2f
-                    ,screenWidth,op.getRegionHeight()/op.getRegionWidth()*screenWidth);
-            batcher.draw(me,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight+me.getRegionHeight()/me.getRegionWidth()*screenWidth*.2f
-                    ,screenWidth,me.getRegionHeight()/me.getRegionWidth()*screenWidth);
+            if (myStrength>=opponentStrength*1.5f){
+                batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
+                batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
+                shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
+                font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
+            }
+            else{
+                TextureRegion me = vsMe[myTapCount%2];
+                TextureRegion op = vsOppo[oppoTapCount%2];
+                batcher.enableBlending();
+                batcher.draw(pic, 0, (screenHeight*ratio)-(screenHeight*2f)/2, screenWidth, screenHeight*2f);
+                batcher.draw(op,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight-op.getRegionHeight()/op.getRegionWidth()*screenWidth*1.2f
+                        ,screenWidth,op.getRegionHeight()/op.getRegionWidth()*screenWidth);
+                batcher.draw(me,0,(screenHeight*ratio)-(screenHeight*2f)/2 + screenHeight+me.getRegionHeight()/me.getRegionWidth()*screenWidth*.2f
+                        ,screenWidth,me.getRegionHeight()/me.getRegionWidth()*screenWidth);
+            }
+            String s = "My Score: "+ myStrength + "  Opponent: "+opponentStrength*1.5f;
+            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight/10f-1);
+            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight/10f);
         }
         batcher.end();
     }
