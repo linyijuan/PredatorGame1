@@ -81,15 +81,10 @@
 
     <!-- TUTORIAL SCREEN -->
     <LinearLayout android:id="@+id/screen_tutorial" style="@style/LLScreen" android:background="@drawable/tutorial">
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/tutorial"/>-->
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ok, Got it."
-            android:id="@+id/checkbox"
-            android:layout_gravity="bottom|center_horizontal"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
     </LinearLayout>
 </FrameLayout>

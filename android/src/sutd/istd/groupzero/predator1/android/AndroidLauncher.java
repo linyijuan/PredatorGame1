@@ -6,11 +6,16 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +30,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
-import com.google.android.gms.games.internal.GamesClientImpl;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -38,20 +42,18 @@ import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListene
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.android.gms.plus.Plus;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.gameobjects.Monster;
 import sutd.istd.groupzero.gameobjects.PowerUps;
 import sutd.istd.groupzero.gameobjects.Tree;
-import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.gameworld.PredatorGame;
+import sutd.istd.groupzero.helpers.ActionResolver;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
@@ -92,7 +94,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private float oppoSpeed = 1.0f;
     private boolean met,oppoWin,oppoLose,iStart,oppoStart  = false;
     private LinearLayout linearLayout;
-    private CheckBox checkBox;
+    private boolean checked = false;
+
+    private TutorialPagerAdapter adapter;
+    private ViewPager mPager;
+    private static final String IMAGE_DATA_EXTRA = "resId";
+    public final static Integer[] imageResIds = new Integer[] {
+            R.drawable.directionpad, R.drawable.predatormode, R.drawable.statusscreen,R.drawable.targetarrow};
+    private static final int NUM_PAGES = 4;
 
     // This array lists all the individual screens our game has.
     final static int[] SCREENS = {R.id.screen_tutorial,R.id.screen_game, R.id.screen_main, R.id.screen_sign_in,R.id.screen_wait};
@@ -158,15 +167,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 
-        checkBox = (CheckBox)findViewById(R.id.checkbox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    switchToScreen(R.id.screen_game);
-            }
-        });
-
+        mPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new TutorialPagerAdapter();
+        mPager.setAdapter(adapter);
     }
 
     //onClickListener for all the buttons visible and hidden in main menu screen
@@ -606,14 +609,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         gameMap.getMonster().setMyPosition(mystartPos);
         // tell opponent my position information
         broadcastMyStatus(gameMap.getMonster().getMyPosition(), gameMap.getMonster().getDirection());
-        if (!checkBox.isChecked())
+        if (!checked)
             switchToScreen(R.id.screen_tutorial);
-//        try
-//        {
-//            Thread.sleep(5000);
-//        }
-//        catch(Exception e)
-//        {}
         else
             switchToScreen(R.id.screen_game);
         // show game play screen
@@ -1235,5 +1232,80 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setNeutralButton(android.R.string.ok, null)
                 .create();
     }
+
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    private class TutorialPagerAdapter extends PagerAdapter {
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
+        }
+
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            // TODO Auto-generated method stub
+            //((ViewPager) arg0).removeView(list.get(arg1));
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            // TODO Auto-generated method stub
+            View v = getLayoutInflater().inflate(R.layout.fragment_tutorial, null, false);
+            ImageView imageView = (ImageView) v.findViewById(R.id.imageView4);
+            imageView.setBackgroundResource(imageResIds[arg1]);
+            CheckBox checkBox1 = (CheckBox) v.findViewById(R.id.checkbox123);
+            if (arg1 != NUM_PAGES-1)
+                checkBox1.setVisibility(View.GONE);
+            else{
+                checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        checked = isChecked;
+                        if (isChecked)
+                            switchToScreen(R.id.screen_game);
+                    }
+                });
+            }
+            ((ViewPager) arg0).addView(v,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+            return v;
+        }
+
+        @Override
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public Parcelable saveState() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void startUpdate(View arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void finishUpdate(View arg0) {
+            // TODO Auto-generated method stub
+
+        }
+    }
+
 
 }
