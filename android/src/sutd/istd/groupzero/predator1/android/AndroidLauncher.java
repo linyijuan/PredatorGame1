@@ -98,9 +98,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     private TutorialPagerAdapter adapter;
     private ViewPager mPager;
-    private static final String IMAGE_DATA_EXTRA = "resId";
     public final static Integer[] imageResIds = new Integer[] {
-            R.drawable.directionpad, R.drawable.predatormode, R.drawable.statusscreen,R.drawable.targetarrow};
+            R.drawable.tutorialss, R.drawable.tutorialpm, R.drawable.tutorialta,R.drawable.tutorialdp};
     private static final int NUM_PAGES = 4;
 
     // This array lists all the individual screens our game has.
