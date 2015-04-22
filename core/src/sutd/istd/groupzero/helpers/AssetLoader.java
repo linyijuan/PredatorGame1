@@ -195,6 +195,7 @@ public class AssetLoader {
         sboost.dispose();
         vboost.dispose();
         eating.dispose();
+        arrow.dispose();
     }
 
 }

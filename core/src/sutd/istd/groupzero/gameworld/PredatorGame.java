@@ -2,8 +2,6 @@ package sutd.istd.groupzero.gameworld;
 
 import com.badlogic.gdx.Game;
 
-import java.util.Timer;
-
 import sutd.istd.groupzero.gameobjects.Map;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
@@ -12,6 +10,7 @@ import sutd.istd.groupzero.helpers.AssetLoader;
 public class PredatorGame extends Game {
     private ActionResolver actionResolver;
     private Map map;
+    private GameScreen screen;
 
     /**
      * PredatorGame constructor
@@ -30,7 +29,8 @@ public class PredatorGame extends Game {
         // called load() to prepare the game picture, font and sound source
 		AssetLoader.load();
         // set game screen to allow drawing
-		setScreen(new GameScreen(this,actionResolver,map));
+        screen = new GameScreen(this,actionResolver,map);
+		setScreen(screen);
 	}
 
     // dispose the game
@@ -38,6 +38,7 @@ public class PredatorGame extends Game {
     public void dispose() {
         super.dispose();
         // dispose all the source at the same time
+        screen.dispose();
         AssetLoader.dispose();
     }
 

@@ -79,8 +79,10 @@ public class GameRenderer {
     private String vertexShader = (Gdx.files.internal("data/vertexShader.glsl")).readString();
     private String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
-
+    private boolean trip = false;
     private Button skillButton;
+
+
 
     /**
      * Initialization of variables within GameRenderer Class
@@ -443,6 +445,7 @@ public class GameRenderer {
 
         //Rendering of game over losing scene
         if (actionResolver.haveYouWin() || ratio >=1){
+            trip = true;
             actionResolver.iLose();
             handler.setMode(1);
             if (myStrength > opponentStrength*1.5f){
@@ -470,6 +473,7 @@ public class GameRenderer {
         }
         //Rendering of game over winning scene
         else if (actionResolver.haveYouLose() || ratio <=0){
+            trip = true;
             actionResolver.iWin();
             handler.setMode(1);
            if (myStrength*1.5f > opponentStrength){
@@ -497,7 +501,7 @@ public class GameRenderer {
 
         }
         //Rendering of tug of war competing scene
-        else{
+        else if(!trip){
             TextureRegion me = vsMe[myTapCount%2];
             TextureRegion op = vsOppo[oppoTapCount%2];
             batcher.enableBlending();
@@ -561,7 +565,15 @@ public class GameRenderer {
 
     public void dispose(){
         music.dispose();
+        defaultShader.dispose();
+        finalShader.dispose();
+        lightShader.dispose();
+        gridBg.dispose();
+        light.dispose();
+        fbo.dispose();
+        batcher.dispose();
+        font.dispose();
+        shadow.dispose();
+        stage.dispose();
     }
-
-
 }
