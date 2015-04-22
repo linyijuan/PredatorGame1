@@ -30,7 +30,7 @@ public class TouchPad {
 	private Stage stage;
 	private com.badlogic.gdx.scenes.scene2d.ui.Touchpad touchpad;
 	public com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle touchpadStyle;
-	private Drawable touchBackground,SkillBackground,touchKnob;
+	private Drawable touchBackground,SkillBackground,touchKnob,SkillBackgroundGrey;
 	public Skin touchpadSkin,SkillButton;
     private ActionResolver actionResolver;
 	private Vector2 moveUp, moveRight, moveLeft, moveDown,touchpadcenter;
@@ -67,8 +67,10 @@ public class TouchPad {
         // Button for activate Predator Mode
         SkillButton = new Skin(); // applying a new skin/ look to the skillbutton
         SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png")));// adds the background texture
+        SkillButton.add("skillButtonGrey",new Texture(Gdx.files.internal("data/saiyanno.png")));// adds the background texture grey version
         SkillBackground = SkillButton.getDrawable("skillButton");//gets the drawable of the skillButton
-        skillButton = new Button(SkillBackground, SkillBackground); // skillButton initialization
+        SkillBackgroundGrey = SkillButton.getDrawable("skillButtonGrey");//gets the drawable of the skillButton grey
+        skillButton = new Button(SkillBackground, SkillBackgroundGrey, SkillBackgroundGrey); // skillButton initialization
         skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);//set bounds of the skillbutton relative to the screen width and height.
 
         // define the skin of the movement controller - touchpad
@@ -122,7 +124,7 @@ public class TouchPad {
              * Predator mode activated. Temporary speed and visibility increase at the cost of 5 strength.
              */
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                monster.addSpeed(1.5f);//increase the speed of the monster
+                monster.addSpeed(1f);//increase the speed of the monster
                 monster.setSaiyanMode(true);//sets the monster current mode as supersaiyan
                 predatorMode = new Timer();//timer initialization to track the predator mode active duration
                 // return the monster status back to normal after skill ends and reduce strength count by 5
@@ -130,10 +132,18 @@ public class TouchPad {
                 predatorMode.scheduleTask(new Timer.Task() {
                     @Override
                     public void run() {
-                        monster.addSpeed(-1.5f);//decrease the monster movement speed at the end of predator mode
+                        monster.addSpeed(-1f);//decrease the monster movement speed at the end of predator mode
                         monster.setVisibility(1.0f);//sets the monster's visiblity at the end of predator mode.
                         monster.setStrength(monster.getStrength() - 5);//decrease the monster's strength by 5 as cost for predator mode activation
                         monster.setSaiyanMode(false); // deactivation of predator mode.
+                        monster.setInCooldown(true);
+                        Timer cooldown = new Timer();
+                        cooldown.scheduleTask(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                monster.setInCooldown(false);
+                            }
+                        }, 5f);
                     }
                 }, 10f);// the task / predator mode is scheduled for 10 secs duration.
                 // Start the countdown
@@ -313,7 +323,9 @@ public class TouchPad {
 		return 	temp;//returns the angle in degree
 	}
 
-
+    public Button getSkillButton(){
+        return skillButton;
+    }
 
 }
 

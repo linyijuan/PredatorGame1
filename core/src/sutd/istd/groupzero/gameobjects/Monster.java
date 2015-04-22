@@ -24,6 +24,7 @@ public class Monster {
 
     // Saiyan mode (aka Predator mode) becomes true when the player presses the skill button
     private boolean saiyanMode = false;
+    private boolean inCooldown = false;
 
     // radius of the arrow's orbit around the player
 
@@ -155,4 +156,12 @@ public class Monster {
     }
 
     public Vector2 getMyPosition(){return  myPosition;}
+
+    public boolean getCooldown(){
+        return inCooldown;
+    }
+
+    public void setInCooldown(boolean bool){
+        inCooldown = bool;
+    }
 }

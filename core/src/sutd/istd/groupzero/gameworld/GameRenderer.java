@@ -19,6 +19,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +36,7 @@ import sutd.istd.groupzero.gameobjects.Tree;
 import sutd.istd.groupzero.helpers.ActionResolver;
 import sutd.istd.groupzero.helpers.AssetLoader;
 import sutd.istd.groupzero.helpers.InputHandler;
+import sutd.istd.groupzero.helpers.TouchPad;
 
 public class GameRenderer {
     //values passed to the shader
@@ -77,6 +80,8 @@ public class GameRenderer {
     private String finalPixelShader =  (Gdx.files.internal("data/pixelShader.glsl")).readString();
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("data/Mt.Moon.mp3"));
 
+    private Button skillButton;
+
     /**
      * Initialization of variables within GameRenderer Class
      * @param map map object that contains positions of visual objects to be rendered
@@ -85,7 +90,7 @@ public class GameRenderer {
      * @param actionResolver handles communication between gps and core project
      * @param stage
      */
-    public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Stage stage){
+    public GameRenderer(Map map, float screenWidth, float screenHeight,ActionResolver actionResolver,Stage stage, TouchPad touchPad){
         myMap = map;
         myMonster = myMap.getMonster();
         this.actionResolver = actionResolver;
@@ -173,6 +178,8 @@ public class GameRenderer {
 
         handler = new InputHandler(actionResolver,0);
         this.stage = stage;
+        skillButton = touchPad.getSkillButton();
+
     }
     /**
      * Resizing of framebuffer, calling in game screen
@@ -361,8 +368,21 @@ public class GameRenderer {
                 batcher.draw(Vpic, 40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
             }
             if(myMonster.getSaiyanMode()){
+                skillButton.setTouchable(Touchable.disabled);
+                skillButton.setChecked(true);
                 batcher.draw(saiyan, 40 * (screenWidth / 1080),45 * (screenHeight / 1920) + 150 * (screenHeight / 1920),screenWidth/10,screenWidth/10);
+
+            }else if(myMonster.getStrength() < 5){
+                skillButton.setTouchable(Touchable.disabled);
+                skillButton.setChecked(true);
+            }else if(myMonster.getCooldown()){
+                skillButton.setTouchable(Touchable.disabled);
+                skillButton.setChecked(true);
+            }else if(myMonster.getStrength() >= 5){
+                skillButton.setTouchable(Touchable.enabled);
+                skillButton.setChecked(false);
             }
+
             batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(speed, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920) + 80 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
@@ -501,6 +521,9 @@ public class GameRenderer {
         batcher.end();
     }
 
+    public void dispose(){
+        music.dispose();
+    }
 
 
 }
