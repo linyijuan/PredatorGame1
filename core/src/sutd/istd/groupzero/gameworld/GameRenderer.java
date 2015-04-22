@@ -444,23 +444,32 @@ public class GameRenderer {
         //Rendering of game over losing scene
         if (actionResolver.haveYouWin() || ratio >=1){
             actionResolver.iLose();
-            batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
-            shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
-            font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
-            String s = "My Score: "+myStrength+"  Opponent: "+opponentStrength;
-            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight * 0.05f -1 + font.getBounds(s).height/2);
-            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight * 0.05f + font.getBounds(s).height/2);
+            handler.setMode(1);
+            if (myStrength >= opponentStrength*1.5f){
+                batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
+                batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
+                shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
+                font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
+            }
+            else{
+                batcher.draw(AssetLoader.losebg,0,0,screenWidth,screenHeight);
+                shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
+                font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
+            }
+            String s = "My Score: "+myStrength;
+            String s1 = "Opponent: "+opponentStrength * 1.5f;
+            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight * 0.8f -1 + font.getBounds(s).height/2);
+            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight * 0.8f + font.getBounds(s).height/2);
+            shadow.draw(batcher,s1,screenWidth/2-shadow.getBounds(s1).width/2-1,screenHeight * 0.9f -1 + font.getBounds(s1).height/2);
+            font.draw(batcher,s1,screenWidth/2-font.getBounds(s1).width/2,screenHeight * 0.9f + font.getBounds(s1).height/2);
+
             handler.setMode(1);
         }
         //Rendering of game over winning scene
         else if (actionResolver.haveYouLose() || ratio <=0){
             actionResolver.iWin();
             handler.setMode(1);
-//            batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
-//            batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
-//            shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
-//            font.draw(batcher,"YOU WIN!",screenWidth/2-font.getBounds("YOU WIN!").width/2,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
-            if (myStrength*1.5f >= opponentStrength){
+           if (myStrength*1.5f >= opponentStrength){
                 batcher.draw(victorybg.getKeyFrame(runTime),0,0,screenWidth,screenHeight);
                 batcher.draw(AssetLoader.victorMonster,screenWidth/2-AssetLoader.victorMonster.getRegionWidth()/2,screenHeight/2 - AssetLoader.victorMonster.getRegionHeight()/2);
                 shadow.draw(batcher,"YOU WIN!",screenWidth/2-shadow.getBounds("YOU WIN!").width/2-1,screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
@@ -471,9 +480,12 @@ public class GameRenderer {
                 shadow.draw(batcher,"YOU LOSE!",screenWidth/2-shadow.getBounds("YOU LOSE!").width/2-1,screenHeight/8.0f-1);//screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2-1);
                 font.draw(batcher,"YOU LOSE!",screenWidth/2-font.getBounds("YOU LOSE!").width/2,screenHeight/8.0f);//screenHeight/2.5f - AssetLoader.victorMonster.getRegionHeight()/2);
             }
-            String s = "My Score: "+myStrength*1.5f+"  Opponent: "+opponentStrength;
-            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight * 0.05f-1 + font.getBounds(s).height/2);
-            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight * 0.05f + font.getBounds(s).height/2);
+            String s = "My Score: "+myStrength*1.5f;
+            String s1 = "  Opponent: "+opponentStrength;
+            shadow.draw(batcher,s,screenWidth/2-shadow.getBounds(s).width/2-1,screenHeight * 0.8f-1 + font.getBounds(s).height/2);
+            font.draw(batcher,s,screenWidth/2-font.getBounds(s).width/2,screenHeight * 0.8f + font.getBounds(s).height/2);
+            shadow.draw(batcher,s1,screenWidth/2-shadow.getBounds(s1).width/2-1,screenHeight * 0.9f-1 + font.getBounds(s1).height/2);
+            font.draw(batcher,s1,screenWidth/2-font.getBounds(s1).width/2,screenHeight * 0.9f + font.getBounds(s1).height/2);
 
 
         }
