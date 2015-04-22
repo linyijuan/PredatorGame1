@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -28,15 +27,15 @@ import sutd.istd.groupzero.gameobjects.Tree;
 /* Input controller for map war */
 public class TouchPad {
     private float screenWidth,screenHeight;
-	private Stage stage;
-	private com.badlogic.gdx.scenes.scene2d.ui.Touchpad touchpad;
-	public com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle touchpadStyle;
-	private Drawable touchBackground,SkillBackground,touchKnob,SkillBackgroundGrey;
-	public Skin touchpadSkin,SkillButton;
+    private Stage stage;
+    private com.badlogic.gdx.scenes.scene2d.ui.Touchpad touchpad;
+    public com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle touchpadStyle;
+    private Drawable touchBackground,SkillBackground,touchKnob,SkillBackgroundGrey;
+    public Skin touchpadSkin,SkillButton;
     private ActionResolver actionResolver;
-	private Vector2 moveUp, moveRight, moveLeft, moveDown,touchpadcenter;
-	private boolean touchUp = false;
-	private Monster monster;
+    private Vector2 moveUp, moveRight, moveLeft, moveDown,touchpadcenter;
+    private boolean touchUp = false;
+    private Monster monster;
     private List<Food> foodSynchroList;
     private List<PowerUps> puSynchroList;
     private Sound sboost,vboost,eating;
@@ -52,9 +51,9 @@ public class TouchPad {
      * @param map  map object associated with the game
      * @param actionResolver handles google play services
      */
-	public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
+    public TouchPad(float x, float y, float width, float height, Map map,ActionResolver actionResolver) {
         // obtain screen dimensions
-		screenHeight = Gdx.graphics.getHeight();//gets the height of the screen
+        screenHeight = Gdx.graphics.getHeight();//gets the height of the screen
         screenWidth = Gdx.graphics.getWidth();//gets the width of the screen
 
         this.actionResolver = actionResolver;//actionResolver instantiation
@@ -70,34 +69,34 @@ public class TouchPad {
         SkillButton.add("skillButton",new Texture(Gdx.files.internal("data/saiyan.png")));// adds the background texture
         SkillButton.add("skillButtonGrey",new Texture(Gdx.files.internal("data/saiyanno.png")));// adds the background texture grey version
         SkillBackground = SkillButton.getDrawable("skillButton");//gets the drawable of the skillButton
-        SkillBackgroundGrey = SkillButton.getDrawable("skillButtonGrey");
+        SkillBackgroundGrey = SkillButton.getDrawable("skillButtonGrey");//gets the drawable of the skillButton grey
         skillButton = new Button(SkillBackground, SkillBackgroundGrey, SkillBackgroundGrey); // skillButton initialization
         skillButton.setBounds(40*(screenWidth/1080), 50*(screenHeight/1920), screenWidth/5, screenWidth/5);//set bounds of the skillbutton relative to the screen width and height.
 
         // define the skin of the movement controller - touchpad
         touchpadSkin = new Skin();// new skin/ look for the touchpad.
         touchpadSkin.add("touchKnob", new Texture(Gdx.files.internal("data/touchKnob1.png")));// adding the grey color touchknob to the touchpad skin
-		touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png"))); // adding the touchpad background to the touchpad skin
-		touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle(); // initialization of touchpadstyle
-		touchBackground = touchpadSkin.getDrawable("touchBackground"); // drawable initialization of touchbackground
-		touchKnob = touchpadSkin.getDrawable("touchKnob"); // drawable initialization of touchknob
-		touchpadStyle.background = touchBackground; // assign touchpad background with touchbackground drawable.
-		touchpadStyle.knob = touchKnob; // assign touchpadknob with touchknob drawable.
+        touchpadSkin.add("touchBackground", new Texture(Gdx.files.internal("data/touchBackground.png"))); // adding the touchpad background to the touchpad skin
+        touchpadStyle = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle(); // initialization of touchpadstyle
+        touchBackground = touchpadSkin.getDrawable("touchBackground"); // drawable initialization of touchbackground
+        touchKnob = touchpadSkin.getDrawable("touchKnob"); // drawable initialization of touchknob
+        touchpadStyle.background = touchBackground; // assign touchpad background with touchbackground drawable.
+        touchpadStyle.knob = touchKnob; // assign touchpadknob with touchknob drawable.
 
         // create touchpad with the defined style
-		touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
+        touchpad = new com.badlogic.gdx.scenes.scene2d.ui.Touchpad(15, touchpadStyle);
         touchpad.setBounds(x, y, width, height);// define the bounds of the touchpad
         touchpadcenter = new Vector2(width/2, height/2); //define the touchpad center to the mid point of the touchpad
-	}
+    }
 
     /**
      * @return Stage object
      */
-	public Stage createTouchPad() {
+    public Stage createTouchPad() {
         //a stage receives input events that can be distributed to the actors
         // an actor can be a button / some form of input listener.
-		stage = new Stage();
-		stage.addActor(touchpad); // add touchpad to stage.
+        stage = new Stage();
+        stage.addActor(touchpad); // add touchpad to stage.
         stage.addActor(skillButton); // add skillButton to stage
         //Predator mode activate button listener.
         skillButton.addListener(new InputListener(){
@@ -107,11 +106,9 @@ public class TouchPad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // checks if the player can pay the cost of 5 food to activate skill,
                 if (monster.getStrength() >= 5) {
-
                     //checks if the player is already in supersaiyan/ predator mode.
                     if (monster.getSaiyanMode() == true){
                         // Do not return true if monster is in predator mode
-
                         return false;
                     }
                     return true;
@@ -139,11 +136,12 @@ public class TouchPad {
                         monster.setVisibility(1.0f);//sets the monster's visiblity at the end of predator mode.
                         monster.setStrength(monster.getStrength() - 5);//decrease the monster's strength by 5 as cost for predator mode activation
                         monster.setSaiyanMode(false); // deactivation of predator mode.
-                        new Timer().scheduleTask(new Timer.Task() {
+                        monster.setInCooldown(true);
+                        Timer cooldown = new Timer();
+                        cooldown.scheduleTask(new Timer.Task() {
                             @Override
                             public void run() {
-                                skillButton.setChecked(false);
-                                skillButton.setTouchable(Touchable.enabled);
+                                monster.setInCooldown(false);
                             }
                         }, 5f);
                     }
@@ -157,7 +155,7 @@ public class TouchPad {
 
         });
         //TouchPad listener to handle monster movement.
-		touchpad.addListener(new InputListener(){
+        touchpad.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = false;
                 Executor executor = Executors.newSingleThreadExecutor();
@@ -230,11 +228,6 @@ public class TouchPad {
                                         actionResolver.eatFood(f);//inform the other player that food "f" is taken by this monster
                                         monster.obtainFood();//adds strength to monster
                                         actionResolver.broadcastMyStrength(monster.getStrength());//informs the other player of this monster's strength increase
-                                        if(monster.getStrength() >= 5)
-                                        {
-                                            skillButton.setChecked(false);
-                                            skillButton.setTouchable(Touchable.enabled);
-                                        }
                                         break;
                                     }
                                 }
@@ -311,35 +304,27 @@ public class TouchPad {
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 touchUp = true;//touchup boolean to check the actual stage of the boolean
-                }
+            }
         });
 
-		return stage;
-	}
+        return stage;
+    }
 
     /**
      * helper method for touchKnob
      * calculates the angle based on the center of the touchpad
      * @param x current touchknob x position
      * @param y current touchknob y position
-     * @return the angle in degree
+     * @return
      */
-	private float getAngle(float x, float y){
-		float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x); //calculates the angle in radian
-		temp = (float) (temp * 57.2957795);//converts the radian to degree
-		return 	temp;//returns the angle in degree
-	}
+    private float getAngle(float x, float y){
+        float temp = (float)Math.atan2(y-touchpadcenter.y, x-touchpadcenter.x); //calculates the angle in radian
+        temp = (float) (temp * 57.2957795);//converts the radian to degree
+        return 	temp;//returns the angle in degree
+    }
 
     public Button getSkillButton(){
         return skillButton;
-    }
-
-    public Drawable getSkillBackground(){
-        return SkillBackground;
-    }
-
-    public Drawable getSkillBackgroundGrey(){
-        return SkillBackgroundGrey;
     }
 
 }

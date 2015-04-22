@@ -181,8 +181,6 @@ public class GameRenderer {
         handler = new InputHandler(actionResolver,0);
         this.stage = stage;
         skillButton = touchPad.getSkillButton();
-        skillBackground = touchPad.getSkillBackground();
-        skillBackgroundGrey = touchPad.getSkillBackgroundGrey();
     }
     /**
      * Resizing of framebuffer, calling in game screen
@@ -379,13 +377,13 @@ public class GameRenderer {
             }else if(myMonster.getStrength() < 5){
                 skillButton.setTouchable(Touchable.disabled);
                 skillButton.setChecked(true);
-
+            }else if(myMonster.getCooldown()){
+                skillButton.setTouchable(Touchable.disabled);
+                skillButton.setChecked(true);
+            }else if(myMonster.getStrength() >= 5){
+                skillButton.setTouchable(Touchable.enabled);
+                skillButton.setChecked(false);
             }
-
-//            else{
-//                skillButton.setTouchable(Touchable.enabled);
-//                skillButton.setChecked(false);
-//            }
             batcher.draw(myHead, 40 * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, myHead.getRegionWidth() * (screenWidth / 1080), myHead.getRegionHeight() * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(food, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
             batcher.draw(speed, 40 * (screenWidth / 1080) + 10 * (screenWidth / 1080) + myHead.getRegionWidth() * (screenWidth / 1080), 45 * (screenHeight / 1920) + 80 * (screenHeight / 1920), 0, 0, (myHead.getRegionWidth() / 2) * (screenWidth / 1080), (myHead.getRegionHeight() / 2) * (screenHeight / 1920), 1, 1, 0);
