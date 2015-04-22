@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,10 +38,12 @@ import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListene
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.android.gms.plus.Plus;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import sutd.istd.groupzero.gameobjects.Food;
 import sutd.istd.groupzero.gameobjects.Map;
@@ -88,9 +92,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private float oppoSpeed = 1.0f;
     private boolean met,oppoWin,oppoLose,iStart,oppoStart  = false;
     private LinearLayout linearLayout;
+    private CheckBox checkBox;
 
     // This array lists all the individual screens our game has.
-    final static int[] SCREENS = {R.id.screen_game, R.id.screen_main, R.id.screen_sign_in,R.id.screen_wait};
+    final static int[] SCREENS = {R.id.screen_tutorial,R.id.screen_game, R.id.screen_main, R.id.screen_sign_in,R.id.screen_wait};
     int mCurScreen = -1;
 
     // This array lists everything that's clickable, so we can install click event handlers.
@@ -139,6 +144,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             findViewById(id).setOnClickListener(this);
         }
 
+
         // when start the game for the first time:
         // 1. configure the libgdx setting for Android platform
         config = new AndroidApplicationConfiguration();
@@ -151,6 +157,16 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         gameView = initializeForView(new PredatorGame(this,gameMap),config);
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+
+        checkBox = (CheckBox)findViewById(R.id.checkbox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    switchToScreen(R.id.screen_game);
+            }
+        });
+
     }
 
     //onClickListener for all the buttons visible and hidden in main menu screen
@@ -590,8 +606,17 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         gameMap.getMonster().setMyPosition(mystartPos);
         // tell opponent my position information
         broadcastMyStatus(gameMap.getMonster().getMyPosition(), gameMap.getMonster().getDirection());
+        if (!checkBox.isChecked())
+            switchToScreen(R.id.screen_tutorial);
+//        try
+//        {
+//            Thread.sleep(5000);
+//        }
+//        catch(Exception e)
+//        {}
+        else
+            switchToScreen(R.id.screen_game);
         // show game play screen
-        switchToScreen(R.id.screen_game);
     }
 
     // quick-start a game with 1 randomly selected opponent

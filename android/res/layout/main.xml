@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+
+
+
     <!-- SIGN-IN SCREEN -->
     <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen"
         android:background="@drawable/menubg">
@@ -69,8 +72,24 @@
         <TextView style="@style/Blurb" android:text="@string/please_wait" />
     </LinearLayout>
 
+
+
     <!-- GAMEPLAY SCREEN -->
     <LinearLayout android:id="@+id/screen_game" style="@style/LLScreen"
         android:background="@drawable/menubg">
+    </LinearLayout>
+
+    <!-- TUTORIAL SCREEN -->
+    <LinearLayout android:id="@+id/screen_tutorial" style="@style/LLScreen" android:background="@drawable/tutorial">
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/tutorial"/>-->
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ok, Got it."
+            android:id="@+id/checkbox"
+            android:layout_gravity="bottom|center_horizontal"/>
     </LinearLayout>
 </FrameLayout>
