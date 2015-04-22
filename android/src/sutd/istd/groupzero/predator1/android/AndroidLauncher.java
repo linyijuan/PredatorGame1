@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.internal.GamesClientImpl;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -122,6 +123,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         iStart = false;
         oppoStart = false;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -274,6 +276,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         //Invitation inbox UI succeeded.
         Invitation inv = data.getExtras().getParcelable(Multiplayer.EXTRA_INVITATION);
+
         // accept invitation
         acceptInviteToRoom(inv.getInvitationId());
     }
@@ -488,6 +491,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         // show the waiting room UI
         showWaitingRoom(room);
+
     }
 
     // Treat update callbacks :
@@ -1187,7 +1191,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
      * @return an instance of {@link android.app.AlertDialog}
      */
     public static Dialog makeSimpleDialog(Activity activity, String text) {
-        return (new AlertDialog.Builder(activity)).setMessage(text)
+        return (new AlertDialog.Builder(activity)).setMessage(text).setIcon(R.drawable.ic_launcher)
                 .setNeutralButton(android.R.string.ok, null).create();
     }
 
@@ -1200,7 +1204,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
      * @return an instance of {@link android.app.AlertDialog}
      */
     public static Dialog makeSimpleDialog(Activity activity, String title, String text) {
-        return (new AlertDialog.Builder(activity))
+        return (new AlertDialog.Builder(activity)).setIcon(R.drawable.ic_launcher)
                 .setTitle(title)
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null)
