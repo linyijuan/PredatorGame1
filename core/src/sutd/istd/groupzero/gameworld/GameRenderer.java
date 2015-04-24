@@ -55,7 +55,7 @@ public class GameRenderer {
     private static BitmapFont font, shadow;
     private Texture gridBg, light;
     private TextureRegion saiyan;
-    private TextureRegion menuBg,grid,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
+    private TextureRegion menuBg,grid,grid1,pic,myHead,oppoHead,food,speed,monsterUp,monsterDown, monsterLeft,monsterRight, Spic, Vpic;
     private TextureRegion[] directionSet,directionSetoppo,vsMe,vsOppo;
     private Animation[] animationSet,animationSetoppo;
     private Animation upAnimation,downaAnimation, leftaAnimation,rightaAnimation,clock,victorybg;
@@ -132,6 +132,7 @@ public class GameRenderer {
 
         gridBg = new Texture(Gdx.files.internal("data/map.png"));
         grid = new TextureRegion(gridBg, 600, 600);
+        grid1 = new TextureRegion(new Texture(Gdx.files.internal("data/map1.png")));
 
 
         Spic = AssetLoader.Spic;    // Speed power up sprite
@@ -283,6 +284,7 @@ public class GameRenderer {
             cam.position.set(camPost, 0);
             cam.update();
             batcher.setProjectionMatrix(cam.combined);
+            batcher.draw(grid1,-50,-50);
             batcher.draw(gridBg, 0, 0);
 
             // Drawing of all visual objects in game

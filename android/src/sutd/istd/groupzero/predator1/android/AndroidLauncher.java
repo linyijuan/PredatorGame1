@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.math.Intersector;
@@ -74,6 +76,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private AndroidApplicationConfiguration config;
     private View gameView;
     private Map gameMap;
+    private Game game;
     private boolean useOppoTree,useOppoFood,useOppoPU = false;
     private Rectangle myCurrentBound = null;
 
@@ -95,6 +98,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private boolean met,oppoWin,oppoLose,iStart,oppoStart  = false;
     private LinearLayout linearLayout;
     private boolean checked = false;
+    private Typeface font;
 
     private TutorialPagerAdapter adapter;
     private ViewPager mPager;
@@ -115,6 +119,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // Reset game variables in preparation for a new game.
     private void resetGameVars() {
+        linearLayout.removeViewAt(0);
+        game.pause();
         gameMap = new Map(this);
         foodList = gameMap.getFoodList();
         powerUpList = gameMap.getPowerUpsList();
@@ -123,7 +129,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         oppopowerUpList = new ArrayList<PowerUps>();
         oppotreeList = new ArrayList<Tree>();
         opponentPosition = null;
-        linearLayout.removeViewAt(0);
         gameView = initializeForView(new PredatorGame(this,gameMap),config);
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         opponentStrength = 0;
@@ -152,7 +157,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             findViewById(id).setOnClickListener(this);
         }
 
-
+        font = Typeface.createFromAsset(this.getAssets(), "font/BADABB.ttf");
         // when start the game for the first time:
         // 1. configure the libgdx setting for Android platform
         config = new AndroidApplicationConfiguration();
@@ -162,7 +167,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         powerUpList = gameMap.getPowerUpsList();
         treeList = gameMap.getTreeList();
         // 3. attach libgdx game view in Android layout
-        gameView = initializeForView(new PredatorGame(this,gameMap),config);
+        game = new PredatorGame(this,gameMap);
+        gameView = initializeForView(game,config);
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 
@@ -1253,25 +1259,24 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
 
         @Override
-        public void destroyItem(View arg0, int arg1, Object arg2) {
-            // TODO Auto-generated method stub
-            //((ViewPager) arg0).removeView(list.get(arg1));
-        }
+        public void destroyItem(View arg0, int arg1, Object arg2) {}
 
         @Override
         public Object instantiateItem(View arg0, int arg1) {
-            // TODO Auto-generated method stub
             View v = getLayoutInflater().inflate(R.layout.fragment_tutorial, null, false);
             ImageView imageView = (ImageView) v.findViewById(R.id.imageView4);
             imageView.setBackgroundResource(imageResIds[arg1]);
-            CheckBox checkBox1 = (CheckBox) v.findViewById(R.id.checkbox123);
-            if (arg1 != NUM_PAGES-1)
+            final CheckBox checkBox1 = (CheckBox) v.findViewById(R.id.checkbox123);
+            if (arg1 != NUM_PAGES-1) {
                 checkBox1.setVisibility(View.GONE);
+            }
             else{
+                checkBox1.setTypeface(font);
                 checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         checked = isChecked;
+                        checkBox1.setText(" Please wait for the other player..");
                         if (isChecked)
                             switchToScreen(R.id.screen_game);
                     }
@@ -1282,28 +1287,18 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
 
         @Override
-        public void restoreState(Parcelable arg0, ClassLoader arg1) {
-            // TODO Auto-generated method stub
-
-        }
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {}
 
         @Override
         public Parcelable saveState() {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
-        public void startUpdate(View arg0) {
-            // TODO Auto-generated method stub
-
-        }
+        public void startUpdate(View arg0) {}
 
         @Override
-        public void finishUpdate(View arg0) {
-            // TODO Auto-generated method stub
-
-        }
+        public void finishUpdate(View arg0) {}
     }
 
 

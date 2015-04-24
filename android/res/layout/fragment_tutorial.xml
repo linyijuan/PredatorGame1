@@ -10,8 +10,8 @@
         android:id="@+id/checkbox123"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ok please don't show again."
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:text=" Check Me to Ready!"
+        android:layout_centerInParent="true"
+        android:textSize="25dp" />
 
 </RelativeLayout>

@@ -80,7 +80,7 @@
     </LinearLayout>
 
     <!-- TUTORIAL SCREEN -->
-    <LinearLayout android:id="@+id/screen_tutorial" style="@style/LLScreen" android:background="@drawable/tutorial">
+    <LinearLayout android:id="@+id/screen_tutorial" style="@style/LLScreen" android:background="@drawable/background">
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="fill_parent"
